@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Journal, Conference, Patent
+from .models import Journal, Conference, Patent, Book
 # Register your models here.
 
 class JournalAdmin(admin.ModelAdmin):
@@ -16,3 +16,4 @@ class PatentAdmin(admin.ModelAdmin):
 admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(Journal, JournalAdmin)
 admin.site.register(Patent, PatentAdmin)
+admin.site.register(Book)

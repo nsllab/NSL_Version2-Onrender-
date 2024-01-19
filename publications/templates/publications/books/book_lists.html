@@ -1,0 +1,230 @@
+{% extends 'base.html' %} {% load bootstrap5 %} {% block content %}
+{% include 'partials/_banner.html' with heading="Books" %}
+<div class="container mt-5">
+    {% if user.is_authenticated %}
+    <div class="row">
+        <div class="col-sm-6 card">
+            <div class="card-body">
+                <h5 class="card-title">Add Book</h5>
+                <form class="" method="POST" action="{% url 'publications:book_create' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-floating">
+                        <input type="text" name="title" value="{{ title }}" class="form-control mb-2"
+                            placeholder="Book Title" />
+                        <label for="title">Title</label>
+                    </div>
+                    <div class="form-floating mb-2">
+                        <textarea class="form-control" name="abstract" value="{{ abstract }}" placeholder="Abstract"
+                            id="abstract" style="height: 100px;"></textarea>
+                        <label for="abstract">Abstract</label>
+                    </div>
+                    <div class="mb-2">
+                        <label for="file1" class="form-label">File:</label>
+                        <input class="form-control form-control-sm" type="file" id="file1" name="file1" />
+                    </div>
+                    <div class="mb-2">
+                        <label for="file2" class="form-label">File:</label>
+                        <input class="form-control form-control-sm" type="file" id="file2" name="file2" />
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-outline-info">
+                            <i class="fa-solid fa-plus"></i> Add Book
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-sm-10">
+            {% if books %}
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <th scope="row">{{ forloop.revcounter}}</th>
+                        <td>
+                            <a type="button" data-bs-toggle="modal" data-bs-target="#detailModal{{ book.pk }}">
+                                {{ book.title }}
+                            </a>
+                        </td>
+                        <div class="modal fade" id="detailModal{{ book.pk }}" tabindex="-1"
+                            aria-labelledby="detailModalLabel{{ book.pk }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="detailModalLabel{{ book.pk }}">Detail</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Add a form for editing the specific field -->
+                                        <h5> <span>Title: </span> {{ book.title }}</h5>
+                                        <hr class="border border-2 border-info">
+                                        <p><span class="fw-bold">Abstract: </span>{{ book.abstract }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if user == book.writer or user.is_staff %}
+                        <td>
+                            <button type="button" class="btn btn-outline-info" data-bs-toggle="modal"
+                                data-bs-target="#editModal{{ book.pk }}">
+                                Edit
+                            </button>
+                        </td>
+
+                        {% endif %}
+                    </tr>
+
+                    <!-- Modal for each item -->
+                    <div class="modal fade" id="editModal{{ book.pk }}" tabindex="-1"
+                        aria-labelledby="editModalLabel{{ book.pk }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel{{ book.pk }}">Edit</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Add a form for editing the specific field -->
+                                    <form method="POST" action="{% url 'publications:book_update' book.pk %}" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="">
+                                            <label for="title{{ book.pk }}">Title</label>
+                                            <input type="text" id="title{{ book.pk }}" name="title"
+                                                value="{{ book.title }}" class="form-control mb-2" placeholder="book" />
+
+                                        </div>
+                                        <div class="">
+                                            <label for="abstract{{ book.pk }}">Abstract</label>
+                                            <textarea class="form-control" name="abstract" placeholder="Abstract"
+                                                id="abstract{{ book.pk }}"
+                                                style="height: 100px">{{ book.abstract }}</textarea>
+
+                                        </div>
+                                        <div class="mb-2">
+											<label for="file1{{ book.pk }}" class="form-label">File:</label>
+											<input class="form-control form-control-sm" type="file" id="file1{{ book.pk }}" name="file1" accept=".pdf, .doc, .docx" />
+										</div>
+                                        <div class="mb-2">
+											<label for="file2{{ book.pk }}" class="form-label">File:</label>
+											<input class="form-control form-control-sm" type="file" id="file2{{ book.pk }}" name="file2" accept=".pdf, .doc, .docx" />
+										</div>
+                                        <button type="submit" class="btn btn-info">Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <P>No data</P>
+            {% endif %}
+        </div>
+        <div class="col-sm-2 mt-5">
+            <div class="card" style="width: 18rem">
+                <div class="card-body">
+                    <h5 class="card-title">Search</h5>
+                    <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
+                    <form method="GET" action="{% url 'publications:books' %}">
+                        <div class="">
+                            <input type="text" name="title" value="{{ title }}" class="form-control mb-2"
+                                placeholder="By title" />
+                        </div>
+                        <div class="">
+                            <input type="text" name="year" value="{{ year }}" class="form-control mb-2"
+                                placeholder="By year" />
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-outline-info">
+                                <i class="fa-solid fa-magnifying-glass"></i>Search
+                            </button>
+                        </div>
+                        <div class="d-grid gap-2 mt-2">
+                            <a href="{% url 'publications:books' %}" class="btn btn-outline-info">
+                                <i class="fa-solid fa-xmark"></i> Clear Search
+                            </a>
+                        </div>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% if journals.has_other_pages %}
+            <ul class="pagination">
+                {% if journals.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo;&laquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ journals.previous_page_number }}">&laquo;</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">&laquo;&laquo;</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link">&laquo;</a>
+                </li>
+                {% endif %}
+
+                {% for i in journals.paginator.page_range %}
+                {% if journals.number == i %}
+                <li class="page-item active">
+                    <a class="page-link">{{ i }}</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if journals.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ journals.next_page_number }}">&raquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ journals.paginator.num_pages }}">&raquo;&raquo;</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">&raquo;&raquo;</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link">&raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+            {%endif%}
+        </div>
+    </div>
+</div>
+
+<!-- {% if user.is_authenticated %}
+<div class="position-fixed bottom-0 end-0 p-3">
+    <a href="{% url 'publications:book_create' %}" class="btn btn-outline-info" type="button">
+        <i class="fa-solid fa-plus"></i> Add book
+	</a>
+  </div>
+{% endif %} -->
+{% endblock %}

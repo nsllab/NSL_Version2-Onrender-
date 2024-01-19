@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
-from .models import Journal, Conference, Patent
+from .models import Journal, Conference, Patent, Book
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import JournalForm, JournalUpdateForm, ConferenceForm, PatentForm, ConferenceUpdateForm
+from .forms import JournalForm, JournalUpdateForm, ConferenceForm, PatentForm, ConferenceUpdateForm, BookForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import CreateView, UpdateView, DetailView
 from .choices import PAPER_STATUS, PAPER_TYPE
@@ -129,7 +129,7 @@ def conferences(request):
             conferences = conferences.filter(write_date__icontains=year)
 
 
-    if 'journal_type' in search:
+    if 'conference_type' in search:
         conference_type = search['conference_type']
         if conference_type:
             conferences = conferences.filter(conference_type__iexact=conference_type)
@@ -145,7 +145,7 @@ def conferences(request):
 
     context = {
         'conferences': page_obj,
-        'journal_type': PAPER_TYPE,
+        'conference_type': PAPER_TYPE,
         'status': PAPER_STATUS,
     }
     return render(request, 'publications/conferences/conferences.html', context)
@@ -255,3 +255,64 @@ class PatentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name = 'publications/patents/update.html'
     success_url = reverse_lazy('publications:patents')
     success_message =  "Updated successfully"
+
+# class PatentDetailView(DetailView):
+#     model = Patent
+#     template_name = ''
+#     # template_name = 'publications/conferences/conference_details.html'
+#     context_object_name = 'patent'
+
+
+def books(request):
+    books = Book.objects.order_by('-write_date')
+    search = request.GET
+
+    if 'title' in search:
+        title = search['title']
+        if title:
+            books = books.filter(title__icontains=title)
+
+    if 'year' in search:
+        year = search['year']
+        if year:
+            books = books.filter(write_date__icontains=year)
+
+    if 'book_type' in search:
+        book_type = search['book_type']
+        if book_type:
+            books = books.filter(book_type__iexact=book_type)
+
+    # international_patents = patents.filter(book_type=1)
+    # domestic_patents = patents.filter(book_type=2)
+
+    context = {
+        'books': books,
+        'book_type': PAPER_TYPE
+        # 'dom_pats': domestic_patents,
+    }
+
+    return render(request, 'publications/books/book_lists.html', context)
+
+class BookCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    login_url="/members/login"
+    model = Book
+    form_class = BookForm  # Replace with your actual form
+    template_name = ''  # Replace with your template name
+    success_url = reverse_lazy('publications:books')  # Replace with your success URL
+    success_message =  "Book added successfully"
+
+    def form_valid(self, form):
+        form.instance.writer = self.request.user  # Set the writer to the current user
+        return super().form_valid(form)
+
+class BookUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url = "/members/login/"
+    model = Book
+    form_class = BookForm
+    template_name = ''
+    success_url = reverse_lazy('publications:books')
+    success_message =  "Updated successfully"
+
+    def form_valid(self, form):
+        form.instance.writer = self.request.user  # Set the writer to the current user
+        return super().form_valid(form)

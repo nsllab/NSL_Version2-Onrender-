@@ -19,4 +19,8 @@ urlpatterns = [
     path('patents', views.patents, name="patents"),
     path('patents/<int:pk>/update', views.PatentUpdateView.as_view(), name="patent_update"),
     path('patents/create', views.PatentCreateView.as_view(), name="patent_create"),
+
+    path('books', views.books, name="books"),
+    path('books/create', views.BookCreateView.as_view(), name="book_create"),
+    path('books/<int:pk>update', views.BookUpdateView.as_view(), name="book_update"),
 ]

@@ -53,7 +53,7 @@
         <div class="card-body">
           <h5 class="card-title">Search</h5>
           <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
-          <form method="GET" action="{% url 'publications:journals' %}">
+          <form method="GET" action="{% url 'publications:conferences' %}">
             <div class="">
               <input type="text" name="title" value="{{ title }}" class="form-control mb-2" placeholder="By Title" />
             </div>
@@ -64,12 +64,12 @@
               <input type="text" name="year" value="{{ year }}" class="form-control mb-2" placeholder="By year" />
             </div>
             <div class="mb-2">
-				<select class="form-select" name="journal_type">
-					<option selected="true" disabled="disabled">Journal Type</option>
-					{% for value in journal_type %}
+				<select class="form-select" name="conference_type">
+					<option selected="true" disabled="disabled">Conference Type</option>
+					{% for value in conference_type %}
 						<option 
 							value="{{ value.0 }}"
-							{% if value.0 == journal_type %}
+							{% if value.0 == conference_type %}
                         		selected
                      		{% endif %}
 							>
@@ -101,7 +101,7 @@
               </button>
             </div>
             <div class="d-grid gap-2 mt-2">
-                <a href="{% url 'publications:journals' %}" class="btn btn-outline-info">
+                <a href="{% url 'publications:conferences' %}" class="btn btn-outline-info">
                   <i class="fa-solid fa-xmark"></i> Clear Search
                 </a>
               </div>
@@ -114,14 +114,14 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      {%  if journals.has_other_pages %}
+      {%  if conferences.has_other_pages %}
       <ul class="pagination">
-          {% if journals.has_previous %}
+          {% if conferences.has_previous %}
             <li class="page-item">
                 <a class="page-link" href="?page=1">&laquo;&laquo;</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ journals.previous_page_number }}">&laquo;</a>
+                <a class="page-link" href="?page={{ conferences.previous_page_number }}">&laquo;</a>
             </li>
           {% else %}
             <li class="page-item disabled">
@@ -132,8 +132,8 @@
             </li>
           {% endif %}
 
-          {% for i in journals.paginator.page_range %}
-            {% if journals.number == i %}
+          {% for i in conferences.paginator.page_range %}
+            {% if conferences.number == i %}
                 <li class="page-item active">
                     <a class="page-link">{{ i }}</a>
                 </li>
@@ -144,12 +144,12 @@
             {% endif %}
           {% endfor %}
 
-          {% if journals.has_next %}
+          {% if conferences.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ journals.next_page_number }}">&raquo;</a>
+                <a class="page-link" href="?page={{ conferences.next_page_number }}">&raquo;</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ journals.paginator.num_pages }}">&raquo;&raquo;</a>
+                <a class="page-link" href="?page={{ conferences.paginator.num_pages }}">&raquo;&raquo;</a>
             </li>
             {% else %}
             <li class="page-item disabled">

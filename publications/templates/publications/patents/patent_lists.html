@@ -14,7 +14,7 @@
                 </div>
                 <div class="form-floating">
                   <textarea class="form-control" name="content" value="{{ content }}" placeholder="Content" id="content" style="height: 100px;"></textarea>
-                  <label for="content">Comments</label>
+                  <label for="content">Content</label>
                 </div>
                 <select class="form-select my-2" name="patent_type">
                   <option selected="true" disabled="disabled">Patent Type</option>
@@ -50,11 +50,9 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>Subject</th>
-            <!-- <th>Author</th> -->
-            <th>Status</th>
-			<th>Type</th>
-            <th></th>
+            <th>Title</th>
+			      <th>Type</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -62,15 +60,32 @@
           <tr>
             <th scope="row">{{ forloop.revcounter}}</th>
             <td>
-              <a href="{% url 'publications:patent_update' pk=patent.pk %}">
+              <a type="button" data-bs-toggle="modal" data-bs-target="#detailModal{{ patent.pk }}">
                 {{ patent.subject }}
               </a>
             </td>
+            <div class="modal fade" id="detailModal{{ patent.pk }}" tabindex="-1" aria-labelledby="detailModalLabel{{ patent.pk }}" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="detailModalLabel{{ patent.pk }}">Detail</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <!-- Add a form for editing the specific field -->
+                          <h5> <span>Title: </span> {{ patent.subject }}</h5>
+                          <hr class="border border-2 border-info">
+                          <p><span class="fw-bold">Content: </span>{{ patent.content }}</p>
+                          <hr class="border border-2 border-info">
+                          <p><span class="fw-bold">Type:</span> {{ patent.type }}</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
             <!-- <td>{{ patent.writer }}</td> -->
-            <td>{{ patent.get_status_display }}</td>
 			      <td>{{ patent.get_patent_type_display }}</td>
             
-            {% if user == seren.writer or user.is_staff %}
+            {% if user == patent.writer or user.is_staff %}
             <td>
               <!-- <a
                 href="{% url 'publications:patent_update' pk=patent.pk %}"

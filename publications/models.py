@@ -28,6 +28,9 @@ class Journal(models.Model):
     all_authors = models.CharField(max_length=200, null=True, blank=True)
     file = models.FileField(upload_to='journals/', null=True, blank=True)
 
+    def __str__(self):
+        return self.title
+
 
 class Conference(models.Model):
     title = models.CharField(max_length=500, null=True, blank=False)
@@ -46,6 +49,9 @@ class Conference(models.Model):
     all_authors = models.CharField(max_length=200, null=True, blank=True)
     file = models.FileField(upload_to='conference/', null=True, blank=True)
 
+    def __str__(self):
+        return self.title
+
 
 class Patent(models.Model):
     subject = models.CharField(max_length=150, null=False)
@@ -58,3 +64,21 @@ class Patent(models.Model):
     visit = models.IntegerField(default=1)
     tcp_ip = models.CharField(max_length=100, null=True)
     patent_type = models.IntegerField(choices=PAPER_TYPE, default=1, null=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Book(models.Model):
+    title = models.CharField(max_length=500, null=True, blank=False)
+    ref = models.CharField(max_length=100, null=False, blank=True)
+    abstract = models.TextField(null=False, blank=True)
+    visit = models.IntegerField(default=1, null=False, blank=True)
+    write_date = models.DateTimeField(default=timezone.now)
+    update_date = models.DateTimeField(default=timezone.now)
+    writer = models.ForeignKey(Member, on_delete=models.DO_NOTHING, related_name='books', default=get_default_user)
+    file1 = models.FileField(upload_to='books/', null=True, blank=True)
+    file2 = models.FileField(upload_to='books/', null=True, blank=True)
+
+    def __str__(self):
+        return self.title

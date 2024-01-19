@@ -1,5 +1,5 @@
 from django import forms
-from .models import Journal, Conference, Patent
+from .models import Journal, Conference, Patent, Book
 
 class JournalForm(forms.ModelForm):
     class Meta:
@@ -39,3 +39,10 @@ class PatentForm(forms.ModelForm):
     class Meta:
         model = Patent
         fields = ['subject', 'content', 'patent_type']
+
+    
+
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ['title', 'abstract']

@@ -30,7 +30,7 @@ class Bio(models.Model):
     display_order = models.IntegerField()
     link = models.URLField(blank=True, null=True)
     email_list = models.CharField('Email')
-    image = models.ImageField(upload_to='', null=True, blank=True)
+    image = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.pk:

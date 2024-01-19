@@ -55,24 +55,24 @@
 									<form method="POST" action="{% url 'publications:journal_update' pk=journal.pk %}" enctype="multipart/form-data">
 										{% csrf_token %}
 										<div class="form-floating">
-											<input type="text" id="title{{ journal.pk }}" name="title" value="{{ journal.title }}" class="form-control mb-2" placeholder="Title" />
+											<input type="text" id="title{{ journal.pk }}" name="title" value="{{ journal.title }}" class="form-control mb-2" placeholder="Title" required />
 											<label for="title{{ journal.pk }}">Title</label>
 										</div>
 										<div class="form-floating">
-											<input type="text" id="journal_name{{ journal.pk }}" name="journal_name" value="{{ journal.journal_name }}" class="form-control mb-2" placeholder="Journal Name" />
+											<input type="text" id="journal_name{{ journal.pk }}" name="journal_name" value="{{ journal.journal_name }}" class="form-control mb-2" placeholder="Journal Name" required />
 											<label for="journal_name{{ journal.pk }}">Journal Name</label>
 										</div>
 										<div class="form-floating">
-											<textarea class="form-control" name="abstract" placeholder="Abstract" id="abstract{{ journal.pk }}" style="height: 150px">{{ journal.abstract }}</textarea>
+											<textarea class="form-control" name="abstract" placeholder="Abstract" id="abstract{{ journal.pk }}" style="height: 150px" required>{{ journal.abstract }}</textarea>
 											<label for="abstract{{ journal.pk }}">Abstract</label>
 										</div>
-										<select class="form-select my-2" name="status">
+										<select class="form-select my-2" name="status" required>
 											<option selected="true" disabled="disabled">Status</option>
 											{% for choice in status %}
 												<option value="{{ choice.0 }}" {% if choice.0 == journal.status %} selected {% endif %}>{{ choice.1 }}</option>
 											{% endfor %}
 										</select>
-										<select class="form-select my-2" name="journal_type">
+										<select class="form-select my-2" name="journal_type" required>
 											<option selected="true" disabled="disabled">Journal Type</option>
 											{% for choice in journal_type %}
 												<option value="{{ choice.0 }}" {% if choice.0 == journal.journal_type %} selected {% endif %}>{{ choice.1 }}</option>
@@ -231,7 +231,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="createJournalModalLabel">Create Journal</h5>
+					<h5 class="modal-title" id="createJournalModalLabel">Add Journal</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -239,37 +239,37 @@
 					<form method="POST" action="{% url 'publications:journal_create' %}">
 						{% csrf_token %}
 						<div class="form-floating">
-							<input type="text" id="title" name="title" class="form-control mb-2" placeholder="Title" />
+							<input type="text" id="title" name="title" class="form-control mb-2" placeholder="Title" required />
 							<label for="title">Title</label>
 						</div>
 						<div class="form-floating">
 							<input type="text" id="journal_name" name="journal_name" class="form-control mb-2"
-								placeholder="Journal Name" />
+								placeholder="Journal Name" required />
 							<label for="journal_name">Journal Name</label>
 						</div>
 						<div class="form-floating">
-							<input type="text" id="all_authors" name="all_authors" class="form-control mb-2" placeholder="Authors" />
+							<input type="text" id="all_authors" name="all_authors" class="form-control mb-2" placeholder="Authors" required />
 							<label for="all_authors">Authors</label>
 						</div>
 						<div class="form-floating">
 							<textarea class="form-control" name="abstract" placeholder="Abstract"
-								style="height: 100px"></textarea>
+								style="height: 100px" required></textarea>
 							<label for="abstract">Abstract</label>
 						</div>
 						
-						<select class="form-select my-2" name="status">
+						<select class="form-select my-2" name="status" required>
 							<option selected="true" disabled="disabled">Status</option>
 							{% for choice in status %}
 							<option value="{{ choice.0 }}">{{ choice.1 }}</option>
 							{% endfor %}
 						</select>
-						<select class="form-select my-2" name="journal_type">
+						<select class="form-select my-2" name="journal_type" required>
 							<option selected="true" disabled="disabled">Journal Type</option>
 							{% for choice in journal_type %}
 							<option value="{{ choice.0 }}">{{ choice.1 }}</option>
 							{% endfor %}
 						</select>
-						<button type="submit" class="btn btn-info">Create Journal</button>
+						<button type="submit" class="btn btn-info">Add Journal</button>
 					</form>
 				</div>
 			</div>

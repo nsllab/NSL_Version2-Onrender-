@@ -53,17 +53,9 @@
                             </p>
                             <hr class="border border-info">
                             {% endif %}
-                            <!-- <p class="card-text">
-                                {{ bio.education }}
-                            </p> -->
-                            <p class="card-text">
-                                <span class="fw-bold">Education:</span> {% with bio.education|split_string:'/' as education_list %}
-                                <ul class="list-group">
-                                    {% for education in education_list %}
-                                        <li class="list-group-item">{{ education }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endwith %}
+                            <p class="card-text"> 
+                                <span class="fw-bold">Education:</span> <br>
+                                {{ bio.education|linebreaksbr }}
                             </p>
                             <p class="card-text"> {% if user.is_authenticated %} <a class="btn btn-outline-info" href="{% url 'members:bio_update' pk=bio.pk %}">Edit</a> {% endif %} </p>
                         </div>
