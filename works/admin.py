@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import WeeklyReport, PostDocReport
+from .models import WeeklyReport, PostDocReport, Seminar
 # Register your models here.
 
 
@@ -12,3 +12,4 @@ class PostDocReportAdmin(admin.ModelAdmin):
     
 admin.site.register(WeeklyReport, WeeklyReportAdmin)
 admin.site.register(PostDocReport, PostDocReportAdmin)
+admin.site.register(Seminar)

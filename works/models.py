@@ -43,3 +43,19 @@ class PostDocReport(models.Model):
     annl_gls = models.TextField("Annual Goals")
     user = models.CharField(null=True, blank=True)
     writer = models.ForeignKey(Member, on_delete=models.DO_NOTHING, related_name='post_doc_reports', default=get_default_user)
+
+
+class Seminar(models.Model):
+    visit = models.IntegerField(default=1, null=False, blank=True)
+    write_date = models.DateTimeField(default=timezone.now)
+    update_date = models.DateTimeField(default=timezone.now)
+    user = models.CharField(max_length=150, null=True, blank=True)
+    writer = models.ForeignKey(Member, on_delete=models.DO_NOTHING, related_name='seminar', default=get_default_user)
+    file1 = models.FileField(upload_to='seminar/', null=True, blank=True)
+    file2 = models.FileField(upload_to='seminar/', null=True, blank=True)
+    title = models.CharField(max_length=500, null=True, blank=False)
+    ref = models.CharField(max_length=150, null=False, blank=True)
+    tcp_ip = models.CharField(max_length=150, null=False, blank=True)
+
+    def __str__(self):
+        return self.title
