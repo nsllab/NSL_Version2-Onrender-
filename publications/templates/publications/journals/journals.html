@@ -91,6 +91,10 @@
 											<label for="extras{{ journal.pk }}">Extras</label>
 										</div>
 										<div class="form-floating">
+											<input type="text" id="cite{{ journal.pk }}" name="cite" value="{{ journal.cite }}" class="form-control mb-2" placeholder="cite" />
+											<label for="cite{{ journal.pk }}">Cite</label>
+										</div>
+										<div class="form-floating">
 											<input type="text" id="all_authors{{ journal.pk }}" name="all_authors" value="{{ journal.all_authors }}" class="form-control mb-2" placeholder="All Authors" />
 											<label for="all_authors{{ journal.pk }}">All Authors</label>
 										</div>
@@ -258,13 +262,13 @@
 						</div>
 						
 						<select class="form-select my-2" name="status" required>
-							<option selected="true" disabled="disabled">Status</option>
+							<!-- <option selected="true" disabled="disabled">Status</option> -->
 							{% for choice in status %}
 							<option value="{{ choice.0 }}">{{ choice.1 }}</option>
 							{% endfor %}
 						</select>
 						<select class="form-select my-2" name="journal_type" required>
-							<option selected="true" disabled="disabled">Journal Type</option>
+							<!-- <option selected="true" disabled="disabled">Journal Type</option> -->
 							{% for choice in journal_type %}
 							<option value="{{ choice.0 }}">{{ choice.1 }}</option>
 							{% endfor %}

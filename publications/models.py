@@ -27,6 +27,7 @@ class Journal(models.Model):
     extras = models.CharField(max_length=50, null=True, blank=True)
     all_authors = models.CharField(max_length=200, null=True, blank=True)
     file = models.FileField(upload_to='journals/', null=True, blank=True)
+    cite = models.CharField(max_length=300, null=False, blank=True)
 
     def __str__(self):
         return self.title
@@ -48,6 +49,7 @@ class Conference(models.Model):
     extras = models.CharField(max_length=50, null=True, blank=True)
     all_authors = models.CharField(max_length=200, null=True, blank=True)
     file = models.FileField(upload_to='conference/', null=True, blank=True)
+    cite = models.CharField(max_length=300, null=False, blank=True)
 
     def __str__(self):
         return self.title

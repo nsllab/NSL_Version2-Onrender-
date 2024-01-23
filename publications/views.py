@@ -284,9 +284,12 @@ def books(request):
 
     # international_patents = patents.filter(book_type=1)
     # domestic_patents = patents.filter(book_type=2)
+    paginator = Paginator(books, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'books': books,
+        'books': page_obj,
         'book_type': PAPER_TYPE
         # 'dom_pats': domestic_patents,
     }

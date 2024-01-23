@@ -12,13 +12,19 @@ def get_default_user():
 def default_from_date():
     return timezone.now() + timedelta(days=(0 - timezone.now().weekday()) % 7)
 
+def next_monday():
+    today = timezone.now()
+    days_until_monday = (7 - today.weekday()) % 7
+    return today + timedelta(days=days_until_monday)
+
 def default_till_date():
-    return timezone.now() + timedelta(days=(4 - timezone.now().weekday()) % 7 + 1)
+    # return timezone.now() + timedelta(days=(7 - timezone.now().weekday()) % 7 + 7)
+    return timezone.now() + timedelta(days=(0 - timezone.now().weekday()) % 7)
 
 
 class WeeklyReport(models.Model):
-    fr_dt = models.DateTimeField("From Date", default=timezone.now)
-    to_dt = models.DateTimeField("Till", default=default_from_date)
+    fr_dt = models.DateTimeField("From", default=timezone.now)
+    to_dt = models.DateTimeField("Till", default=next_monday)
     paper_progress = models.TextField("Paper Progress")
     paper_prog_percent = models.IntegerField("Paper Progress Percent")
     paper_last_wk = models.TextField("Last Week Paper")
@@ -31,12 +37,12 @@ class WeeklyReport(models.Model):
     annl_gls = models.TextField("Annual Goals")
     user = models.CharField(null=True, blank=True)
     writer = models.ForeignKey(Member, on_delete=models.DO_NOTHING, related_name='reports', default=get_default_user)
-    is_post_doc = models.BooleanField("Post Doc?",default=False)
+    # is_post_doc = models.BooleanField("Post Doc?",default=False)
 
 
 class PostDocReport(models.Model):
     fr_dt = models.DateTimeField("From Date", default=timezone.now)
-    to_dt = models.DateTimeField("Till", default=default_from_date)
+    to_dt = models.DateTimeField("Till", default=next_monday)
     paper_progress = models.TextField("Paper Progress")
     project_progress = models.TextField("Project Progress")
     mnth_gls = models.TextField("Monthly Goals")
