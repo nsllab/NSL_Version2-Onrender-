@@ -12,10 +12,10 @@ def get_default_user():
 def default_from_date():
     return timezone.now() + timedelta(days=(0 - timezone.now().weekday()) % 7)
 
-def next_monday():
+def next_friday():
     today = timezone.now()
-    days_until_monday = (7 - today.weekday()) % 7
-    return today + timedelta(days=days_until_monday)
+    days_until_friday = (4 - today.weekday()) % 7  # Friday is the 4th day of the week (0-based)
+    return today + timedelta(days=days_until_friday)
 
 def default_till_date():
     # return timezone.now() + timedelta(days=(7 - timezone.now().weekday()) % 7 + 7)
@@ -24,7 +24,7 @@ def default_till_date():
 
 class WeeklyReport(models.Model):
     fr_dt = models.DateTimeField("From", default=timezone.now)
-    to_dt = models.DateTimeField("Till", default=next_monday)
+    to_dt = models.DateTimeField("Till", default=next_friday)
     paper_progress = models.TextField("Paper Progress")
     paper_prog_percent = models.IntegerField("Paper Progress Percent")
     paper_last_wk = models.TextField("Last Week Paper")
@@ -42,7 +42,7 @@ class WeeklyReport(models.Model):
 
 class PostDocReport(models.Model):
     fr_dt = models.DateTimeField("From Date", default=timezone.now)
-    to_dt = models.DateTimeField("Till", default=next_monday)
+    to_dt = models.DateTimeField("Till", default=next_friday)
     paper_progress = models.TextField("Paper Progress")
     project_progress = models.TextField("Project Progress")
     mnth_gls = models.TextField("Monthly Goals")

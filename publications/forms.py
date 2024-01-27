@@ -45,4 +45,4 @@ class PatentForm(forms.ModelForm):
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['title', 'abstract']
+        fields = ['title', 'abstract', 'file1', 'file2']

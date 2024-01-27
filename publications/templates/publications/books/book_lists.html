@@ -71,6 +71,8 @@
                                         <h5> <span>Title: </span> {{ book.title }}</h5>
                                         <hr class="border border-2 border-info">
                                         <p><span class="fw-bold">Abstract: </span>{{ book.abstract }}</p>
+                                        <p>File {{ book.file2 }} </p>
+                                        <p>File {{ book.file1 }} </p>
                                     </div>
                                 </div>
                             </div>
@@ -88,46 +90,45 @@
                     </tr>
 
                     <!-- Modal for each item -->
-                    <div class="modal fade" id="editModal{{ book.pk }}" tabindex="-1"
-                        aria-labelledby="editModalLabel{{ book.pk }}" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editModalLabel{{ book.pk }}">Edit</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Add a form for editing the specific field -->
-                                    <form method="POST" action="{% url 'publications:book_update' book.pk %}" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <div class="">
-                                            <label for="title{{ book.pk }}">Title</label>
-                                            <input type="text" id="title{{ book.pk }}" name="title"
-                                                value="{{ book.title }}" class="form-control mb-2" placeholder="book" />
+<div class="modal fade" id="editModal{{ book.pk }}" tabindex="-1"
+aria-labelledby="editModalLabel{{ book.pk }}" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel{{ book.pk }}">Edit</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <!-- Add a form for editing the specific field -->
+            <form method="POST" action="{% url 'publications:book_update' pk=book.pk %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="">
+                    <label for="title{{ book.pk }}">Title</label>
+                    <input type="text" id="title{{ book.pk }}" name="title"
+                        value="{{ book.title }}" class="form-control mb-2" placeholder="book" />
+                </div>
+                <div class="">
+                    <label for="abstract{{ book.pk }}">Abstract</label>
+                    <textarea class="form-control" name="abstract" placeholder="Abstract"
+                        id="abstract{{ book.pk }}"
+                        style="height: 100px">{{ book.abstract }}</textarea>
+                </div>
+                <div class="mb-2">
+                    <label for="file1{{ book.pk }}" class="form-label">File:</label>
+                    <input class="form-control form-control-sm" type="file" id="file1{{ book.pk }}" name="file1" accept=".pdf, .doc, .docx" />
+                </div>
+                <div class="mb-2">
+                    <label for="file2{{ book.pk }}" class="form-label">File:</label>
+                    <input class="form-control form-control-sm" type="file" id="file2{{ book.pk }}" name="file2" accept=".pdf, .doc, .docx" />
+                </div>
+                <button type="submit" class="btn btn-info">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
 
-                                        </div>
-                                        <div class="">
-                                            <label for="abstract{{ book.pk }}">Abstract</label>
-                                            <textarea class="form-control" name="abstract" placeholder="Abstract"
-                                                id="abstract{{ book.pk }}"
-                                                style="height: 100px">{{ book.abstract }}</textarea>
-
-                                        </div>
-                                        <div class="mb-2">
-											<label for="file1{{ book.pk }}" class="form-label">File:</label>
-											<input class="form-control form-control-sm" type="file" id="file1{{ book.pk }}" name="file1" accept=".pdf, .doc, .docx" />
-										</div>
-                                        <div class="mb-2">
-											<label for="file2{{ book.pk }}" class="form-label">File:</label>
-											<input class="form-control form-control-sm" type="file" id="file2{{ book.pk }}" name="file2" accept=".pdf, .doc, .docx" />
-										</div>
-                                        <button type="submit" class="btn btn-info">Save Changes</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     {% endfor %}
                 </tbody>
             </table>

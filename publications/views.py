@@ -252,7 +252,7 @@ class PatentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = "/members/login/"
     model = Patent
     form_class = PatentForm
-    template_name = 'publications/patents/update.html'
+    template_name = ''
     success_url = reverse_lazy('publications:patents')
     success_message =  "Updated successfully"
 
@@ -312,7 +312,7 @@ class BookUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = "/members/login/"
     model = Book
     form_class = BookForm
-    template_name = ''
+    template_name = 'publications/books/update.html'
     success_url = reverse_lazy('publications:books')
     success_message =  "Updated successfully"
 

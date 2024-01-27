@@ -9,7 +9,7 @@ class WeeklyReportForm(forms.ModelForm):
 class PostDocReportForm(forms.ModelForm):
     class Meta:
         model = PostDocReport
-        exclude = ['users', 'writer']
+        exclude = ['user', 'writer']
 
 class SeminarForm(forms.ModelForm):
     class Meta:
