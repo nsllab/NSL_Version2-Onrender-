@@ -74,12 +74,12 @@
         </div>
     </div>
 </div>
-{% if user.is_authenticated %}
+
 <div class="position-fixed bottom-0 end-0 p-3">
 	<a href="{% url 'works:create_seminar' %}" class="btn btn-outline-info" type="button">
         <i class="fa-solid fa-plus"></i> Create seminar
 	  <!-- Bootstrap Icons -->
 	</a>
   </div>
-{% endif %}
+
 {% endblock %}

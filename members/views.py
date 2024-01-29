@@ -34,8 +34,9 @@ def login_user(request):
             
             if user is not None:
                 login(request, user)
+                next_url = request.GET.get('next', 'publications:journals')
                 messages.add_message(request, messages.SUCCESS, f'Welcome back {user.username}')
-                return redirect('publications:journals')  # Redirect to the home page or any other page you want
+                return redirect(next_url)  # Redirect to the home page or any other page you want
             else:
                 messages.add_message(request, messages.ERROR, 'Invalid Credentials. Login Unsuccessful. Contact Admin')
     else:

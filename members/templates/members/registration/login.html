@@ -12,6 +12,7 @@
                             <form method="post">
                                 {% csrf_token %}
                                 {% bootstrap_form form show_label=False%}
+                                <input type="hidden" name="next" value="{{ request.GET.next }}">
                                 <div class="d-grid gap-2">
                                     {% bootstrap_button "Login" button_type="submit" button_class="btn-outline-info" %}
                                 </div>
