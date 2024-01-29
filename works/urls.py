@@ -16,6 +16,6 @@ urlpatterns = [
     path('post_doc/<int:pk>/update', views.PostReportUpdateView.as_view(), name="post_doc_update"),
 
     path('seminars/', views.seminars, name='seminars'),
-    path('create', views.SeminarCreateView.as_view(), name='create_seminar'),
-    path('seminars/<int:pk>/update', views.PostReportUpdateView.as_view(), name="seminar_update"),
+    path('create_seminar', views.SeminarCreateView.as_view(), name='create_seminar'),
+    path('seminars/<int:pk>/update', views.SeminarUpdateView.as_view(), name="seminar_update"),
 ]

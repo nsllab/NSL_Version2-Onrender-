@@ -95,10 +95,23 @@ class SeminarCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url="/members/login"
     model = Seminar
     form_class = SeminarForm  # Replace with your actual form
-    template_name = 'works/seminar/create.html'  # Replace with your template name
+    template_name = 'works/seminars/create.html'  # Replace with your template name
     success_url = reverse_lazy('works:seminars')  # Replace with your success URL
     success_message =  "Seminar added successfully"
 
     def form_valid(self, form):
         form.instance.writer = self.request.user  # Set the writer to the current user
         return super().form_valid(form)
+
+class SeminarUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url="/members/login"
+    model = Seminar
+    form_class = SeminarForm  # Replace with your actual form
+    template_name = 'works/seminars/update.html'  # Replace with your template name
+    success_url = reverse_lazy('works:seminars')  # Replace with your success URL
+    success_message =  "Seminar updated successfully"
+
+    def form_valid(self, form):
+        form.instance.writer = self.request.user  # Set the writer to the current user
+        return super().form_valid(form)
+

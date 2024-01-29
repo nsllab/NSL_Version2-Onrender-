@@ -21,9 +21,39 @@
                     {% for seminar in seminars %}
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
-                        <td><a href="{% url 'works:seminar_update' pk=seminar.pk %}">
-                                {{ seminar.title }}
-                            </a></td>
+                        <td>
+                            <a type="button" data-bs-toggle="modal" data-bs-target="#detailModal{{ seminar.pk }}">
+                                {{ seminar.title}}
+                              </a>
+                        </td>
+                        <div class="modal fade" id="detailModal{{ seminar.pk }}" tabindex="-1" aria-labelledby="detailModalLabel{{ seminar.pk }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="detailModalLabel{{ seminar.pk }}">Detail</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Add a form for editing the specific field -->
+                                        <h5> <span>Title: </span> {{ seminar.title }}</h5>
+                                        <hr class="border border-2 border-info">
+                                        <p class="fw-lead">File 1</p>
+                                        {% if seminar.file1 %}
+												<a href="{{ seminar.file1.url }}" target="_blank">Download / Open PDF</a>
+											{% else %}
+												No file attached
+											{% endif %}
+                                        
+                                            <p class="fw-lead">File 2</p>
+                                            {% if seminar.file2 %}
+                                                    <a href="{{ seminar.file2.url }}" target="_blank">Download / Open PDF</a>
+                                                {% else %}
+                                                    No file attached
+                                                {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <td>
                             {% if seminar.user %}
                                 {{ seminar.user|capfirst  }}
@@ -37,6 +67,7 @@
                         </td>
                         {% endif %}
                     </tr>
+                    
                     {% endfor %}
                 </tbody>
             </table>

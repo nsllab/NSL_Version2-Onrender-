@@ -15,4 +15,4 @@ class SeminarForm(forms.ModelForm):
     class Meta:
         model = Seminar
         # exclude = ['users', 'writer']
-        fields = "__all__"
+        fields = ['write_date', 'update_date', 'title', 'file1', 'file2']

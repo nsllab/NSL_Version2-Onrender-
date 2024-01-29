@@ -100,6 +100,12 @@
 										</div>
 										<div class="mb-2">
 											<label for="file{{ journal.pk }}" class="form-label">File:</label>
+											<!-- <span class="fw-bold">File:</span> -->
+											{% if journal.file %}
+												<a href="{{ journal.file.url }}" target="_blank">Download / Open PDF</a>
+											{% else %}
+												No file attached
+											{% endif %}
 											<input class="form-control form-control-sm" type="file" id="file{{ journal.pk }}" name="file" accept=".pdf, .doc, .docx" />
 										</div>
 										<button type="submit" class="btn btn-info">Save Changes</button>

@@ -18,6 +18,7 @@ class MemberAdmin(UserAdmin):
 class BioAdmin(admin.ModelAdmin):
     list_display = ('name', 'display_order', 'position',)
     search_fields = ['name', 'position']
+    list_filter = ('position',)
     
 
 admin.site.register(Member, MemberAdmin)
