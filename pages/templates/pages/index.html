@@ -109,7 +109,7 @@
   <div class="container">
       <div class="row">
           <div class="col-lg-6">
-              <img src="https://via.placeholder.com/800x800" class="img-fluid rounded-circle about-image" alt="About Us Image">
+              <img src="{% static 'img/about.jpg' %}" class="img-fluid rounded-circle about-image" alt="About Us Image">
           </div>
           <div class="col-lg-6">
               <div class="about-content">
@@ -177,40 +177,27 @@
 
 <!-- Team Members Section -->
 <section id="team" class="py-5">
-  <div class="team-background"></div>
-  <div class="container text-center">
-      <h2 class="display-4 mb-5 decorative-border">Meet Our Professors</h2>
-      <div class="row">
-        {% for prof in profs %}
-          <div class="col-lg-4 mb-4">
-              <div class="team-member">
-                  <img src="{{ prof.image.url }}" class="img-fluid rounded-circle team-image" alt="Professor 1">
-                  <h3 class="h5 mt-3">{{ prof.get_fullname }}</h3>
-                  <p class="text-muted">AI & Machine Learning</p>
-              </div>
-          </div>
-        {% endfor %}
-          <!-- <div class="col-lg-4 mb-4">
-              <div class="team-member">
-                  <img src="https://via.placeholder.com/300" class="img-fluid rounded-circle team-image" alt="Professor 2">
-                  <h3 class="h5 mt-3">Prof. Jane Smith</h3>
-                  <p class="text-muted">Blockchain Specialist</p>
-              </div>
-          </div>
-          <div class="col-lg-4 mb-4">
-              <div class="team-member">
-                  <img src="https://via.placeholder.com/300" class="img-fluid rounded-circle team-image" alt="Professor 3">
-                  <h3 class="h5 mt-3">Prof. Robert Johnson</h3>
-                  <p class="text-muted">Digital Twin Expert</p>
-              </div>
-          </div> -->
-      </div>
-  </div>
-</section>
+    <div class="team-background"></div>
+    <div class="container text-center">
+        <h2 class="display-4 mb-5 decorative-border">Meet Our Professors</h2>
+        <div class="row justify-content-center"> <!-- Use justify-content-center to center the columns -->
+          {% for prof in profs %}
+            <div class="col-lg-4 mb-4">
+                <div class="team-member">
+                    <img src="{{ prof.image.url }}" class="img-fluid rounded-circle team-image" style="width: 300px;" alt="Professor">
+                    <h3 class="h5 mt-3">{{ prof.name }}</h3>
+                    <!-- <p class="text-muted">AI & Machine Learning</p> -->
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+    </div>
+  </section>
+  
 
 <!-- <hr class="border border-info border-3"> -->
 <!-- Publication Section -->
-<section id="publications" class="py-5">
+<!-- <section id="publications" class="py-5">
   <div class="container text-center">
       <h2 class="display-4 mb-5 decorative-border text-light">Publications Overview</h2>
       <div class="publication-table-responsive">
@@ -249,12 +236,11 @@
                           </ul>
                       </td>
                   </tr>
-                  <!-- Add more rows as needed -->
               </tbody>
           </table>
       </div>
   </div>
-</section>
+</section> -->
 
 
 
