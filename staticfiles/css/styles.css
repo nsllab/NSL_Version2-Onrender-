@@ -1,0 +1,389 @@
+
+
+/* Custom styles for the navbar */
+
+.btn-outline-info:hover {
+    color: #fff !important;
+}
+
+.navbar {
+    background-color: transparent; /* Dark background color */
+    z-index: 1000;
+    min-height: 100px;
+}
+
+.navbar-brand img {
+    width: 250px; /* Adjust the logo size as needed */
+}
+
+.navbar-toggler {
+    border-color: #ffffff; /* White border color for the toggler */
+}
+
+.navbar-toggler-icon {
+    background-color: #ffffff; /* White background color for the toggler icon */
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff !important; /* White text color for the links */
+    font-size: 18px; /* Adjust the font size as needed */
+    font-weight: bold; /* Optional: Add font-weight for emphasis */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #17a2b8 !important; /* Hover color for the links */
+    font-size: 18px;
+}
+
+.navbar-nav .nav-item {
+    background-color: #17a2b8;
+}
+
+.navbar-nav .nav-item:hover {
+    background-color: #343a40;
+}
+
+/* Custom styles for the dropdowns */
+.navbar-nav .dropdown:hover .dropdown-menu {
+    display: block;
+    animation: fadeInUp 0.3s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-menu {
+    display: none;
+    background-color: #343a40; /* Dark background color for the dropdown menu */
+    border: none;
+    border-radius: 0;
+}
+
+.dropdown-item {
+    color: #ffffff !important; /* White text color for dropdown items */
+}
+
+.dropdown-item:hover {
+    background-color: #17a2b8; /* Hover background color for dropdown items */
+    color: #ffffff !important;
+}
+
+
+/* Custom styles for the carousel */
+.carousel-item img {
+    height: 95vh; /* Full height of the viewport */
+    object-fit: cover;
+}
+
+.carousel-caption {
+    background-color: rgba(23,162,184, 0.6); /* Semi-transparent black background for captions */
+    padding: 20px;
+}
+
+
+
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #17a2b8; /* Custom control icon color */
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: #17a2b8; /* Hover background color for controls */
+}
+
+
+/* Custom styles for the About Us section */
+#about {
+    background-color: #f8f9fa; /* Light background color for the section */
+}
+
+.about-content {
+    padding: 30px;
+}
+
+.about-content h2 {
+    color: #343a40; /* Dark text color for the heading */
+}
+
+.about-content p {
+    color: #6c757d; /* Text color for the content */
+}
+
+/* Style for the placeholder image */
+.about-image {
+    border: 8px solid #ffffff; /* White border around the image */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle lift */
+    opacity: 0; /* Set initial opacity to 0 for the animation */
+    transition: opacity 1s ease-in-out; /* Add a smooth fade-in animation */
+}
+
+/* Animation: Fade in the image when it comes into view */
+@media (min-width: 768px) {
+    #about .row {
+        display: flex;
+        align-items: center;
+    }
+
+    .about-image {
+        opacity: 1;
+    }
+}
+
+
+/* Custom styles for the Research Areas section */
+#research {
+    background-color: #ffffff; /* White background color for the section */
+}
+
+.research-item {
+    padding: 30px;
+    border: 1px solid #eeeeee; /* Light gray border for each research item */
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.research-item:hover {
+    transform: scale(1.05); /* Scale up the item on hover for a subtle effect */
+}
+
+.research-item i {
+    color: #17a2b8; /* Icon color */
+}
+
+.research-item h3 {
+    color: #343a40; /* Heading color */
+}
+
+.research-item p {
+    color: #6c757d; /* Text color */
+}
+
+
+/* Custom styles for the Team Members section */
+#team {
+    position: relative;
+}
+
+#team::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top left, #17a2b8 50%, #ffffff 50%);
+    z-index: -1; /* Set z-index to -1 to keep it behind the content */
+}
+
+.team-member {
+    position: relative;
+    z-index: 1; /* Ensure the team member content is above the background */
+    padding: 30px;
+    border: 1px solid #eeeeee; /* Light gray border for each team member */
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.team-member:hover {
+    transform: scale(1.05); /* Scale up the team member on hover for a subtle effect */
+}
+
+.team-image {
+    border: 4px solid #ffffff; /* White border around the team member image */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle lift */
+}
+
+.team-member h3 {
+    color: #343a40; /* Heading color */
+}
+
+.team-member p {
+    color: #6c757d; /* Text color */
+}
+
+
+/* Custom styles for the Publications section */
+#publications {
+    position: relative;
+    /* overflow: hidden; */
+}
+
+#publications::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(from bottom right, #17a2b8 50%, #ffffff 50%);
+    z-index: -1; /* Set z-index to -1 to keep it behind the content */
+}
+
+
+
+
+
+
+
+
+
+
+.report-container {
+    max-width: 800px;
+    margin: 0 auto;
+    /* background-color: #f8f8f8; */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-in-out; /* Add a simple fade-in animation */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+
+/* Style for the journal_title link */
+.table a {
+    text-decoration: none; /* Remove underlines from links */
+    font-weight: bold; /* Make the text bold */
+    color: #343a40;
+}
+
+.table a:hover {
+    color: #17a2b8; /* Change link color on hover */
+}
+
+
+
+
+
+/* Add this CSS to your stylesheet or in a <style> tag in your HTML file */
+
+.bio-links a {
+    text-decoration: none;
+    color: #17a2b8;
+    transition: color 0.3s ease;
+}
+
+.bio-links a:hover {
+    color: #343a40;
+}
+
+.bio-links i {
+    font-size: 150%;
+    color: #17a2b8;
+}
+
+
+
+
+/* Custom class for h2 elements with decorative border and knot */
+.decorative-border {
+    position: relative;
+    display: inline-block;
+    padding: 0 20px;
+    margin-bottom: 10px;
+}
+
+.decorative-border::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px; /* Adjust the width of the border knot as needed */
+    height: 5px; /* Adjust the height of the border knot as needed */
+    background-color: #17a2b8; /* Adjust the color of the border knot */
+    /* border-radius: 0 0 50% 50%; Create a semi-circle shape for the knot */
+    transform-origin: 50% 50%; /* Ensures the scale transformation originates from the center */
+    transform: scaleX(2); /* Initially, set the width to 0, so it's not visible */
+    transition: transform 0.3s ease 0.1s;
+}
+
+.decorative-border:hover::before {
+    transform: scaleX(4); /* On hover, scale the width to 100% */
+}
+
+
+/* a {
+    text-decoration: none;
+    color: #212529;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #212529;
+}
+
+.list-group-item.active {
+    background-color: #0DCAF0;
+    border-color: #0DCAF0;
+}
+
+.header-text {
+    color: #17a2b8;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+
+p {
+    color: #ffffff;
+}
+
+.navbar a, .navbar a:hover {
+    color: #17a2b8;
+} */
+
+.custom-banner {
+    height: 30vh; /* 20% of the viewport height */
+    /* background: linear-gradient(135deg, #6c5b7b, #c06c84, #6c5b7b);  */
+    background-image: url('../img/one.jpg');
+    background-repeat: no-repeat;
+    color: #fff; /* Text color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Center-align text */
+    font-size: 2em; /* Increase font size for better visibility */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a subtle text shadow */
+}
+
+.members-banner {
+    /* background-color: #bada55; */
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
+
+.accounts_form {
+    height: 90vh !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
