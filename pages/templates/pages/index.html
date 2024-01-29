@@ -109,7 +109,7 @@
   <div class="container">
       <div class="row">
           <div class="col-lg-6">
-              <img src="{% static 'img/about.jpg' %}" class="img-fluid rounded-circle about-image" alt="About Us Image">
+              <img src="{% static 'img/banner.png' %}" class="img-fluid rounded-circle about-image" alt="About Us Image">
           </div>
           <div class="col-lg-6">
               <div class="about-content">
@@ -184,7 +184,7 @@
           {% for prof in profs %}
             <div class="col-lg-4 mb-4">
                 <div class="team-member">
-                    <img src="{{ prof.image.url }}" class="img-fluid rounded-circle team-image" style="width: 300px;" alt="Professor">
+                    <img src="{{ prof.image.url }}" class="img-fluid rounded-circle team-image" style="width: 300px; height: 300px;" alt="Professor">
                     <h3 class="h5 mt-3">{{ prof.name }}</h3>
                     <!-- <p class="text-muted">AI & Machine Learning</p> -->
                 </div>
