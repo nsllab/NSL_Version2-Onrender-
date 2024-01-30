@@ -15,7 +15,7 @@ def index(request):
     profs = Bio.objects.filter(position=1)
     context = {
         'profs': profs,
-        'total': len(profs)
+        'total': len(profs),
         }
     return render(request, 'pages/index.html', context)
 
