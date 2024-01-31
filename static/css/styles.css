@@ -280,7 +280,10 @@
 
 
 
-
+.list-group-item.active {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
 
 /* Add this CSS to your stylesheet or in a <style> tag in your HTML file */
 

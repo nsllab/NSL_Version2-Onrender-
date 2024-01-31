@@ -228,5 +228,18 @@ class BioUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Bio
     form_class = BioUpdateForm
     template_name = 'members/bios/bio_update.html'
-    success_url = reverse_lazy('publications:conferences')
-    success_message =  "Updated successfully"
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Updated successfully")
+        return response
+
+    def get_success_url(self):
+        # Get the previous page from the session or default to some URL
+        previous_page = self.request.session.get('previous_page', '/members/full_time/')
+        return previous_page
+
+    def get(self, request, *args, **kwargs):
+        # Store the current page in the session before displaying the form
+        self.request.session['previous_page'] = request.META.get('HTTP_REFERER', '/members/full_time/')
+        return super().get(request, *args, **kwargs)

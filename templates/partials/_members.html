@@ -10,6 +10,11 @@
             <a href="{% url 'members:post_docs_list' %}" class="list-group-item {% if request.path == '/members/post_docs/' %}list-group-item list-group-item-action active{% endif %} ">Post Doctoral Researchers</a>
             <a href="{% url 'members:full_time_list' %}" class="list-group-item {% if request.path == '/members/full_time/' %}list-group-item list-group-item-action active{% endif %} ">Full-Time Researchers</a>
             <a href="{% url 'members:part_time_list' %}" class="list-group-item {% if request.path == '/members/part_time/' %}list-group-item list-group-item-action active{% endif %}">Part-Time Researchers</a>
+            <a href="{% url 'members:visiting_list' %}" class="list-group-item {% if request.path == '/members/visiting/' %}list-group-item list-group-item-action active{% endif %}">Visiting Researchers</a>
+            <a href="{% url 'members:alumni_post_doc' %}" class="list-group-item {% if request.path == '/members/alumni_post_doc/' %}list-group-item list-group-item-action active{% endif %}">Alumni Researchers (Post Doc)</a>
+            <a href="{% url 'members:alumni_graduate' %}" class="list-group-item {% if request.path == '/members/alumni_graduate/' %}list-group-item list-group-item-action active{% endif %}">Alumin Researchers (Gradudate)</a>
+            <a href="{% url 'members:advisers' %}" class="list-group-item {% if request.path == '/members/advisers/' %}list-group-item list-group-item-action active{% endif %}">Advisers</a>
+            <a href="{% url 'members:undergraduate' %}" class="list-group-item {% if request.path == '/members/undergraduate/' %}list-group-item list-group-item-action active{% endif %}">Undergraduate</a>
             
         </div>
     </div>
