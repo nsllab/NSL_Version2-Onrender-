@@ -113,14 +113,12 @@ def conferences(request):
     if 'title' in search:
         title = search['title']
         if title:
-            print(writer)
             conferences = conferences.filter(title__icontains=title)
 
     if 'writer' in search:
         writer = search['writer']
         print(f"{writer}gggg")
         if writer:
-            print(writer)
             conferences = conferences.filter(writer__iexact=writer)
 
     if 'year' in search:
