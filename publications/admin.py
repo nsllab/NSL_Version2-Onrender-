@@ -10,10 +10,10 @@ class ConferenceAdmin(admin.ModelAdmin):
     search_fields = ['conference_type']
     list_display = ('id', 'title', 'conference_type',)
 
-class PatentAdmin(admin.ModelAdmin):
-    list_filter = ('patent_type',)
+# class PatentAdmin(admin.ModelAdmin):
+#     list_filter = ('patent_type',)
 
 admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(Journal, JournalAdmin)
-admin.site.register(Patent, PatentAdmin)
+admin.site.register(Patent)
 admin.site.register(Book)

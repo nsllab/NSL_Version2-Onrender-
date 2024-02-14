@@ -27,7 +27,7 @@ class Journal(models.Model):
     # extras = models.CharField(max_length=50, null=True, blank=True)
     all_authors = models.CharField(max_length=500, null=True, blank=True)
     file = models.FileField(upload_to='journals/', null=True, blank=True)
-    cite = models.CharField(max_length=300, null=False, blank=True)
+    cite = models.CharField(max_length=400, null=False, blank=True)
 
     def __str__(self):
         return self.title
@@ -48,7 +48,7 @@ class Conference(models.Model):
     pub_year = models.CharField(max_length=10, blank=True, null=True)
     # extras = models.CharField(max_length=50, null=True, blank=True)
     all_authors = models.CharField(max_length=500, null=True, blank=True)
-    cite = models.CharField(max_length=300, null=False, blank=True)
+    cite = models.CharField(max_length=400, null=False, blank=True)
     file = models.FileField(upload_to='conference/', null=True, blank=True)
 
     def __str__(self):
@@ -68,7 +68,7 @@ class Patent(models.Model):
     patent_type = models.IntegerField(choices=PAPER_TYPE, default=1, null=True)
 
     def __str__(self):
-        return self.title
+        return self.subject
 
 
 class Book(models.Model):
