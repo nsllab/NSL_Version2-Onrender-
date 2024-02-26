@@ -1,30 +1,9 @@
 {% extends 'base.html' %} {% load bootstrap5 %} {% block content %}
-{% include 'partials/_banner.html' with heading="Conferences" %}
+{% include 'partials/_banner.html' with heading=project.name %}
 <div class="container mt-5">
   <div class="row">
     <div class="col-sm-3">
-      <div class="card shadow-lg">
-        <h4 class="card-header">Researches</h4>
-        <div class="card-body">
-          <ul class="list-group">
-            {% for base_project in base_projects %}
-              <li class="list-group-item list-group-item-info">
-                
-                {{ base_project.name }}
-                <ul class="list-group">
-                  {% for project in base_project.project_set.all %}
-                    <li class="list-group-item">
-                      <a href="{% url 'research:history' pk=project.pk %}">{{ project.name }}</a>
-                    </li>
-                  {% endfor %}
-                </ul>
-
-              </li>
-            {% endfor %}
-          </ul>
-          
-        </div>
-    </div>
+      
     
     </div>
     <div class="col-sm-9">
@@ -35,14 +14,16 @@
             <th>#</th>
             <th>Subject</th>
             <th>Author</th>
+            <!-- <th>By</th> -->
 			      <th>Date</th>
+            <!-- <th></th> -->
           </tr>
         </thead>
         <tbody>
           <!-- history of the projects -->
           {% for history in history_list %}
             <tr>
-              <td>{{ forloop.revcounter }}</td>
+              <td>{{ forloop.counter }}</td>
               <td>{{ history.subject }}</td>
               <td>{{ history.writer }}</td>
               <td>{{ history.write_date }}</td>
@@ -59,7 +40,7 @@
 
 {% if user.is_authenticated %}
 <div class="position-fixed bottom-0 end-0 p-3">
-    <a href="{% url 'research:create' %}" class="btn btn-outline-info" type="button">
+    <a href="" class="btn btn-outline-info" type="button">
         <i class="fa-solid fa-plus"></i> Add Conference
 	  <!-- Bootstrap Icons -->
 	</a>

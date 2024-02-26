@@ -16,3 +16,4 @@ populate_journal.py
 media/
 static/
 pop_weekly.py
+migrations/
