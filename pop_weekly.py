@@ -11,7 +11,7 @@ import django
 django.setup()
 
 # from works.models import WeeklyReport
-from works.models import Seminar
+from works.models import Seminar research_history
 
 
 data = {

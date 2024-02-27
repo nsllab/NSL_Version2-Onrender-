@@ -54,6 +54,44 @@ def journals(request):
     }
     return render(request, 'publications/journals/journals.html', context)
 
+def all_journals(request):
+    journals = Journal.objects.order_by('-write_date')
+    search = request.GET
+    
+    if 'title' in search:
+        title = search['title']
+        if title:
+            journals = journals.filter(title__icontains=title)
+
+    if 'year' in search:
+        year = search['year']
+        if year:
+            journals = journals.filter(write_date__icontains=year)
+
+
+    if 'journal_type' in search:
+        journal_type = search['journal_type']
+        if journal_type:
+            journals = journals.filter(journal_type__iexact=journal_type)
+
+    if 'status' in search:
+        status = search['status']
+        if status:
+            journals = journals.filter(status__iexact=status)
+
+    # if query:
+    #     journals = journals.filter(
+    #         Q(title__icontains=query) | Q(write_date__icontains=query)
+    #     )
+    
+
+    context = {
+        'journals': journals,
+        'journal_type': PAPER_TYPE,
+        'status': PAPER_STATUS,
+    }
+    return render(request, 'publications/journals/all_journals.html', context)
+
 class JournalCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url = "/members/login/"
     model = Journal
@@ -148,6 +186,44 @@ def conferences(request):
     }
     return render(request, 'publications/conferences/conferences.html', context)
 
+def all_conferences(request):
+    conferences = Conference.objects.order_by('-write_date')
+    search = request.GET
+    
+    if 'title' in search:
+        title = search['title']
+        if title:
+            conferences = conferences.filter(title__icontains=title)
+
+    if 'writer' in search:
+        writer = search['writer']
+        print(f"{writer}gggg")
+        if writer:
+            conferences = conferences.filter(writer__iexact=writer)
+
+    if 'year' in search:
+        year = search['year']
+        if year:
+            conferences = conferences.filter(write_date__icontains=year)
+
+
+    if 'conference_type' in search:
+        conference_type = search['conference_type']
+        if conference_type:
+            conferences = conferences.filter(conference_type__iexact=conference_type)
+
+    if 'status' in search:
+        status = search['status']
+        if status:
+            conferences = conferences.filter(status__iexact=status)
+
+
+    context = {
+        'conferences': conferences,
+        'conference_type': PAPER_TYPE,
+        'status': PAPER_STATUS,
+    }
+    return render(request, 'publications/conferences/all_conferences.html', context)
 
 
 class ConferenceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):

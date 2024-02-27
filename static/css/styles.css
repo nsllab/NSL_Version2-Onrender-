@@ -274,11 +274,15 @@
     color: #343a40;
 }
 
-.table a:hover {
-    color: #17a2b8; /* Change link color on hover */
+/* .table a:hover {
+    color: #17a2b8; 
+} */
+
+
+table.table-sm tr, table.table tr a{
+    font-size: 89%;
+    font-weight: normal !important;
 }
-
-
 
 .list-group-item.active {
     background-color: #17a2b8;

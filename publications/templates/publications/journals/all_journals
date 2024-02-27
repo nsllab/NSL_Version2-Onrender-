@@ -1,0 +1,289 @@
+{% extends 'base.html' %} {% load bootstrap5 %} {% block content %}
+{% include 'partials/_banner.html' with heading="Journals" %}
+<div class="container mt-5">
+	<div class="row">
+		<div class="col-sm-10">
+			{% if journals %}
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Title</th>
+						<!-- <th>Author</th> -->
+						<th>Status</th>
+						<th>Type</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for journal in journals %}
+					<tr>
+						<th scope="row">{{ forloop.revcounter}}</th>
+						<td>
+							<a href="{% url 'publications:journal_detail' pk=journal.pk %}">
+								{{ journal.title }} <br>
+								<span class="badge bg-info">{{ journal.journal_name }}</span>
+							</a>
+						</td>
+						<!-- <td>{{ journal.writer }}</td> -->
+						<td>{{ journal.get_status_display }}</td>
+						<td>{{ journal.get_journal_type_display }}</td>
+
+						<td>
+
+
+						</td>
+
+						{% if user.is_authenticated %}
+						<td>
+						<button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#editJournalModal{{ journal.id }}">
+							Edit
+						</button>
+						</td>
+						{% endif %}
+					</tr>
+
+					<div class="modal fade" id="editJournalModal{{ journal.pk }}" tabindex="-1" aria-labelledby="editJournalModalLabel{{ journal.pk }}" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="editJournalModalLabel{{ journal.pk }}">Edit</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<!-- Add a form for editing a journal -->
+									<form method="POST" action="{% url 'publications:journal_update' pk=journal.pk %}" enctype="multipart/form-data">
+										{% csrf_token %}
+										<div class="form-floating">
+											<input type="text" id="title{{ journal.pk }}" name="title" value="{{ journal.title }}" class="form-control mb-2" placeholder="Title" required />
+											<label for="title{{ journal.pk }}">Title</label>
+										</div>
+										<div class="form-floating">
+											<input type="text" id="journal_name{{ journal.pk }}" name="journal_name" value="{{ journal.journal_name }}" class="form-control mb-2" placeholder="Journal Name" required />
+											<label for="journal_name{{ journal.pk }}">Journal Name</label>
+										</div>
+										<div class="form-floating">
+											<textarea class="form-control" name="abstract" placeholder="Abstract" id="abstract{{ journal.pk }}" style="height: 150px" required>{{ journal.abstract }}</textarea>
+											<label for="abstract{{ journal.pk }}">Abstract</label>
+										</div>
+										<select class="form-select my-2" name="status" required>
+											<option selected="true" disabled="disabled">Status</option>
+											{% for choice in status %}
+												<option value="{{ choice.0 }}" {% if choice.0 == journal.status %} selected {% endif %}>{{ choice.1 }}</option>
+											{% endfor %}
+										</select>
+										<select class="form-select my-2" name="journal_type" required>
+											<option selected="true" disabled="disabled">Journal Type</option>
+											{% for choice in journal_type %}
+												<option value="{{ choice.0 }}" {% if choice.0 == journal.journal_type %} selected {% endif %}>{{ choice.1 }}</option>
+											{% endfor %}
+										</select>
+										<div class="form-floating">
+											<input type="text" id="ack{{ journal.pk }}" name="ack" value="{{ journal.ack }}" class="form-control mb-2" placeholder="Acknowledgment" />
+											<label for="ack{{ journal.pk }}">Acknowledgment</label>
+										</div>
+										<div class="form-floating">
+											<input type="text" id="pub_year{{ journal.pk }}" name="pub_year" value="{{ journal.pub_year }}" class="form-control mb-2" placeholder="Publication Year" />
+											<label for="pub_year{{ journal.pk }}">Publication Year</label>
+										</div>
+										<!-- <div class="form-floating">
+											<input type="text" id="extras{{ journal.pk }}" name="extras" value="{{ journal.extras }}" class="form-control mb-2" placeholder="Extras" />
+											<label for="extras{{ journal.pk }}">Extras</label>
+										</div> -->
+										<div class="form-floating">
+											<input type="text" id="cite{{ journal.pk }}" name="cite" value="{{ journal.cite }}" class="form-control mb-2" placeholder="cite" />
+											<label for="cite{{ journal.pk }}">Cite</label>
+										</div>
+										<div class="form-floating">
+											<input type="text" id="all_authors{{ journal.pk }}" name="all_authors" value="{{ journal.all_authors }}" class="form-control mb-2" placeholder="All Authors" />
+											<label for="all_authors{{ journal.pk }}">All Authors</label>
+										</div>
+										<div class="mb-2">
+											<label for="file{{ journal.pk }}" class="form-label">File:</label>
+											<!-- <span class="fw-bold">File:</span> -->
+											{% if journal.file %}
+												<a href="{{ journal.file.url }}" target="_blank">Download / Open PDF</a>
+											{% else %}
+												No file attached
+											{% endif %}
+											<input class="form-control form-control-sm" type="file" id="file{{ journal.pk }}" name="file" accept=".pdf, .doc, .docx" />
+										</div>
+										<button type="submit" class="btn btn-info">Save Changes</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<P>No data</P>
+			{% endif %}
+		</div>
+		<div class="col-sm-2 mt-5">
+			<div class="card" style="width: 18rem">
+				<div class="card-body">
+					<h5 class="card-title">Search</h5>
+					<!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
+					<form method="GET" action="{% url 'publications:all_journals' %}">
+						<div class="">
+							<input type="text" name="title" value="{{ title }}" class="form-control mb-2"
+								placeholder="By Title (use your name for now)" />
+						</div>
+						<div class="">
+							<input type="text" name="year" value="{{ year }}" class="form-control mb-2"
+								placeholder="By year" />
+						</div>
+						<div class="mb-2">
+							<select class="form-select" name="journal_type">
+								<option selected="true" disabled="disabled">Journal Type</option>
+								{% for value in journal_type %}
+									<option value="{{ value.0 }}" {% if value.0 == selected_journal_type %} selected {% endif %}>
+										{{ value.1 }}
+									</option>
+								{% endfor %}
+							</select>
+						</div>
+
+						<div class="mb-2">
+							<select class="form-select" name="status">
+								<option selected="true" disabled="disabled">Status</option>
+								{% for value in status %}
+								<option value="{{ value.0 }}" {% if value.0 == selected_status %} selected {% endif %}>
+									{{ value.1 }}
+								</option>
+								{% endfor %}
+							</select>
+						</div>
+
+						<div class="d-grid gap-2">
+							<button type="submit" class="btn btn-outline-info">
+								<i class="fa-solid fa-magnifying-glass"></i>Search
+							</button>
+						</div>
+						<div class="d-grid gap-2 mt-2">
+							<a href="{% url 'publications:all_journals' %}" class="btn btn-outline-info">
+								<i class="fa-solid fa-xmark"></i> Clear Search
+							</a>
+						</div>
+					</form>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			{% if journals.has_other_pages %}
+			<ul class="pagination">
+				{% if journals.has_previous %}
+				<li class="page-item">
+					<a class="page-link" href="?page=1">&laquo;&laquo;</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" href="?page={{ journals.previous_page_number }}">&laquo;</a>
+				</li>
+				{% else %}
+				<li class="page-item disabled">
+					<a class="page-link">&laquo;&laquo;</a>
+				</li>
+				<li class="page-item disabled">
+					<a class="page-link">&laquo;</a>
+				</li>
+				{% endif %}
+
+				{% for i in journals.paginator.page_range %}
+				{% if journals.number == i %}
+				<li class="page-item active">
+					<a class="page-link">{{ i }}</a>
+				</li>
+				{% else %}
+				<li class="page-item">
+					<a href="?page={{ i }}" class="page-link">{{ i }}</a>
+				</li>
+				{% endif %}
+				{% endfor %}
+
+				{% if journals.has_next %}
+				<li class="page-item">
+					<a class="page-link" href="?page={{ journals.next_page_number }}">&raquo;</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" href="?page={{ journals.paginator.num_pages }}">&raquo;&raquo;</a>
+				</li>
+				{% else %}
+				<li class="page-item disabled">
+					<a class="page-link">&raquo;&raquo;</a>
+				</li>
+				<li class="page-item disabled">
+					<a class="page-link">&raquo;</a>
+				</li>
+				{% endif %}
+			</ul>
+			{%endif%}
+		</div>
+	</div>
+
+	{% if user.is_authenticated %}
+	<div class="position-fixed bottom-0 end-0 p-3">
+		<button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#createJournalModal">
+			<i class="fa-solid fa-plus"></i> Add Journal
+		</button>
+	</div>
+
+	{% endif %}
+	<div class="modal fade" id="createJournalModal" tabindex="-1" aria-labelledby="createJournalModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="createJournalModalLabel">Add Journal</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Add a form for creating a journal -->
+					<form method="POST" action="{% url 'publications:all_journal_create' %}">
+						{% csrf_token %}
+						<div class="form-floating">
+							<input type="text" id="title" name="title" class="form-control mb-2" placeholder="Title" required />
+							<label for="title">Title</label>
+						</div>
+						<div class="form-floating">
+							<input type="text" id="journal_name" name="journal_name" class="form-control mb-2"
+								placeholder="Journal Name" required />
+							<label for="journal_name">Journal Name</label>
+						</div>
+						<div class="form-floating">
+							<input type="text" id="all_authors" name="all_authors" class="form-control mb-2" placeholder="Authors" required />
+							<label for="all_authors">Authors</label>
+						</div>
+						<div class="form-floating">
+							<textarea class="form-control" name="abstract" placeholder="Abstract"
+								style="height: 100px" required></textarea>
+							<label for="abstract">Abstract</label>
+						</div>
+						
+						<select class="form-select my-2" name="status" required>
+							<!-- <option selected="true" disabled="disabled">Status</option> -->
+							{% for choice in status %}
+							<option value="{{ choice.0 }}">{{ choice.1 }}</option>
+							{% endfor %}
+						</select>
+						<select class="form-select my-2" name="journal_type" required>
+							<!-- <option selected="true" disabled="disabled">Journal Type</option> -->
+							{% for choice in journal_type %}
+							<option value="{{ choice.0 }}">{{ choice.1 }}</option>
+							{% endfor %}
+						</select>
+						<button type="submit" class="btn btn-info">Add Journal</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% endblock %}

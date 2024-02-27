@@ -35,7 +35,7 @@ class History(models.Model):
     project = models.ForeignKey(Project, on_delete=models.DO_NOTHING)
     subject = models.CharField(max_length=255)
     write_date = models.DateTimeField(auto_now_add=True)
-    update_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now_add=True, null=True)
     content = models.TextField()
     tcp_ip = models.CharField(max_length=20, null=True, blank=True)
     visit = models.IntegerField(default=1, null=True, blank=True)
