@@ -32,11 +32,11 @@ class Bio(models.Model):
     email_list = models.CharField('Email')
     image = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            old_instance = Bio.objects.get(pk=self.pk)
-            if old_instance.image:
-                default_storage.delete(old_instance.image.name)
+    # def save(self, *args, **kwargs):
+    #     if self.pk:
+    #         old_instance = Bio.objects.get(pk=self.pk)
+    #         if old_instance.image:
+    #             default_storage.delete(old_instance.image.name)
         super().save(*args, **kwargs)
 
     # date_joined 
