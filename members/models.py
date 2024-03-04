@@ -37,7 +37,7 @@ class Bio(models.Model):
     #         old_instance = Bio.objects.get(pk=self.pk)
     #         if old_instance.image:
     #             default_storage.delete(old_instance.image.name)
-        super().save(*args, **kwargs)
+    #     super().save(*args, **kwargs)
 
     # date_joined 
     # user = models.OneToOneField(Member, on_delete=models.DO_NOTHING, related_name='bio', null=True, blank=True)
