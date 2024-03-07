@@ -10,7 +10,7 @@
             {% for base_project in base_projects %}
               <li class="list-group-item">
                 
-                <span class="my-5">{{ base_project.name }}</span>
+                <span class="fw-bold">{{ base_project.name }}</span>
 
                 <ul class="list-group">
                   {% for project in base_project.project_set.all %}
@@ -59,12 +59,11 @@
   </div>
 </div>
 
-{% if user.is_authenticated %}
+<!-- {% if user.is_authenticated %}
 <div class="position-fixed bottom-0 end-0 p-3">
     <a href="{% url 'research:create' %}" class="btn btn-outline-info" type="button">
         <i class="fa-solid fa-plus"></i> Add Conference
-	  <!-- Bootstrap Icons -->
 	</a>
   </div>
-{% endif %}
+{% endif %} -->
 {% endblock %}
