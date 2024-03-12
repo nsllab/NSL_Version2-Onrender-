@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'members',
     'works',
     'research',
+    'education',
     'bootstrap5',
     'storages',
     'custom_filters',

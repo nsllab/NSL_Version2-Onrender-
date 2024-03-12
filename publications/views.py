@@ -25,7 +25,7 @@ def journals(request):
     if 'writer' in search:
         writer = search['writer']
         if writer:
-            journals = journals.filter(writer__username__icontains=writer)
+            journals = journals.filter(writer__first_name__icontains=writer)
 
     if 'year' in search:
         year = search['year']
@@ -76,7 +76,7 @@ def all_journals(request):
     if 'writer' in search:
         writer = search['writer']
         if writer:
-            journals = journals.filter(writer__username__icontains=writer)
+            journals = journals.filter(writer__first_name__icontains=writer)
 
 
     if 'journal_type' in search:
@@ -166,7 +166,7 @@ def conferences(request):
     if 'writer' in search:
         writer = search['writer']
         if writer:
-            conferences = conferences.filter(writer__username__icontains=writer)
+            conferences = conferences.filter(writer__first_name__icontains=writer)
 
     if 'year' in search:
         year = search['year']
@@ -207,7 +207,7 @@ def all_conferences(request):
     if 'writer' in search:
         writer = search['writer']
         if writer:
-            conferences = conferences.filter(writer__username__icontains=writer)
+            conferences = conferences.filter(writer__first_name__icontains=writer)
 
     if 'year' in search:
         year = search['year']

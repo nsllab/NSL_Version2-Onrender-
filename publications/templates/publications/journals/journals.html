@@ -12,6 +12,7 @@
 						<!-- <th>Author</th> -->
 						<th>Status</th>
 						<th>Type</th>
+						<th>By</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -31,7 +32,7 @@
 
 						<td>
 
-
+							{{ journal.writer }}
 						</td>
 
 						{% if user.is_authenticated %}
