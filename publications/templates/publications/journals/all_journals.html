@@ -36,9 +36,11 @@
 
 						{% if user.is_authenticated %}
 						<td>
-						<button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#editJournalModal{{ journal.id }}">
+							<a href="{% url 'publications:journal_detail' pk=journal.pk' %}" class="btn btn-outline-info">Edit</a>
+							
+						<!-- <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#editJournalModal{{ journal.id }}">
 							Edit
-						</button>
+						</button> -->
 						</td>
 						{% endif %}
 					</tr>
@@ -131,8 +133,11 @@
 					<form method="GET" action="{% url 'publications:all_journals' %}">
 						<div class="">
 							<input type="text" name="title" value="{{ title }}" class="form-control mb-2"
-								placeholder="By Title (use your name for now)" />
+								placeholder="By Title" />
 						</div>
+						<div class="">
+							<input type="text" name="writer" value="{{ writer }}" class="form-control mb-2" placeholder="By username" />
+						  </div>
 						<div class="">
 							<input type="text" name="year" value="{{ year }}" class="form-control mb-2"
 								placeholder="By year" />
