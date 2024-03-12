@@ -32,7 +32,7 @@ class WeeklyReport(models.Model):
     project_progress = models.TextField("Project Progress")
     project_prog_percent = models.IntegerField("Paper Progress Percent")
     project_last_wk = models.TextField("Last Week Project")
-    project_this_wk = models.TextField("Last Week Project")
+    project_this_wk = models.TextField("This Week Project")
     mnth_gls = models.TextField("Monthly Goals")
     annl_gls = models.TextField("Annual Goals")
     user = models.CharField(null=True, blank=True)

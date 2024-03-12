@@ -29,7 +29,7 @@
             <!-- <td>{{ conference.writer }}</td> -->
             <td>{{ conference.get_status_display }}</td>
 			      <td>{{ conference.get_conference_type_display }}</td>
-            <td>{{ conference.writer|capfirst }}</td>
+            <td>{{ conference.writer.first_name|capfirst }}</td>
             
             {% if user.is_authenticated %}
             <td>

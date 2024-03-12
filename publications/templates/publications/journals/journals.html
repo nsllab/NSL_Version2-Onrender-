@@ -32,7 +32,7 @@
 
 						<td>
 
-							{{ journal.writer }}
+							{{ journal.writer.first_name|capfirst }}
 						</td>
 
 						{% if user.is_authenticated %}
