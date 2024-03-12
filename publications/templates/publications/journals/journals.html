@@ -36,7 +36,7 @@
 
 						{% if user.is_authenticated %}
 						<td>
-						<a href="{% url 'publications:journal_detail' pk=journal.pk' %}" class="btn btn-outline-info">Edit</a>
+						<a href="{% url 'publications:journal_update' pk=journal.pk %}" class="btn btn-outline-info">Edit</a>
 						<!-- <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#editJournalModal{{ journal.id }}">
 							Edit
 						</button> -->

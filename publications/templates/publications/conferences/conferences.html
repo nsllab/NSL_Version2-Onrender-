@@ -12,6 +12,7 @@
             <!-- <th>Author</th> -->
             <th>Status</th>
 			<th>Type</th>
+      <th>By</th>
             <th></th>
           </tr>
         </thead>
@@ -27,12 +28,13 @@
             </td>
             <!-- <td>{{ conference.writer }}</td> -->
             <td>{{ conference.get_status_display }}</td>
-			      <td>{{ conference.writer }}</td>
+			      <td>{{ conference.get_conference_type_display }}</td>
+            <td>{{ conference.writer|capfirst }}</td>
             
             {% if user.is_authenticated %}
             <td>
               <a
-                href="{% url 'publications:conference_update' pk=conference.pk %}""
+                href="{% url 'publications:conference_update' pk=conference.pk %}"
                 class="btn btn-outline-info"
                 >Edit</a
               >
