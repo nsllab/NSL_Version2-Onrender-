@@ -18,7 +18,7 @@
                     <div class="card-body">
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
-                            {% bootstrap_form form show_label=False%}
+                            {% bootstrap_form form show_label=True%}
                             <div class="d-grid gap-2">
                                 {% bootstrap_button "Create" button_type="submit" button_class="btn-outline-info" %}
                             </div>

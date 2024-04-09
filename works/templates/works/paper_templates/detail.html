@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+{% include 'partials/_banner.html' with heading="" %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-header">
+                    <h5 class="mb-0">Paper Template Details</h5>
+                    <nav class="breadcrumb-container pt-2" aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'pages:index' %}" class="">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'works:paper_templates' %}" class="">Back to Templates</a></li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ paper_template.subject }}</h4>
+                    <p class="text-muted"><small>Last updated {{ paper_template.update_date }}</small></p>
+                    <p>{{ paper_template.content | linebreaksbr }}</p>
+                    <hr>
+                    <div>
+                        {% if paper_template.file1 %}
+                            <a href="{{ paper_template.file1.url }}" class="btn btn-outline-primary me-2" download>Download File 1</a>
+                        {% endif %}
+                        {% if paper_template.file2 %}
+                            <a href="{{ paper_template.file2.url }}" class="btn btn-outline-primary" download>Download File 2</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Written by: {{ paper_template.writer|capfirst }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

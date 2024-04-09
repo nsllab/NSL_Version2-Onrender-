@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from .models import WeeklyReport, PostDocReport, Seminar, Review
+from .models import WeeklyReport, PostDocReport, Seminar, Review, PaperTemplate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import CreateView, UpdateView, DetailView, ListView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import WeeklyReportForm, PostDocReportForm, SeminarForm, ReviewForm
+from .forms import WeeklyReportForm, PostDocReportForm, SeminarForm, ReviewForm, PaperTemplateForm
 
 # Create your views here.
 
@@ -116,6 +116,7 @@ class SeminarUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return super().form_valid(form)
 
 class ReviewListView(LoginRequiredMixin, ListView):
+    login_url="/members/login"
     model = Review
     context_object_name = 'reviews'
     template_name = 'works/reviews/review_list.html'
@@ -151,3 +152,43 @@ class ReviewUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def form_valid(self, form):
         form.instance.writer = self.request.user  # Set the writer to the current user
         return super().form_valid(form)
+
+
+class PaperTemplateListView(LoginRequiredMixin, ListView):
+    login_url = '/members/login'
+    model = PaperTemplate
+    template_name = 'works/paper_templates/template_list.html'
+    context_object_name = 'paper_templates'
+
+    def get_queryset(self):
+        return PaperTemplate.objects.order_by('-write_date')
+
+class PaperTemplateCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    login_url="/members/login"
+    model = PaperTemplate
+    form_class = PaperTemplateForm  # Replace with your actual form
+    template_name = 'works/paper_templates/create.html'  # Replace with your template name
+    success_url = reverse_lazy('works:paper_templates')  # Replace with your success URL
+    success_message =  "Paper Template added successfully"
+
+    def form_valid(self, form):
+        form.instance.writer = self.request.user  # Set the writer to the current user
+        return super().form_valid(form)
+
+class PaperTemplateUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url="/members/login"
+    model = PaperTemplate
+    form_class = PaperTemplateForm  # Replace with your actual form
+    template_name = 'works/paper_templates/update.html'  # Replace with your template name
+    success_url = reverse_lazy('works:paper_templates')  # Replace with your success URL
+    success_message =  "Paper Template updated successfully"
+
+    def form_valid(self, form):
+        form.instance.writer = self.request.user  # Set the writer to the current user
+        return super().form_valid(form)
+
+
+class PaperTemplateDetailView(DetailView):
+    model = PaperTemplate
+    context_object_name = 'paper_template'
+    template_name = 'works/paper_templates/detail.html'

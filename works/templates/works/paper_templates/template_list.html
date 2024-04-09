@@ -1,0 +1,181 @@
+{% extends 'base.html' %} {% load bootstrap5 %} {% block content %}
+{% include 'partials/_banner.html' with heading="Paper Templates" %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-sm-10">
+        {% if paper_templates.exists %}
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Subject</th>
+            <!-- <th>Author</th> -->
+            <th>By</th>
+			<th>Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for paper_template in paper_templates %}
+          <tr>
+            <th scope="row">{{ forloop.revcounter}}</th>
+            <td>
+              <a href="{% url 'works:paper_template_detail' pk=paper_template.pk %}">
+                {{ paper_template.subject }}
+              </a>
+            </td>
+            <!-- <td>{{ conference.writer }}</td> -->
+            <td>{{ paper_template.writer|capfirst }}</td>
+			      <td>{{ paper_template.write_date }}</td>
+            
+            {% if user.is_authenticated %}
+            <td>
+              <a
+                href="{% url 'works:paper_template_update' pk=paper_template.pk %}"
+                class="btn btn-outline-info"
+                >Edit</a
+              >
+            </td>
+            {% endif %}
+          </tr>
+          
+
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <P>No data</P>
+      {% endif %}
+    </div>
+    <div class="col-sm-2 mt-5">
+
+      <div class="card" style="width: 18rem">
+        <div class="card-body">
+          <h5 class="card-title">Search </h5>
+          <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
+          <form method="GET" action="{% url 'publications:conferences' %}">
+            <div class="">
+              <input type="text" name="title" value="{{ title }}" class="form-control mb-2" placeholder="By Title" />
+            </div>
+            <div class="">
+              <input type="text" name="writer" value="{{ writer }}" class="form-control mb-2" placeholder="By username" />
+            </div>
+            <div class="">
+              <input type="text" name="year" value="{{ year }}" class="form-control mb-2" placeholder="By year" />
+            </div>
+            <div class="mb-2">
+				<select class="form-select" name="conference_type">
+					<option selected="true" disabled="disabled">Conference Type</option>
+					{% for value in conference_type %}
+						<option 
+							value="{{ value.0 }}"
+							{% if value.0 == conference_type %}
+                        		selected
+                     		{% endif %}
+							>
+							{{ value.1 }}
+						</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			<div class="mb-2">
+				<select class="form-select" name="status">
+					<option selected="true" disabled="disabled">Status</option>
+					{% for value in status %}
+						<option 
+							value="{{ value.0 }}"
+							{% if value.0 == status %}
+                        		selected
+                     		{% endif %}
+							>
+							{{ value.1 }}
+						</option>
+					{% endfor %}
+				</select>
+			</div>
+			
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-outline-info">
+                <i class="fa-solid fa-magnifying-glass"></i>Search
+              </button>
+            </div>
+            <div class="d-grid gap-2 mt-2">
+                <a href="{% url 'publications:conferences' %}" class="btn btn-outline-info">
+                  <i class="fa-solid fa-xmark"></i> Clear Search
+                </a>
+              </div>
+          </form>
+          <!-- <p class="card-text text-center">Or</p> -->
+          <div class="d-grid gap-2 mt-2">
+            <a href="{% url 'publications:all_conferences' %}" class="btn btn-outline-info">
+              View Statistics
+            </a>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {%  if conferences.has_other_pages %}
+      <ul class="pagination">
+          {% if conferences.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo;&laquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ conferences.previous_page_number }}">&laquo;</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">&laquo;&laquo;</a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link">&laquo;</a>
+            </li>
+          {% endif %}
+
+          {% for i in conferences.paginator.page_range %}
+            {% if conferences.number == i %}
+                <li class="page-item active">
+                    <a class="page-link">{{ i }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if conferences.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ conferences.next_page_number }}">&raquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ conferences.paginator.num_pages }}">&raquo;&raquo;</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">&raquo;&raquo;</a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link">&raquo;</a>
+            </li>
+        {% endif %}
+      </ul>
+      {%endif%}
+    </div>
+</div>
+</div>
+
+{% if user.is_authenticated %}
+<div class="position-fixed bottom-0 end-0 p-3">
+    <a href="{% url 'works:create_paper_template' %}" class="btn btn-outline-info" type="button">
+        <i class="fa-solid fa-plus"></i> Add Conference
+	  <!-- Bootstrap Icons -->
+	</a>
+  </div>
+{% endif %}
+{% endblock %}

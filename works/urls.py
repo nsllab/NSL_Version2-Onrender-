@@ -22,5 +22,11 @@ urlpatterns = [
     path('reviews/', views.ReviewListView.as_view(), name='reviews'),
     path('reviews/create', views.ReviewCreateView.as_view(), name='create_review'),
     path('reviews/<int:pk>/update', views.ReviewUpdateView.as_view(), name="review_update"),
-    
+
+    path('pt', views.PaperTemplateListView.as_view(), name='paper_templates'),
+    path('pt/create', views.PaperTemplateCreateView.as_view(), name='create_paper_template'),
+    path('pt/<int:pk>/update', views.PaperTemplateUpdateView.as_view(), name="paper_template_update"),
+    path('pt/<int:pk>/', views.PaperTemplateDetailView.as_view(), name='paper_template_detail'),
+
+
 ]

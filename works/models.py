@@ -78,3 +78,16 @@ class Review(models.Model):
 
     def __str__(self):
         return self.subject
+
+class PaperTemplate(models.Model):
+    subject = models.CharField(max_length=250)
+    content = models.TextField()
+    write_date = models.DateTimeField(default=timezone.now, null=True)
+    update_date = models.DateTimeField(default=timezone.now, null=True)
+    tcp_ip = models.CharField(max_length=150, null=False, blank=True)
+    writer = models.ForeignKey(Member, on_delete=models.DO_NOTHING, related_name='paper_templates', default=get_default_user)
+    file1 = models.FileField(upload_to='paper_templates/', null=True, blank=True)
+    file2 = models.FileField(upload_to='paper_templates/', null=True, blank=True)
+    
+    def __str__(self):
+        return self.subject

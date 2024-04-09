@@ -1,5 +1,5 @@
 from django import forms
-from .models import WeeklyReport, PostDocReport, Seminar, Review
+from .models import WeeklyReport, PostDocReport, Seminar, Review, PaperTemplate
 
 class WeeklyReportForm(forms.ModelForm):
     class Meta:
@@ -29,3 +29,9 @@ class ReviewForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ReviewForm, self).__init__(*args, **kwargs)
+
+class PaperTemplateForm(forms.ModelForm):
+    class Meta:
+        model = PaperTemplate
+        # exclude = ['users', 'writer']
+        exclude = ['write_date', 'update_date', 'tcp_ip', 'writer']
