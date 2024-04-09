@@ -46,7 +46,7 @@
             <tr>
               <td>{{ forloop.revcounter }}</td>
               <td>{{ history.subject }}</td>
-              <td>{{ history.writer }}</td>
+              <td>{{ history.writer|capfirst }}</td>
               <td>{{ history.write_date }}</td>
             </tr>
           {% endfor %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %} {% load bootstrap5 %} {% block content %}
+{% include 'partials/_banner.html' with heading="Reviews" %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-sm-10">
+            {% if reviews.exists %}
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Subject</th>
+                        <th>By</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in reviews %}
+                    <tr>
+                        <th scope="row">{{ forloop.revcounter}}</th>
+                        <td>
+                            <a href="{% url 'works:review_update' pk=review.pk %}">
+                                {{ review.subject }} <br>
+                            </a>
+                        </td>
+                        <!-- <td>{{ conference.writer }}</td> -->
+                        <td>{{ review.writer|capfirst }}</td>
+                        <td>{{ review.write_date }}</td>
+
+                        {% if user.is_authenticated %}
+                        <td>
+                            <a href="{% url 'works:review_update' pk=review.pk %}"
+                                class="btn btn-outline-info">Edit</a>
+                        </td>
+                        {% endif %}
+                    </tr>
+
+
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <P>No data</P>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {%  if reviews.has_other_pages %}
+            <ul class="pagination">
+                {% if reviews.has_previous %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page=1">&laquo;&laquo;</a>
+                  </li>
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ reviews.previous_page_number }}">&laquo;</a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link">&laquo;&laquo;</a>
+                  </li>
+                  <li class="page-item disabled">
+                      <a class="page-link">&laquo;</a>
+                  </li>
+                {% endif %}
+      
+                {% for i in reviews.paginator.page_range %}
+                  {% if reviews.number == i %}
+                      <li class="page-item active">
+                          <a class="page-link">{{ i }}</a>
+                      </li>
+                  {% else %}
+                      <li class="page-item">
+                          <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                      </li>
+                  {% endif %}
+                {% endfor %}
+      
+                {% if reviews.has_next %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ reviews.next_page_number }}">&raquo;</a>
+                  </li>
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ reviews.paginator.num_pages }}">&raquo;&raquo;</a>
+                  </li>
+                  {% else %}
+                  <li class="page-item disabled">
+                      <a class="page-link">&raquo;&raquo;</a>
+                  </li>
+                  <li class="page-item disabled">
+                      <a class="page-link">&raquo;</a>
+                  </li>
+              {% endif %}
+            </ul>
+            {%endif%}
+          </div>
+    </div>
+</div>
+
+{% if user.is_authenticated %}
+<div class="position-fixed bottom-0 end-0 p-3">
+    <a href="{% url 'works:create_review' %}" class="btn btn-outline-info" type="button">
+        <i class="fa-solid fa-plus"></i> Add Review
+        <!-- Bootstrap Icons -->
+    </a>
+</div>
+{% endif %}
+{% endblock %}

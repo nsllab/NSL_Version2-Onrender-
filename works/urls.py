@@ -16,6 +16,11 @@ urlpatterns = [
     path('post_doc/<int:pk>/update', views.PostReportUpdateView.as_view(), name="post_doc_update"),
 
     path('seminars/', views.seminars, name='seminars'),
-    path('create_seminar', views.SeminarCreateView.as_view(), name='create_seminar'),
+    path('seminars/create', views.SeminarCreateView.as_view(), name='create_seminar'),
     path('seminars/<int:pk>/update', views.SeminarUpdateView.as_view(), name="seminar_update"),
+
+    path('reviews/', views.ReviewListView.as_view(), name='reviews'),
+    path('reviews/create', views.ReviewCreateView.as_view(), name='create_review'),
+    path('reviews/<int:pk>/update', views.ReviewUpdateView.as_view(), name="review_update"),
+    
 ]

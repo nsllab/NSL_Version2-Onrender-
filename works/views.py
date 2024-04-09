@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from .models import WeeklyReport, PostDocReport, Seminar
+from .models import WeeklyReport, PostDocReport, Seminar, Review
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import CreateView, UpdateView, DetailView
+from django.views.generic import CreateView, UpdateView, DetailView, ListView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import WeeklyReportForm, PostDocReportForm, SeminarForm
+from .forms import WeeklyReportForm, PostDocReportForm, SeminarForm, ReviewForm
 
 # Create your views here.
 
@@ -115,3 +115,39 @@ class SeminarUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         form.instance.writer = self.request.user  # Set the writer to the current user
         return super().form_valid(form)
 
+class ReviewListView(LoginRequiredMixin, ListView):
+    model = Review
+    context_object_name = 'reviews'
+    template_name = 'works/reviews/review_list.html'
+    # paginate_by = 10
+   
+    def get_queryset(self):
+        return Review.objects.order_by('-write_date')
+
+
+
+
+class ReviewCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    login_url="/members/login"
+    model = Review
+    form_class = ReviewForm  # Replace with your actual form
+    template_name = 'works/reviews/create.html'  # Replace with your template name
+    success_url = reverse_lazy('works:reviews')  # Replace with your success URL
+    success_message =  "Review added successfully"
+
+    def form_valid(self, form):
+        form.instance.writer = self.request.user  # Set the writer to the current user
+        return super().form_valid(form)
+
+
+class ReviewUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url="/members/login"
+    model = Review
+    form_class = ReviewForm  # Replace with your actual form
+    template_name = 'works/reviews/update.html'  # Replace with your template name
+    success_url = reverse_lazy('works:reviews')  # Replace with your success URL
+    success_message =  "Review updated successfully"
+
+    def form_valid(self, form):
+        form.instance.writer = self.request.user  # Set the writer to the current user
+        return super().form_valid(form)
