@@ -6,7 +6,8 @@ PAPER_STATUS = [
     (5, "Published"),
     (6, "Best Paper"),
     (7, "Minor Revision"),
-    (8, "Rejected"),
+    (8, "Major Revision"),
+    (9, "Rejected"),
 ]
 
 PAPER_TYPE = [
