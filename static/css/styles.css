@@ -401,7 +401,7 @@ p {
     margin: 0;
 }
 
-/* Ensure the submenu is hidden by default */
+/* Hide all nested dropdowns by default */
 .dropdown-submenu .dropdown-menu {
     display: none;
     position: absolute;
@@ -412,7 +412,7 @@ p {
     z-index: 1000; /* Ensures it appears above other elements */
 }
 
-/* Show the submenu on hover over the parent item */
-.dropdown-submenu:hover .dropdown-menu {
+/* Only show the submenu when hovering over its specific parent (e.g., Conferences or Journals) */
+.dropdown-submenu:hover > .dropdown-menu {
     display: block;
 }
