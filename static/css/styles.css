@@ -401,16 +401,18 @@ p {
     margin: 0;
 }
 
-/* Hide the submenu by default */
+/* Ensure the submenu is hidden by default */
 .dropdown-submenu .dropdown-menu {
     display: none;
-    position: absolute; /* Position it absolutely for better alignment */
-    left: 100%; /* Shift it to the right of the parent menu */
+    position: absolute;
+    left: 100%;
     top: 0;
     margin-top: 0;
+    min-width: 200px;
+    z-index: 1000; /* Ensures it appears above other elements */
 }
 
-/* Show submenu when hovering over the parent menu item */
+/* Show the submenu on hover over the parent item */
 .dropdown-submenu:hover .dropdown-menu {
     display: block;
 }

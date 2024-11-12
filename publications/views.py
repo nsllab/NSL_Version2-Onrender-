@@ -59,6 +59,61 @@ def journals(request):
     }
     return render(request, 'publications/journals/journals.html', context)
 
+def domestic_journals(request):
+    # Filter journals for domestic type
+    journals = Journal.objects.filter(journal_type='2').order_by('-write_date')
+    search = request.GET
+
+    # Apply search filters as needed
+    if 'title' in search:
+        journals = journals.filter(title__icontains=search['title'])
+    if 'writer' in search:
+        journals = journals.filter(writer__first_name__icontains=search['writer'])
+    if 'year' in search:
+        journals = journals.filter(write_date__icontains=search['year'])
+    if 'status' in search:
+        journals = journals.filter(status__iexact=search['status'])
+
+    # Pagination
+    paginator = Paginator(journals, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'journals': page_obj,
+        'journal_type': PAPER_TYPE,
+        'status': PAPER_STATUS,
+    }
+    return render(request, 'publications/journals/domestic_journals.html', context)
+
+
+def international_journals(request):
+    # Filter journals for international type
+    journals = Journal.objects.filter(journal_type='1').order_by('-write_date')
+    search = request.GET
+
+    # Apply search filters as needed
+    if 'title' in search:
+        journals = journals.filter(title__icontains=search['title'])
+    if 'writer' in search:
+        journals = journals.filter(writer__first_name__icontains=search['writer'])
+    if 'year' in search:
+        journals = journals.filter(write_date__icontains=search['year'])
+    if 'status' in search:
+        journals = journals.filter(status__iexact=search['status'])
+
+    # Pagination
+    paginator = Paginator(journals, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'journals': page_obj,
+        'journal_type': PAPER_TYPE,
+        'status': PAPER_STATUS,
+    }
+    return render(request, 'publications/journals/international_journals.html', context)
+
 def all_journals(request):
     journals = Journal.objects.order_by('-write_date')
     search = request.GET

@@ -56,5 +56,5 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     
 
 def purechain_view(request):
-    return render(request, 'purechain.html')
+    return render(request, 'research/purechain.html')
 
