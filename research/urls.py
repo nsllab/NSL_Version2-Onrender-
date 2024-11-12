@@ -8,8 +8,5 @@ urlpatterns = [
     path('', views.base_project, name='projects'),
     path('history/<int:pk>/', views.project_history, name='history'),
     path('history/create/', views.HistoryCreateView.as_view(), name="create"),
-
-    path('', views.purechain_view, name='purechain')
-
-
+    path('purechain/', views.purechain_view, name='purechain'),  # Ensure trailing slash here
 ]
