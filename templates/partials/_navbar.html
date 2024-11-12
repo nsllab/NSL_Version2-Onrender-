@@ -139,14 +139,25 @@
 <!-- JavaScript for toggling nested dropdowns -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-      const submenuToggles = document.querySelectorAll('.dropdown-submenu > a.dropdown-toggle');
-  
-      submenuToggles.forEach(toggle => {
-          toggle.addEventListener('click', function (event) {
-              event.preventDefault(); // Prevent default link behavior
-              const submenu = this.nextElementSibling;
-              submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
-          });
-      });
-  });
+    // Select all dropdown toggles within the submenu
+    const submenuToggles = document.querySelectorAll('.dropdown-submenu > a.dropdown-toggle');
+
+    submenuToggles.forEach(toggle => {
+        toggle.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            // Get the currently open submenu (if any) and close it
+            submenuToggles.forEach(otherToggle => {
+                const otherSubmenu = otherToggle.nextElementSibling;
+                if (otherToggle !== this && otherSubmenu.style.display === 'block') {
+                    otherSubmenu.style.display = 'none';
+                }
+            });
+
+            // Toggle the clicked submenu
+            const submenu = this.nextElementSibling;
+            submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+});
   </script>
