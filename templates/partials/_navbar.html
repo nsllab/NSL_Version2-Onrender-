@@ -53,33 +53,34 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Publications
+              Publications
           </a>
           <ul class="dropdown-menu">
-            <li class="dropdown-submenu">
-              <a class="dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Conferences
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'publications:domestic_conferences' %}">Domestic Conferences</a></li>
-                <li><a class="dropdown-item" href="{% url 'publications:international_conferences' %}">International Conferences</a></li>
-              </ul>
-            </li>
-        
-            <li class="dropdown-submenu">
-              <a class="dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Journals
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'publications:domestic_journals' %}">Domestic Journals</a></li>
-                <li><a class="dropdown-item" href="{% url 'publications:international_journals' %}">International Journals</a></li>
-              </ul>
-            </li>
-            <!-- <li><a class="dropdown-item" href="{% url 'publications:journals' %}">Journals</a></li> -->
-
-            <!-- Remaining Primary Dropdown Items -->
-            <li><a class="dropdown-item" href="{% url 'publications:patents' %}">Patents</a></li>
-            <li><a class="dropdown-item" href="{% url 'publications:books' %}">Books</a></li>
+              <!-- Conferences Submenu -->
+              <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#" role="button" aria-expanded="false">
+                      Conferences
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'publications:domestic_conferences' %}">Domestic Conferences</a></li>
+                      <li><a class="dropdown-item" href="{% url 'publications:international_conferences' %}">International Conferences</a></li>
+                  </ul>
+              </li>
+      
+              <!-- Journals Submenu -->
+              <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#" role="button" aria-expanded="false">
+                      Journals
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'publications:domestic_journals' %}">Domestic Journals</a></li>
+                      <li><a class="dropdown-item" href="{% url 'publications:international_journals' %}">International Journals</a></li>
+                  </ul>
+              </li>
+      
+              <!-- Other Primary Dropdown Items -->
+              <li><a class="dropdown-item" href="{% url 'publications:patents' %}">Patents</a></li>
+              <li><a class="dropdown-item" href="{% url 'publications:books' %}">Books</a></li>
           </ul>
         </li>
         <li class="nav-item">
@@ -139,14 +140,29 @@
 <!-- JavaScript for toggling nested dropdowns -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // Select all dropdown toggles within the submenu
-    const submenuToggles = document.querySelectorAll('.dropdown-submenu > a.dropdown-toggle');
+    const publicationsToggle = document.querySelector('.nav-item.dropdown > a.nav-link');
+    const publicationsMenu = publicationsToggle.nextElementSibling;
 
+    // Toggle the display of the Publications dropdown on click
+    publicationsToggle.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default link behavior
+        publicationsMenu.style.display = publicationsMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close the Publications dropdown if clicking outside
+    document.addEventListener('click', function (event) {
+        if (!publicationsToggle.contains(event.target) && !publicationsMenu.contains(event.target)) {
+            publicationsMenu.style.display = 'none';
+        }
+    });
+
+    // Nested dropdown toggle for Conferences and Journals
+    const submenuToggles = document.querySelectorAll('.dropdown-submenu > a.dropdown-toggle');
     submenuToggles.forEach(toggle => {
         toggle.addEventListener('click', function (event) {
             event.preventDefault(); // Prevent default link behavior
 
-            // Get the currently open submenu (if any) and close it
+            // Close other open submenus
             submenuToggles.forEach(otherToggle => {
                 const otherSubmenu = otherToggle.nextElementSibling;
                 if (otherToggle !== this && otherSubmenu.style.display === 'block') {
@@ -154,7 +170,7 @@
                 }
             });
 
-            // Toggle the clicked submenu
+            // Toggle the current submenu
             const submenu = this.nextElementSibling;
             submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
         });
