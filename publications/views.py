@@ -195,6 +195,58 @@ def conferences(request):
     }
     return render(request, 'publications/conferences/conferences.html', context)
 
+# Views for Domestic Conferences
+def domestic_conferences(request):
+    conferences = Conference.objects.filter(conference_type='2').order_by('-write_date')
+    search = request.GET
+
+    # Filtering logic as in `conferences` view
+    if 'title' in search:
+        conferences = conferences.filter(title__icontains=search['title'])
+    if 'writer' in search:
+        conferences = conferences.filter(writer__first_name__icontains=search['writer'])
+    if 'year' in search:
+        conferences = conferences.filter(write_date__icontains=search['year'])
+    if 'status' in search:
+        conferences = conferences.filter(status__iexact=search['status'])
+
+    paginator = Paginator(conferences, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'conferences': page_obj,
+        'conference_type': PAPER_TYPE,
+        'status': PAPER_STATUS,
+    }
+    return render(request, 'publications/conferences/domestic_conferences.html', context)
+
+# Views for International Conferences
+def international_conferences(request):
+    conferences = Conference.objects.filter(conference_type='1').order_by('-write_date')
+    search = request.GET
+
+    # Filtering logic as in `conferences` view
+    if 'title' in search:
+        conferences = conferences.filter(title__icontains=search['title'])
+    if 'writer' in search:
+        conferences = conferences.filter(writer__first_name__icontains=search['writer'])
+    if 'year' in search:
+        conferences = conferences.filter(write_date__icontains=search['year'])
+    if 'status' in search:
+        conferences = conferences.filter(status__iexact=search['status'])
+
+    paginator = Paginator(conferences, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'conferences': page_obj,
+        'conference_type': PAPER_TYPE,
+        'status': PAPER_STATUS,
+    }
+    return render(request, 'publications/conferences/international_conferences.html', context)
+
 def all_conferences(request):
     conferences = Conference.objects.order_by('-write_date')
     search = request.GET

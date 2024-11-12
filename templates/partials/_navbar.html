@@ -56,7 +56,17 @@
             Publications
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'publications:conferences' %}">Conferences</a></li>
+            <li class="dropdown-submenu">
+              <a class="dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Conferences
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'publications:domestic_conferences' %}">Domestic Conferences</a></li>
+                <li><a class="dropdown-item" href="{% url 'publications:international_conferences' %}">International Conferences</a></li>
+              </ul>
+            </li>
+        
+            <!-- Remaining Primary Dropdown Items -->
             <li><a class="dropdown-item" href="{% url 'publications:journals' %}">Journals</a></li>
             <li><a class="dropdown-item" href="{% url 'publications:patents' %}">Patents</a></li>
             <li><a class="dropdown-item" href="{% url 'publications:books' %}">Books</a></li>
@@ -107,6 +117,9 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://sites.google.com/view/profdskim">Professor Website</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'research:purechain' %}">Pure Chain</a>
         </li>
       </ul>
     </div>
