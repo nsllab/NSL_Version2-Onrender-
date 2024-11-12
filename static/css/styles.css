@@ -412,7 +412,7 @@ p {
     z-index: 1000; /* Ensures it appears above other elements */
 }
 
-/* Only show the submenu when hovering over its specific parent (e.g., Conferences or Journals) */
+/* Show the submenu only when hovering over the specific parent item */
 .dropdown-submenu:hover > .dropdown-menu {
     display: block;
 }
