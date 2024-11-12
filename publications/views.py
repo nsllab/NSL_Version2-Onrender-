@@ -197,7 +197,7 @@ def conferences(request):
 
 # Views for Domestic Conferences
 def domestic_conferences(request):
-    conferences = Conference.objects.filter(conference_type='domestic').order_by('-write_date')
+    conferences = Conference.objects.filter(conference_type='2').order_by('-write_date')
     search = request.GET
 
     # Filtering logic as in `conferences` view
@@ -223,7 +223,7 @@ def domestic_conferences(request):
 
 # Views for International Conferences
 def international_conferences(request):
-    conferences = Conference.objects.filter(conference_type='international').order_by('-write_date')
+    conferences = Conference.objects.filter(conference_type='1').order_by('-write_date')
     search = request.GET
 
     # Filtering logic as in `conferences` view
