@@ -53,4 +53,8 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         form.instance.writer = self.request.user  # Set the writer to the current user
         return super().form_valid(form)
+    
+
+def purechain_view(request):
+    return render(request, 'purechain.html')
 

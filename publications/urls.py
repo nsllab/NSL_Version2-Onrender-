@@ -13,6 +13,8 @@ urlpatterns = [
 
     
     path('conferences', views.conferences, name='conferences'),
+    path('conferences/domestic/', views.domestic_conferences, name='domestic_conferences'),
+    path('conferences/international/', views.international_conferences, name='international_conferences'),
     path('stats/conferences', views.all_conferences, name='all_conferences'),
     path('conferences/create', views.ConferenceCreateView.as_view(), name='conference_create'),
     path('conferences/update/<int:pk>', views.ConferenceUpdateView.as_view(), name='conference_update'),
