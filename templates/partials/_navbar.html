@@ -52,38 +52,38 @@
           </ul>
         </li>
 
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Publications
-            </a>
-            <ul class="dropdown-menu">
-                <!-- Conferences Submenu -->
-                <li class="dropdown-submenu">
-                    <a class="dropdown-item dropdown-toggle" href="#" role="button" aria-expanded="false">
-                        Conferences
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'publications:domestic_conferences' %}">Domestic Conferences</a></li>
-                        <li><a class="dropdown-item" href="{% url 'publications:international_conferences' %}">International Conferences</a></li>
-                    </ul>
-                </li>
-
-                <!-- Journals Submenu -->
-                <li class="dropdown-submenu">
-                    <a class="dropdown-item dropdown-toggle" href="#" role="button" aria-expanded="false">
-                        Journals
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'publications:domestic_journals' %}">Domestic Journals</a></li>
-                        <li><a class="dropdown-item" href="{% url 'publications:international_journals' %}">International Journals</a></li>
-                    </ul>
-                </li>
-
-                <!-- Other Primary Dropdown Items -->
-                <li><a class="dropdown-item" href="{% url 'publications:patents' %}">Patents</a></li>
-                <li><a class="dropdown-item" href="{% url 'publications:books' %}">Books</a></li>
-            </ul>
-        </li>
+        <li class="nav-item dropdown" id="publications-dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" aria-expanded="false">
+              Publications
+          </a>
+          <ul class="dropdown-menu">
+              <!-- Conferences Submenu -->
+              <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#" role="button" aria-expanded="false">
+                      Conferences
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'publications:domestic_conferences' %}">Domestic Conferences</a></li>
+                      <li><a class="dropdown-item" href="{% url 'publications:international_conferences' %}">International Conferences</a></li>
+                  </ul>
+              </li>
+      
+              <!-- Journals Submenu -->
+              <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#" role="button" aria-expanded="false">
+                      Journals
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'publications:domestic_journals' %}">Domestic Journals</a></li>
+                      <li><a class="dropdown-item" href="{% url 'publications:international_journals' %}">International Journals</a></li>
+                  </ul>
+              </li>
+      
+              <!-- Other Primary Dropdown Items -->
+              <li><a class="dropdown-item" href="{% url 'publications:patents' %}">Patents</a></li>
+              <li><a class="dropdown-item" href="{% url 'publications:books' %}">Books</a></li>
+          </ul>
+      </li>
 
 
         <li class="nav-item">
@@ -139,3 +139,40 @@
     </div>
   </div>
 </nav>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mainDropdown = document.getElementById('publications-dropdown');
+    const subMenus = mainDropdown.querySelectorAll('.dropdown-submenu');
+
+    // Function to toggle main dropdown visibility
+    mainDropdown.addEventListener('mouseenter', function() {
+        mainDropdown.classList.add('active');
+    });
+
+    mainDropdown.addEventListener('mouseleave', function() {
+        mainDropdown.classList.remove('active');
+    });
+
+    // Function to handle each submenu's visibility
+    subMenus.forEach(subMenu => {
+        subMenu.addEventListener('mouseenter', function() {
+            subMenu.classList.add('active');
+        });
+
+        subMenu.addEventListener('mouseleave', function() {
+            subMenu.classList.remove('active');
+        });
+    });
+
+    // Close all dropdowns if clicking outside the menu
+    document.addEventListener('click', function(event) {
+        if (!mainDropdown.contains(event.target)) {
+            mainDropdown.classList.remove('active');
+            subMenus.forEach(subMenu => subMenu.classList.remove('active'));
+        }
+    });
+});
+</script>
