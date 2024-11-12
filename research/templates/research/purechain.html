@@ -1,9 +1,25 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<!-- Add content here if needed, otherwise leave it blank -->
-<div class="container mt-5 text-center">
-    <h2>Welcome to the Blank Page</h2>
-    <p>This is a placeholder page using the base layout.</p>
+{% extends 'base.html' %} {% load bootstrap5 %} {% block content %}
+{% include 'partials/_banner.html' with heading="Projects" %}
+<div class="container mt-5 projects">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="card shadow-lg">
+        <h4 class="card-header">Pure Chain</h4>
+        <div class="card-body">
+                  
+        </div>
+    </div>
+    
+    </div>
+    
+  </div>
 </div>
+
+<!-- {% if user.is_authenticated %}
+<div class="position-fixed bottom-0 end-0 p-3">
+    <a href="{% url 'research:create' %}" class="btn btn-outline-info" type="button">
+        <i class="fa-solid fa-plus"></i> Add Conference
+	</a>
+  </div>
+{% endif %} -->
 {% endblock %}
