@@ -431,3 +431,16 @@ p {
         transform: translateY(0);
     }
 }
+
+/* Adjusting submenu positioning */
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%; /* Aligns the submenu to the right of the parent */
+    margin-left: 0.1rem;
+    margin-top: -1px; /* Slightly adjust the top to align seamlessly */
+}
+
+/* Optional: Add slight padding to avoid overlap visually */
+.dropdown-submenu > .dropdown-item {
+    padding-right: 1.5rem;
+}
