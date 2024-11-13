@@ -401,7 +401,6 @@ p {
     margin: 0;
 }
 
-/* NAVBAR */
 /* Ensure main dropdown menu is only visible when hovering over the nav-item */
 .nav-item.dropdown:hover > .dropdown-menu {
     display: block;
@@ -419,4 +418,25 @@ p {
 /* Display submenus only when hovering over their specific parent item */
 .dropdown-submenu:hover > .dropdown-menu {
     display: block;
+}
+
+/* Add an arrow to indicate a submenu for dropdown items with submenus */
+.dropdown-submenu > .dropdown-item::after {
+    content: " ▸"; /* Arrow indicating a submenu */
+    float: right;
+}
+
+/* Optional styling to differentiate the submenus */
+.dropdown-menu {
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+.dropdown-item {
+    color: #ffffff;
+}
+
+.dropdown-item:hover {
+    background-color: #17a2b8;
+    color: #ffffff;
 }
