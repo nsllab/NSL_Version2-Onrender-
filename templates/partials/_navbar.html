@@ -59,7 +59,7 @@
           <ul class="dropdown-menu">
               <!-- Conferences Submenu -->
               <li class="dropdown-submenu">
-                  <a class="dropdown-item dropdown-toggle" href="{% url 'publications:conferences' %}" role="button" aria-expanded="false">
+                  <a class="dropdown-item" href="{% url 'publications:conferences' %}">
                       Conferences
                   </a>
                   <ul class="dropdown-menu">
@@ -70,7 +70,7 @@
       
               <!-- Journals Submenu -->
               <li class="dropdown-submenu">
-                  <a class="dropdown-item dropdown-toggle" href="{% url 'publications:journals' %}" role="button" aria-expanded="false">
+                  <a class="dropdown-item" href="{% url 'publications:journals' %}">
                       Journals
                   </a>
                   <ul class="dropdown-menu">
@@ -142,17 +142,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', function(event) {
-        const dropdowns = document.querySelectorAll('.dropdown-menu');
-        dropdowns.forEach(dropdown => {
-            if (!dropdown.contains(event.target) && 
-                !event.target.closest('.dropdown-toggle')) {
-                dropdown.style.display = 'none';
-            }
-        });
-    });
-
     // Toggle dropdown on mobile only
     const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
     dropdownToggles.forEach(toggle => {
