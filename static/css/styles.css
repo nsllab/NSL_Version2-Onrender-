@@ -401,18 +401,19 @@ p {
     margin: 0;
 }
 
-/* Ensure main dropdown menu is only visible when hovering over the nav-item */
+/* Ensure main dropdown menu is visible only when hovering over the nav-item */
 .nav-item.dropdown:hover > .dropdown-menu {
     display: block;
 }
 
-/* Ensure submenus are only displayed when hovering over the specific parent dropdown item */
+/* Hide submenus by default */
 .dropdown-submenu > .dropdown-menu {
     display: none;
     position: absolute;
     top: 0;
-    left: 100%; /* Aligns the submenu to the right of the parent */
-    margin-top: -1px; /* Slight adjustment to avoid overlapping */
+    left: 100%; /* Aligns to the right of the parent */
+    margin-top: -1px; /* Small adjustment to avoid overlap */
+    background-color: #343a40;
 }
 
 /* Display submenus only when hovering over their specific parent item */
@@ -420,23 +421,38 @@ p {
     display: block;
 }
 
-/* Add an arrow to indicate a submenu for dropdown items with submenus */
+/* Add an arrow to indicate a submenu for items with nested dropdowns */
 .dropdown-submenu > .dropdown-item::after {
-    content: " ▸"; /* Arrow indicating a submenu */
+    content: " ▸"; /* Arrow indicating submenu */
     float: right;
+    font-size: 0.8em;
+    margin-left: 5px;
+    color: #ccc; /* Adjust color for visibility */
 }
 
-/* Optional styling to differentiate the submenus */
-.dropdown-menu {
-    background-color: #343a40;
-    color: #ffffff;
-}
-
+/* Additional styling for consistency */
 .dropdown-item {
     color: #ffffff;
+    padding-right: 2rem; /* Space for the arrow */
 }
 
 .dropdown-item:hover {
     background-color: #17a2b8;
     color: #ffffff;
+}
+
+/* Fade-in effect for a smoother dropdown experience */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-menu {
+    animation: fadeInUp 0.3s ease-in-out;
 }
