@@ -46,39 +46,6 @@ a {
     background-color: #343a40;
 }
 
-/* Custom styles for the dropdowns */
-.navbar-nav .dropdown:hover .dropdown-menu {
-    display: block;
-    animation: fadeInUp 0.3s ease-in-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.dropdown-menu {
-    display: none;
-    background-color: #343a40; /* Dark background color for the dropdown menu */
-    border: none;
-    border-radius: 0;
-}
-
-.dropdown-item {
-    color: #ffffff !important; /* White text color for dropdown items */
-}
-
-.dropdown-item:hover {
-    background-color: #17a2b8; /* Hover background color for dropdown items */
-    color: #ffffff !important;
-}
-
 
 /* Custom styles for the carousel */
 .carousel-item img {
@@ -401,47 +368,15 @@ p {
     margin: 0;
 }
 
-/* Ensure main dropdown menu is visible only when hovering over the nav-item */
-.nav-item.dropdown:hover > .dropdown-menu {
+
+/* Custom styles for the dropdowns */
+
+/* General dropdown styles */
+.navbar-nav .dropdown:hover > .dropdown-menu {
     display: block;
+    animation: fadeInUp 0.3s ease-in-out;
 }
 
-/* Hide submenus by default */
-.dropdown-submenu > .dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 100%; /* Aligns to the right of the parent */
-    margin-top: -1px; /* Small adjustment to avoid overlap */
-    background-color: #343a40;
-}
-
-/* Display submenus only when hovering over their specific parent item */
-.dropdown-submenu:hover > .dropdown-menu {
-    display: block;
-}
-
-/* Add an arrow to indicate a submenu for items with nested dropdowns */
-.dropdown-submenu > .dropdown-item::after {
-    content: " ▸"; /* Arrow indicating submenu */
-    float: right;
-    font-size: 0.8em;
-    margin-left: 5px;
-    color: #ccc; /* Adjust color for visibility */
-}
-
-/* Additional styling for consistency */
-.dropdown-item {
-    color: #ffffff;
-    padding-right: 2rem; /* Space for the arrow */
-}
-
-.dropdown-item:hover {
-    background-color: #17a2b8;
-    color: #ffffff;
-}
-
-/* Fade-in effect for a smoother dropdown experience */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -453,6 +388,44 @@ p {
     }
 }
 
+/* Main dropdown menu styling */
 .dropdown-menu {
-    animation: fadeInUp 0.3s ease-in-out;
+    display: none;
+    background-color: #343a40;
+    border: none;
+    border-radius: 0;
+}
+
+/* General styling for dropdown items */
+.dropdown-item {
+    color: #ffffff !important;
+    padding-right: 2rem;
+}
+
+.dropdown-item:hover {
+    background-color: #17a2b8;
+    color: #ffffff !important;
+}
+
+/* Submenu specific styling */
+.dropdown-submenu > .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%; /* Aligns submenu to the right of its parent */
+    background-color: #343a40;
+}
+
+/* Show submenu when hovering over its parent */
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Arrow indicator for items with nested dropdowns */
+.dropdown-submenu > .dropdown-item::after {
+    content: " ▸";
+    float: right;
+    font-size: 0.8em;
+    color: #ccc;
+    margin-left: 5px;
 }
