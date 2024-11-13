@@ -59,7 +59,7 @@
           <ul class="dropdown-menu">
               <!-- Conferences Submenu -->
               <li class="dropdown-submenu">
-                  <a class="dropdown-item dropdown-toggle" href="#" role="button" aria-expanded="false">
+                  <a class="dropdown-item dropdown-toggle" href="{% url 'publications:conferences' %}" role="button" aria-expanded="false">
                       Conferences
                   </a>
                   <ul class="dropdown-menu">
@@ -70,7 +70,7 @@
       
               <!-- Journals Submenu -->
               <li class="dropdown-submenu">
-                  <a class="dropdown-item dropdown-toggle" href="#" role="button" aria-expanded="false">
+                  <a class="dropdown-item dropdown-toggle" href="{% url 'publications:journals' %}" role="button" aria-expanded="false">
                       Journals
                   </a>
                   <ul class="dropdown-menu">
@@ -140,39 +140,30 @@
   </div>
 </nav>
 
-
-
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const mainDropdown = document.getElementById('publications-dropdown');
-    const subMenus = mainDropdown.querySelectorAll('.dropdown-submenu');
-
-    // Function to toggle main dropdown visibility
-    mainDropdown.addEventListener('mouseenter', function() {
-        mainDropdown.classList.add('active');
-    });
-
-    mainDropdown.addEventListener('mouseleave', function() {
-        mainDropdown.classList.remove('active');
-    });
-
-    // Function to handle each submenu's visibility
-    subMenus.forEach(subMenu => {
-        subMenu.addEventListener('mouseenter', function() {
-            subMenu.classList.add('active');
-        });
-
-        subMenu.addEventListener('mouseleave', function() {
-            subMenu.classList.remove('active');
-        });
-    });
-
-    // Close all dropdowns if clicking outside the menu
-    document.addEventListener('click', function(event) {
-        if (!mainDropdown.contains(event.target)) {
-            mainDropdown.classList.remove('active');
-            subMenus.forEach(subMenu => subMenu.classList.remove('active'));
-        }
-    });
-});
-</script>
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function(event) {
+          const dropdowns = document.querySelectorAll('.dropdown-menu');
+          dropdowns.forEach(dropdown => {
+              if (!dropdown.contains(event.target) && 
+                  !event.target.matches('.dropdown-toggle')) {
+                  dropdown.style.display = 'none';
+              }
+          });
+      });
+  
+      // Handle Bootstrap dropdown toggle functionality for mobile
+      const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+      dropdownToggles.forEach(toggle => {
+          toggle.addEventListener('click', function(e) {
+              if (window.innerWidth < 992) { // Bootstrap's lg breakpoint
+                  e.preventDefault();
+                  const dropdownMenu = this.nextElementSibling;
+                  dropdownMenu.style.display = 
+                      dropdownMenu.style.display === 'block' ? 'none' : 'block';
+              }
+          });
+      });
+  });
+  </script>
