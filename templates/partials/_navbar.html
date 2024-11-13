@@ -141,29 +141,29 @@
 </nav>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      // Close dropdowns when clicking outside
-      document.addEventListener('click', function(event) {
-          const dropdowns = document.querySelectorAll('.dropdown-menu');
-          dropdowns.forEach(dropdown => {
-              if (!dropdown.contains(event.target) && 
-                  !event.target.matches('.dropdown-toggle')) {
-                  dropdown.style.display = 'none';
-              }
-          });
-      });
-  
-      // Handle Bootstrap dropdown toggle functionality for mobile
-      const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-      dropdownToggles.forEach(toggle => {
-          toggle.addEventListener('click', function(e) {
-              if (window.innerWidth < 992) { // Bootstrap's lg breakpoint
-                  e.preventDefault();
-                  const dropdownMenu = this.nextElementSibling;
-                  dropdownMenu.style.display = 
-                      dropdownMenu.style.display === 'block' ? 'none' : 'block';
-              }
-          });
-      });
-  });
+document.addEventListener('DOMContentLoaded', function() {
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdowns = document.querySelectorAll('.dropdown-menu');
+        dropdowns.forEach(dropdown => {
+            if (!dropdown.contains(event.target) && 
+                !event.target.closest('.dropdown-toggle')) {
+                dropdown.style.display = 'none';
+            }
+        });
+    });
+
+    // Toggle dropdown on mobile only
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            if (window.innerWidth < 992) { // lg breakpoint for Bootstrap
+                e.preventDefault();
+                const dropdownMenu = this.nextElementSibling;
+                dropdownMenu.style.display = 
+                    dropdownMenu.style.display === 'block' ? 'none' : 'block';
+            }
+        });
+    });
+});
   </script>
