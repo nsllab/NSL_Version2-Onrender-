@@ -402,45 +402,21 @@ p {
 }
 
 /* NAVBAR */
-/* Only display dropdowns on hover for direct parent items */
+/* Ensure main dropdown menu is only visible when hovering over the nav-item */
 .nav-item.dropdown:hover > .dropdown-menu {
     display: block;
 }
 
-/* For submenus */
-.dropdown-submenu:hover > .dropdown-menu {
-    display: block;
-}
-
-/* Ensure submenus have a smooth fade-in effect */
-.dropdown-menu {
-    display: none;
-    animation: fadeInUp 0.3s ease-in-out;
-    background-color: #343a40;
-    border: none;
-    border-radius: 0;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Adjusting submenu positioning */
+/* Ensure submenus are only displayed when hovering over the specific parent dropdown item */
 .dropdown-submenu > .dropdown-menu {
+    display: none;
+    position: absolute;
     top: 0;
     left: 100%; /* Aligns the submenu to the right of the parent */
-    margin-left: 0.1rem;
-    margin-top: -1px; /* Slightly adjust the top to align seamlessly */
+    margin-top: -1px; /* Slight adjustment to avoid overlapping */
 }
 
-/* Optional: Add slight padding to avoid overlap visually */
-.dropdown-submenu > .dropdown-item {
-    padding-right: 1.5rem;
+/* Display submenus only when hovering over their specific parent item */
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
 }
