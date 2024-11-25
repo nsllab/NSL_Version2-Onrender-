@@ -1,6 +1,7 @@
 import os
 import uuid
-
+from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from .models import Project, History, BaseProject
@@ -14,6 +15,7 @@ from .models import UserInput
 from .forms import UserInputForm
 from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
+from django.views.decorators.csrf import csrf_exempt
 
 def base_project(request):
     base_projects = BaseProject.objects.all()
@@ -62,6 +64,8 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     
 
 def purechain_view(request):
+    file_data = []  # Initialize before any logic
+
     if request.method == 'POST':
         form = UserInputForm(request.POST, request.FILES)
         if form.is_valid():
@@ -76,28 +80,57 @@ def purechain_view(request):
                     default_storage.save(text_path, text_content.encode('utf-8'))
                 except Exception as e:
                     print(f"Error saving text file: {e}")
+                    messages.error(request, "Failed to save text content.")
 
             # Save each uploaded file
             for file in files:
                 file_path = os.path.join('uploads', f"{uuid.uuid4()}_{file.name}")
                 try:
                     default_storage.save(file_path, file)
+                    
+                    # Attach text content for .txt files
+                    if file.name.lower().endswith('.txt'):
+                        with default_storage.open(file_path) as f:
+                            text_content = f.read().decode('utf-8')
+                        file_data.append({
+                            "url": default_storage.url(file_path),
+                            "basename": os.path.basename(file_path),
+                            "text_content": text_content,
+                        })
+                    else:
+                        file_data.append({
+                            "url": default_storage.url(file_path),
+                            "basename": os.path.basename(file_path),
+                            "text_content": None,
+                        })
                 except Exception as e:
                     print(f"Error saving file: {e}")
+                    messages.error(request, f"Failed to save file: {file.name}")
 
-            return redirect('purechain_view')
+            messages.success(request, "Files uploaded successfully.")
+            return redirect('research:purechain_view')
     else:
         form = UserInputForm()
 
     # Fetch file list and preprocess file data
     files = default_storage.listdir('uploads')[1]
-    file_data = [
+    file_data.extend([
         {
             "url": default_storage.url(f'uploads/{file}'),
             "basename": os.path.basename(file),
-            "is_text_file": file.lower().endswith(".txt"),
+            "text_content": None,  # Replace with actual text if available
         }
         for file in files
-    ]
+    ])
 
     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
+
+def delete_file(request, filename):
+    if request.method == 'POST':
+        file_path = f'uploads/{filename}'
+        if default_storage.exists(file_path):
+            default_storage.delete(file_path)
+            messages.success(request, "File deleted successfully.")
+        else:
+            messages.error(request, "File not found.")
+        return redirect('research:purechain_view')
