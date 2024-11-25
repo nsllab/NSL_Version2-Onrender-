@@ -109,9 +109,9 @@ def purechain_view(request):
     # Fetch file list from storage
     files = default_storage.listdir('uploads')[1]  # List all files in the 'uploads' directory
     for file in files:
-        # Default metadata
         file_entry = {
             "url": default_storage.url(f'uploads/{file}'),
+            "filename": file,  # Add just the filename
             "title": file.split("_")[1] if "_" in file else "Unknown Title",
             "text_content": None,
             "timestamp": "Unknown",
@@ -121,13 +121,11 @@ def purechain_view(request):
         if file.lower().endswith('.txt'):
             try:
                 with default_storage.open(f'uploads/{file}', 'r') as f:
-                    file_entry["text_content"] = f.read()  # Read the content of the text file
+                    file_entry["text_content"] = f.read()
             except Exception as e:
                 print(f"Error reading file content for {file}: {e}")
 
-        # Add placeholder for timestamp
         file_entry["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
         file_data.append(file_entry)
 
     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
@@ -143,5 +141,5 @@ def delete_file(request, filename):
             else:
                 messages.error(request, "File not found.")
         except Exception as e:
-            messages.error(request, f"Error deleting file: {e}")
+            messages.error(request, f"An error occurred while deleting the file: {e}")
         return redirect('research:purechain_view')
