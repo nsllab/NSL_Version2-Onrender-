@@ -22,7 +22,7 @@ class UserInputForm(forms.Form):
         for file in files:
             if file.size > 5 * 1024 * 1024:  # 5 MB limit
                 raise forms.ValidationError("File size must be less than 5 MB.")
-            if not file.name.lower().endswith(('.jpg', '.png', '.txt', '.pdf')):
+            if not file.name.lower().endswith(('.jpg', '.png', '.txt', '.pdf', '.doc', '.docx')):
                 raise forms.ValidationError("Invalid file type.")
         return files
 
