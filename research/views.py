@@ -64,79 +64,82 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
 def purechain_view(request):
-    file_data = []
+    file_data = []  # List to hold data for saved entries
 
     if request.method == 'POST':
         form = UserInputForm(request.POST, request.FILES)
         if form.is_valid():
             title = form.cleaned_data['title']
             text_content = form.cleaned_data['text_content']
-            files = request.FILES.getlist('files')
+            files = request.FILES.getlist('files')  # Get multiple files
 
             # Save text content as a .txt file
             if text_content:
-                text_filename = f"{uuid.uuid4()}_{title}.txt"
-                text_path = os.path.join("uploads", text_filename)
+                text_path = os.path.join('uploads', f"{uuid.uuid4()}_{title}.txt")
                 try:
                     default_storage.save(text_path, text_content.encode('utf-8'))
                     file_data.append({
                         "url": default_storage.url(text_path),
-                        "basename": title,
+                        "title": title,
                         "text_content": text_content,
                         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     })
                 except Exception as e:
-                    print(f"Error saving text file: {e}")
-                    messages.error(request, "Failed to save text content.")
+                    messages.error(request, f"Failed to save text content: {e}")
 
-            # Save each uploaded file
+            # Save uploaded files
             for file in files:
-                file_filename = f"{uuid.uuid4()}_{file.name}"
-                file_path = os.path.join("uploads", file_filename)
+                file_path = os.path.join('uploads', f"{uuid.uuid4()}_{file.name}")
                 try:
                     default_storage.save(file_path, file)
                     file_data.append({
                         "url": default_storage.url(file_path),
-                        "basename": title,  # Use the title for display
-                        "text_content": None,
+                        "title": title,
+                        "text_content": text_content if file.name.lower().endswith(".txt") else None,
                         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     })
                 except Exception as e:
-                    print(f"Error saving file: {e}")
-                    messages.error(request, f"Failed to save file: {file.name}")
+                    messages.error(request, f"Failed to save file {file.name}: {e}")
 
             messages.success(request, "Files uploaded successfully.")
             return redirect('research:purechain_view')
     else:
         form = UserInputForm()
 
-    # Fetch file list
-    try:
-        files = default_storage.listdir("uploads")[1]
-        for file in files:
-            file_path = os.path.join("uploads", file)
-            file_data.append({
-                "url": default_storage.url(file_path),
-                "basename": os.path.splitext(file)[0],
-                "text_content": None,  # Replace if text content is saved separately
-                "timestamp": "Unknown",  # Add real metadata if available
-            })
-    except Exception as e:
-        print(f"Error reading uploads directory: {e}")
+    # Fetch file list from storage
+    files = default_storage.listdir('uploads')[1]  # List all files in the 'uploads' directory
+    for file in files:
+        # Default metadata
+        file_entry = {
+            "url": default_storage.url(f'uploads/{file}'),
+            "title": file.split("_")[1] if "_" in file else "Unknown Title",
+            "text_content": None,
+            "timestamp": "Unknown",
+        }
+
+        # Check if the file is a text file to read its content
+        if file.lower().endswith('.txt'):
+            try:
+                with default_storage.open(f'uploads/{file}', 'r') as f:
+                    file_entry["text_content"] = f.read()  # Read the content of the text file
+            except Exception as e:
+                print(f"Error reading file content for {file}: {e}")
+
+        # Simulate adding a timestamp (since no timestamps are currently stored)
+        file_entry["timestamp"] = datetime.fromtimestamp(
+            os.path.getmtime(default_storage.path(f'uploads/{file}'))
+        ).strftime("%Y-%m-%d %H:%M:%S")
+
+        file_data.append(file_entry)
 
     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
 
-
 def delete_file(request, filename):
     if request.method == 'POST':
-        file_path = os.path.join("uploads", filename)
-        try:
-            if default_storage.exists(file_path):
-                default_storage.delete(file_path)
-                messages.success(request, "File deleted successfully.")
-            else:
-                messages.error(request, "File not found.")
-        except Exception as e:
-            print(f"Error deleting file: {e}")
-            messages.error(request, "An error occurred while deleting the file.")
+        file_path = f'uploads/{filename}'
+        if default_storage.exists(file_path):
+            default_storage.delete(file_path)
+            messages.success(request, "File deleted successfully.")
+        else:
+            messages.error(request, "File not found.")
         return redirect('research:purechain_view')
