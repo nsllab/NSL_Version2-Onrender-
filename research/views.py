@@ -87,22 +87,19 @@ def purechain_view(request):
                 file_path = os.path.join('uploads', f"{uuid.uuid4()}_{file.name}")
                 try:
                     default_storage.save(file_path, file)
-                    
+
                     # Attach text content for .txt files
+                    text = None
                     if file.name.lower().endswith('.txt'):
                         with default_storage.open(file_path) as f:
-                            text_content = f.read().decode('utf-8')
-                        file_data.append({
-                            "url": default_storage.url(file_path),
-                            "basename": os.path.basename(file_path),
-                            "text_content": text_content,
-                        })
-                    else:
-                        file_data.append({
-                            "url": default_storage.url(file_path),
-                            "basename": os.path.basename(file_path),
-                            "text_content": None,
-                        })
+                            text = f.read().decode('utf-8')
+
+                    file_data.append({
+                        "url": default_storage.url(file_path),
+                        "basename": os.path.basename(file_path),
+                        "title": title,  # Attach the title
+                        "text_content": text,
+                    })
                 except Exception as e:
                     print(f"Error saving file: {e}")
                     messages.error(request, f"Failed to save file: {file.name}")
@@ -118,6 +115,7 @@ def purechain_view(request):
         {
             "url": default_storage.url(f'uploads/{file}'),
             "basename": os.path.basename(file),
+            "title": file.split('_')[1],  # Assume title is part of filename
             "text_content": None,  # Replace with actual text if available
         }
         for file in files
