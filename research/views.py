@@ -75,7 +75,7 @@ def purechain_view(request):
 
             # Save text content as a .txt file
             if text_content:
-                text_path = os.path.join('uploads', f"{uuid.uuid4()}_{title}.txt")
+                text_path = f'uploads/{uuid.uuid4()}_{title}.txt'
                 try:
                     default_storage.save(text_path, text_content.encode('utf-8'))
                     file_data.append({
@@ -89,7 +89,7 @@ def purechain_view(request):
 
             # Save uploaded files
             for file in files:
-                file_path = os.path.join('uploads', f"{uuid.uuid4()}_{file.name}")
+                file_path = f'uploads/{uuid.uuid4()}_{file.name}'
                 try:
                     default_storage.save(file_path, file)
                     file_data.append({
@@ -125,21 +125,23 @@ def purechain_view(request):
             except Exception as e:
                 print(f"Error reading file content for {file}: {e}")
 
-        # Simulate adding a timestamp (since no timestamps are currently stored)
-        file_entry["timestamp"] = datetime.fromtimestamp(
-            os.path.getmtime(default_storage.path(f'uploads/{file}'))
-        ).strftime("%Y-%m-%d %H:%M:%S")
+        # Add placeholder for timestamp
+        file_entry["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         file_data.append(file_entry)
 
     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
 
+
 def delete_file(request, filename):
     if request.method == 'POST':
         file_path = f'uploads/{filename}'
-        if default_storage.exists(file_path):
-            default_storage.delete(file_path)
-            messages.success(request, "File deleted successfully.")
-        else:
-            messages.error(request, "File not found.")
+        try:
+            if default_storage.exists(file_path):
+                default_storage.delete(file_path)
+                messages.success(request, "File deleted successfully.")
+            else:
+                messages.error(request, "File not found.")
+        except Exception as e:
+            messages.error(request, f"Error deleting file: {e}")
         return redirect('research:purechain_view')
