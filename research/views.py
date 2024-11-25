@@ -89,8 +89,15 @@ def purechain_view(request):
     else:
         form = UserInputForm()
 
-    # Fetch file list and prepare basenames
+    # Fetch file list and preprocess file data
     files = default_storage.listdir('uploads')[1]
-    file_data = [{'url': default_storage.url(f'uploads/{file}'), 'basename': os.path.basename(file)} for file in files]
+    file_data = [
+        {
+            "url": default_storage.url(f'uploads/{file}'),
+            "basename": os.path.basename(file),
+            "is_text_file": file.lower().endswith(".txt"),
+        }
+        for file in files
+    ]
 
     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
