@@ -1,21 +1,70 @@
-{% extends 'base.html' %} {% load bootstrap5 %} {% block content %}
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block content %}
 {% include 'partials/_banner.html' with heading="Pure Chain" %}
-<div class="container mt-5 projects">
-  <div class="row">
-    <div class="col-sm-3">
-      
-    </div>
-    
-    </div>
-    
-  </div>
-</div>
 
-<!-- {% if user.is_authenticated %}
-<div class="position-fixed bottom-0 end-0 p-3">
-    <a href="{% url 'research:create' %}" class="btn btn-outline-info" type="button">
-        <i class="fa-solid fa-plus"></i> Add Conference
-	</a>
-  </div>
-{% endif %} -->
+<div class="container mt-5">
+    <div class="row">
+        <!-- Form Section -->
+        <div class="col-lg-6">
+            <h3 class="mb-4">Add New Entry</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+
+        <!-- Entries Display Section -->
+        <div class="col-lg-6">
+            <h3 class="mb-4">Saved Entries</h3>
+            {% if data %}
+                <div class="list-group">
+                    {% for item in data %}
+                    <div class="list-group-item mb-4 p-3 {% if forloop.counter <= 3 %}border-success{% endif %}">
+                        <h5>{{ item.title }}</h5>
+                        {% if forloop.counter <= 3 %}
+                        <span class="badge bg-success">New</span>
+                        {% endif %}
+                        <p>{{ item.text_content }}</p>
+                        {% if item.file %}
+                        <a href="{{ item.file.url }}" target="_blank" class="btn btn-outline-primary">View File</a>
+                        {% endif %}
+                        <small class="text-muted">Uploaded on {{ item.created_at }}</small>
+
+                        <!-- Delete Option -->
+                        <form method="post" action="{% url 'research:delete_entry' item.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination Controls -->
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination">
+                        {% if data.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ data.previous_page_number }}">Previous</a>
+                        </li>
+                        {% endif %}
+                        {% for num in data.paginator.page_range %}
+                        <li class="page-item {% if num == data.number %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+                        {% if data.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ data.next_page_number }}">Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% else %}
+                <p>No entries found. Add one using the form on the left.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

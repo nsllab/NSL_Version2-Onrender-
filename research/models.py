@@ -45,3 +45,16 @@ class History(models.Model):
     
     def __str__(self):
         return self.subject
+
+class UserInput(models.Model):
+    title = models.CharField(max_length=255)
+    text_content = models.TextField(blank=True, null=True)
+    file = models.FileField(upload_to='uploads/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "User Input"
+        verbose_name_plural = "User Inputs"
+
+    def __str__(self):
+        return self.title
