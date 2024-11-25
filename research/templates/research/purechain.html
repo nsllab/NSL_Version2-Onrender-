@@ -33,7 +33,7 @@
                         <div class="list-group">
                             {% for file in files %}
                             <div class="list-group-item mb-4 p-3 border rounded">
-                                <h5 class="fw-bold text-truncate">{{ file.basename }}</h5>
+                                <h5 class="fw-bold">{{ file.basename }}</h5>
                                 <p class="mb-2">{{ file.text_content|default:"No content available." }}</p>
                                 <p class="mb-2">
                                     <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary">
