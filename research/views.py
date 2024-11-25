@@ -16,6 +16,7 @@ from .forms import UserInputForm
 from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
 
 def base_project(request):
     base_projects = BaseProject.objects.all()
@@ -61,10 +62,9 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         form.instance.writer = self.request.user  # Set the writer to the current user
         return super().form_valid(form)
-    
 
 def purechain_view(request):
-    file_data = []  # Initialize before any logic
+    file_data = []  # Initialize file data list
 
     if request.method == 'POST':
         form = UserInputForm(request.POST, request.FILES)
@@ -78,6 +78,12 @@ def purechain_view(request):
                 text_path = os.path.join('uploads', f"{uuid.uuid4()}_{title}.txt")
                 try:
                     default_storage.save(text_path, text_content.encode('utf-8'))
+                    file_data.append({
+                        "url": default_storage.url(text_path),
+                        "basename": title,  # Use title instead of file name
+                        "text_content": text_content,
+                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    })
                 except Exception as e:
                     print(f"Error saving text file: {e}")
                     messages.error(request, "Failed to save text content.")
@@ -87,18 +93,13 @@ def purechain_view(request):
                 file_path = os.path.join('uploads', f"{uuid.uuid4()}_{file.name}")
                 try:
                     default_storage.save(file_path, file)
-
-                    # Attach text content for .txt files
-                    text = None
-                    if file.name.lower().endswith('.txt'):
-                        with default_storage.open(file_path) as f:
-                            text = f.read().decode('utf-8')
-
+                    
+                    # Attach metadata for each file
                     file_data.append({
                         "url": default_storage.url(file_path),
-                        "basename": os.path.basename(file_path),
-                        "title": title,  # Attach the title
-                        "text_content": text,
+                        "basename": title,  # Use title instead of file name
+                        "text_content": None,
+                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     })
                 except Exception as e:
                     print(f"Error saving file: {e}")
@@ -114,9 +115,9 @@ def purechain_view(request):
     file_data.extend([
         {
             "url": default_storage.url(f'uploads/{file}'),
-            "basename": os.path.basename(file),
-            "title": file.split('_')[1],  # Assume title is part of filename
+            "basename": os.path.splitext(file)[0],  # Use the file name without extension
             "text_content": None,  # Replace with actual text if available
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
         for file in files
     ])
