@@ -1,3 +1,6 @@
+import os
+import uuid
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from .models import Project, History, BaseProject
@@ -10,6 +13,7 @@ from .choices import PROJECTS
 from .models import UserInput
 from .forms import UserInputForm
 from django.core.paginator import Paginator
+from django.core.files.storage import default_storage
 
 def base_project(request):
     base_projects = BaseProject.objects.all()
@@ -61,16 +65,32 @@ def purechain_view(request):
     if request.method == 'POST':
         form = UserInputForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            title = form.cleaned_data['title']
+            text_content = form.cleaned_data['text_content']
+            files = request.FILES.getlist('files')  # Get multiple files
+
+            # Save text content as a .txt file
+            if text_content:
+                text_path = os.path.join('uploads', f"{uuid.uuid4()}_{title}.txt")
+                try:
+                    default_storage.save(text_path, text_content.encode('utf-8'))
+                except Exception as e:
+                    print(f"Error saving text file: {e}")
+
+            # Save each uploaded file
+            for file in files:
+                file_path = os.path.join('uploads', f"{uuid.uuid4()}_{file.name}")
+                try:
+                    default_storage.save(file_path, file)
+                except Exception as e:
+                    print(f"Error saving file: {e}")
+
             return redirect('purechain_view')
     else:
         form = UserInputForm()
 
-    # Fetch all user inputs and paginate
-    data_list = UserInput.objects.all().order_by('-created_at')
-    paginator = Paginator(data_list, 10)  # Show 10 items per page
-    page_number = request.GET.get('page')
-    data = paginator.get_page(page_number)
+    # Fetch file list
+    files = default_storage.listdir('uploads')[1]
+    file_urls = [default_storage.url(f'uploads/{file}') for file in files]
 
-    context = {'form': form, 'data': data}
-    return render(request, 'research/purechain.html', context)
+    return render(request, 'research/purechain.html', {'form': form, 'files': file_urls})
