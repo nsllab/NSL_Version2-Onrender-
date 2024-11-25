@@ -74,3 +74,8 @@ def purechain_view(request):
 
     context = {'form': form, 'data': data}
     return render(request, 'research/purechain.html', context)
+
+def delete_entry(request, pk):
+    entry = get_object_or_404(UserInput, pk=pk)
+    entry.delete()
+    return redirect('purechain_view')
