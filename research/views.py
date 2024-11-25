@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from .models import Project, History, BaseProject
 from django.views.generic import CreateView, UpdateView, DetailView
@@ -7,7 +7,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .choices import PROJECTS
-
+from .models import UserInput
+from .forms import UserInputForm
+from django.core.paginator import Paginator
 
 def base_project(request):
     base_projects = BaseProject.objects.all()
@@ -56,5 +58,19 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     
 
 def purechain_view(request):
-    return render(request, 'research/purechain.html')
+    if request.method == 'POST':
+        form = UserInputForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('purechain_view')
+    else:
+        form = UserInputForm()
 
+    # Fetch all user inputs and paginate
+    data_list = UserInput.objects.all().order_by('-created_at')
+    paginator = Paginator(data_list, 10)  # Show 10 items per page
+    page_number = request.GET.get('page')
+    data = paginator.get_page(page_number)
+
+    context = {'form': form, 'data': data}
+    return render(request, 'research/purechain.html', context)
