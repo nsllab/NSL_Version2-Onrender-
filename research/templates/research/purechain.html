@@ -27,7 +27,7 @@
                         <span class="badge bg-success">New</span>
                         {% endif %}
                         <!-- Display text files -->
-                        {% if file.basename.endswith:".txt" %}
+                        {% if file.is_text_file %}
                         <p>
                             <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary">View Text</a>
                         </p>
