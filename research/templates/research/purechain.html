@@ -20,20 +20,20 @@
             <h3 class="mb-4">Saved Entries</h3>
             {% if files %}
                 <div class="list-group">
-                    {% for file_url in files %}
+                    {% for file in files %}
                     <div class="list-group-item mb-4 p-3 {% if forloop.counter <= 3 %}border-success{% endif %}">
-                        <h5>{{ file_url|basename }}</h5>
+                        <h5>{{ file.basename }}</h5>
                         {% if forloop.counter <= 3 %}
                         <span class="badge bg-success">New</span>
                         {% endif %}
                         <!-- Display text files -->
-                        {% if file_url.endswith:".txt" %}
+                        {% if file.basename.endswith:".txt" %}
                         <p>
-                            <a href="{{ file_url }}" target="_blank" class="btn btn-outline-primary">View Text</a>
+                            <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary">View Text</a>
                         </p>
                         {% else %}
                         <!-- Display uploaded files -->
-                        <a href="{{ file_url }}" target="_blank" class="btn btn-outline-primary">Download File</a>
+                        <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary">Download File</a>
                         {% endif %}
                         <small class="text-muted">Uploaded recently</small>
                     </div>
