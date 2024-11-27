@@ -10,42 +10,47 @@ a {
 }
 
 .navbar {
-    background-color: transparent; /* Dark background color */
+    background-color: #ffffff; /* White background for better contrast */
     z-index: 1000;
-    min-height: 100px;
+    min-height: 80px; /* Slightly reduced height for a compact design */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 0.8rem 1.5rem; /* Consistent spacing */
 }
 
 .navbar-brand img {
-    width: 250px; /* Adjust the logo size as needed */
+    max-height: 50px; /* Logo scales appropriately */
+    margin-right: 15px;
 }
 
 .navbar-toggler {
-    border-color: #ffffff; /* White border color for the toggler */
+    border-color: #343a40; /* Neutral border for toggler */
 }
 
 .navbar-toggler-icon {
-    background-color: #ffffff; /* White background color for the toggler icon */
+    background-color: #343a40; /* Neutral toggler icon for visibility */
 }
 
 .navbar-nav .nav-link {
-    color: #ffffff !important; /* White text color for the links */
-    font-size: 18px; /* Adjust the font size as needed */
-    font-weight: bold; /* Optional: Add font-weight for emphasis */
+    color: #343a40 !important; /* Neutral text color for links */
+    font-size: 18px; /* Readable font size */
+    font-weight: 500; /* Medium font weight */
+    text-transform: capitalize; /* Uniform capitalization */
+    padding: 0 1rem; /* Equal spacing between links */
+    transition: color 0.3s ease-in-out;
 }
 
 .navbar-nav .nav-link:hover {
-    color: #17a2b8 !important; /* Hover color for the links */
-    font-size: 18px;
+    color: #17a2b8 !important; /* Bootstrap info color for hover */
 }
 
 .navbar-nav .nav-item {
-    background-color: #17a2b8;
+    background-color: transparent; /* Clear background */
+    border-radius: 4px; /* Slight rounding for hover effect */
 }
 
 .navbar-nav .nav-item:hover {
-    background-color: #343a40;
+    background-color: rgba(23, 162, 184, 0.1); /* Light hover background */
 }
-
 
 /* Custom styles for the carousel */
 .carousel-item img {
@@ -371,10 +376,17 @@ p {
 
 /* Custom styles for the dropdowns */
 
-/* General dropdown styles */
+/* Dropdown styling */
 .navbar-nav .dropdown:hover > .dropdown-menu {
     display: block;
     animation: fadeInUp 0.3s ease-in-out;
+}
+
+/* Sticky behavior */
+.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
 }
 
 @keyframes fadeInUp {
