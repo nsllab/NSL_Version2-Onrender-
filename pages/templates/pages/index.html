@@ -7,11 +7,9 @@
     <div class="section mb-5">
         <div class="row">
             <div class="col-12">
-                <div class="custom-banner">
-                    <img src="{% static 'img/three.jpg' %}" alt="Projects" class="banner-image">
-                    <div class="banner-content">
-                        <h1 class="fw-bold">{{ heading }}</h1>
-                    </div>
+                <div class="home-custom-banner">
+                    
+                   
                 </div>
             </div>
         </div>
@@ -163,14 +161,21 @@
             <div class="col-lg-4 mb-4">
                 <div class="team-member">
                     <img src="{{ prof.image.url }}" class="img-fluid rounded-circle team-image" style="width: 300px; height: 300px;" alt="Professor">
-                    <h3 class="h5 mt-3">{{ prof.name }}</h3>
+                    <h3 class="h5 mt-3">
+                        {% if prof.name == "Deong-Seong Kim" %}
+                            <a href="https://sites.google.com/view/profdskim" target="_blank">{{ prof.name }}</a>
+                        {% else %}
+                            {{ prof.name }}
+                        {% endif %}
+                    </h3>
                     <!-- <p class="text-muted">AI & Machine Learning</p> -->
                 </div>
             </div>
           {% endfor %}
         </div>
     </div>
-  </section>
+</section>
+
 
   <section id="partners" class="pt-5">
     <div class="team-background"></div>
