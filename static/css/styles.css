@@ -359,17 +359,18 @@ p {
 }
 
 .home-custom-banner {
-    height: 30vh; /* 20% of the viewport height */
-    /* background: linear-gradient(135deg, #6c5b7b, #c06c84, #6c5b7b);  */
+    height: 30vh; /* 30% of the viewport height */
     background-image: url('../img/three.jpg');
+    background-size: cover; /* Ensures the image covers the whole area without distorting */
+    background-position: center; /* Ensures the image is centered */
     background-repeat: no-repeat;
     color: #fff; /* Text color */
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center; /* Center-align text */
-    font-size: 2em; /* Increase font size for better visibility */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a subtle text shadow */
+    font-size: 2em; /* Adjust font size */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Subtle text shadow */
 }
 
 .members-banner {
