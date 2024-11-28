@@ -361,7 +361,7 @@ p {
 .home-custom-banner {
     height: 30vh; /* 30% of the viewport height */
     background-image: url('../img/three.jpg');
-    background-size: cover; /* Ensures the image covers the whole area without distorting */
+    background-size: contain; /* Ensures the image covers the whole area without distorting */
     background-position: center; /* Ensures the image is centered */
     background-repeat: no-repeat;
     color: #fff; /* Text color */
