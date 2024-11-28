@@ -360,10 +360,11 @@ p {
 
 .home-custom-banner {
     height: 30vh; /* 30% of the viewport height */
+    background-color: gray; /* Set the background color of the div to gray */
     background-image: url('../img/three.jpg');
-    background-size: contain; /* Ensures the image covers the whole area without distorting */
-    background-position: center; /* Ensures the image is centered */
-    background-repeat: no-repeat;
+    background-size: contain; /* Ensures the image is contained within the div, without distorting */
+    background-position: top center; /* Position the image at the top center */
+    background-repeat: no-repeat; /* Prevent the background from repeating */
     color: #fff; /* Text color */
     display: flex;
     justify-content: center;
@@ -372,6 +373,7 @@ p {
     font-size: 2em; /* Adjust font size */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Subtle text shadow */
 }
+
 
 .home-div-banner{
     margin: 0;
