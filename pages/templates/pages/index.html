@@ -3,8 +3,22 @@
 
 {% block content %}
 <main>
-    <div id="myCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
-      <!-- Single Image in Carousel -->
+
+    <div class="section mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="custom-banner">
+                    <img src="{% static 'img/three.jpg' %}" alt="Projects" class="banner-image">
+                    <div class="banner-content">
+                        <h1 class="fw-bold">{{ heading }}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- <div id="myCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+      
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img src="{% static 'img/sub_img.jpg' %}" alt="" class="d-block w-100">
@@ -17,7 +31,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </main>
       <!-- Hero Section -->
       <!-- <main id="myCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
