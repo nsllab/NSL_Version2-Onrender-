@@ -359,8 +359,8 @@ p {
 }
 
 .home-custom-banner {
-    height: 10vh; /* 30% of the viewport height */
-    background-color: rgb(226, 226, 226); /* Set the background color of the div to gray */
+    height: 100vh; /* 30% of the viewport height */
+    background-color: rgba(226, 226, 226, 0); /* Set the background color of the div to gray */
     background-image: url('../img/three.jpg');
     background-size: contain; /* Ensures the image is contained within the div, without distorting */
     background-position: top center; /* Position the image at the top center */
