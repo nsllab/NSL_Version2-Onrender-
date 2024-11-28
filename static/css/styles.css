@@ -359,19 +359,40 @@ p {
 }
 
 .home-custom-banner {
-    height: 100vh; /* 30% of the viewport height */
-    background-color: rgba(226, 226, 226, 0); /* Set the background color of the div to gray */
-    background-image: url('../img/three.jpg');
-    background-size: contain; /* Ensures the image is contained within the div, without distorting */
-    background-position: top center; /* Position the image at the top center */
-    background-repeat: no-repeat; /* Prevent the background from repeating */
-    color: #fff; /* Text color */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center; /* Center-align text */
-    font-size: 2em; /* Adjust font size */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Subtle text shadow */
+    height: 30vh; /* Makes height proportional to the viewport */
+    width: 100%; /* Full width of the container */
+    background-image: url('../img/three.jpg'); /* Update with your image path */
+    background-size: cover; /* Ensures the image covers the container while maintaining aspect ratio */
+    background-position: center top; /* Keeps the image aligned to the top center */
+    background-repeat: no-repeat; /* Prevents repeating the image */
+    background-color: gray; /* Gray background in case of gaps */
+    display: flex; /* Flexbox for aligning content (if any) */
+    justify-content: center; /* Horizontal alignment */
+    align-items: center; /* Vertical alignment */
+    text-align: center; /* Centers any text horizontally */
+}
+
+/* Media query for larger screens */
+@media (min-width: 1200px) {
+    .home-custom-banner {
+        height: 40vh; /* Increase banner height on larger screens */
+    }
+}
+
+/* Media query for tablets */
+@media (max-width: 768px) {
+    .home-custom-banner {
+        height: 25vh; /* Decrease banner height for tablets */
+        background-size: contain; /* Ensure entire image fits */
+    }
+}
+
+/* Media query for small screens (e.g., phones) */
+@media (max-width: 480px) {
+    .home-custom-banner {
+        height: 20vh; /* Further reduce height for small screens */
+        background-position: center; /* Adjust positioning for small screens */
+    }
 }
 
 
