@@ -347,7 +347,7 @@ p {
 .custom-banner {
     height: 30vh; /* 20% of the viewport height */
     /* background: linear-gradient(135deg, #6c5b7b, #c06c84, #6c5b7b);  */
-    background-image: url('../img/one.jpg');
+    background-image: url('../img/one_old.jpg');
     background-repeat: no-repeat;
     color: #fff; /* Text color */
     display: flex;
