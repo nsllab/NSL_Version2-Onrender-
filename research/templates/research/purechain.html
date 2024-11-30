@@ -1,10 +1,100 @@
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %}
 {% load bootstrap5 %}
 {% block content %}
 {% include 'partials/_banner.html' with heading="Pure Chain" %}
 
 <div class="container mt-5">
     <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Add New Entry</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Saved Entries</h3>
+                </div>
+                <div class="card-body">
+                    {% if files %}
+                        <div class="list-group">
+                            {% for file in files %}
+                            <div class="list-group-item mb-4 p-3 border rounded">
+                                <h5 class="fw-bold text-truncate">{{ file.title }}</h5>
+                                <p class="mb-2">{{ file.text_content|default:"No content available." }}</p>
+                                <p class="mb-2">
+                                    <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary">
+                                        Download File
+                                    </a>
+                                </p>
+                                <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                                <small class="text-muted d-block mt-2">Uploaded: {{ file.timestamp }}</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No entries found. Start by adding a new entry using the form.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.querySelector('input[type="file"]');
+    const uploadedFiles = document.getElementById('uploaded-files');
+
+    fileInput.addEventListener('change', () => {
+        uploadedFiles.innerHTML = '';
+        Array.from(fileInput.files).forEach((file, index) => {
+            const fileDiv = document.createElement('div');
+            fileDiv.className = 'uploaded-file';
+
+            fileDiv.innerHTML = `
+                <span>${file.name}</span>
+                <button type="button" onclick="removeFile(${index})" class="btn btn-danger btn-sm">X</button>
+            `;
+            uploadedFiles.appendChild(fileDiv);
+        });
+    });
+
+    function removeFile(index) {
+        const dt = new DataTransfer();
+        const files = fileInput.files;
+
+        Array.from(files).forEach((file, i) => {
+            if (i !== index) dt.items.add(file);
+        });
+
+        fileInput.files = dt.files;
+        fileInput.dispatchEvent(new Event('change'));
+    }
+</script>
+{% endblock %} -->
+
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block content %}
+{% include 'partials/_banner.html' with heading="Pure Chain" %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
         <!-- Add New Entry Section -->
         <div class="col-lg-6 mb-4">
             <div class="card">
@@ -29,21 +119,21 @@
                 </div>
                 <div class="card-body">
                     {% if files %}
-                        <div class="list-group">
+                        <div class="row row-cols-1 row-cols-md-3 g-4">
                             {% for file in files %}
-                            <div class="list-group-item mb-4 p-3 border rounded">
-                                <h5 class="fw-bold text-truncate">{{ file.title }}</h5>
-                                <p class="mb-2">{{ file.text_content|default:"No content available." }}</p>
-                                <p class="mb-2">
-                                    <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary">
-                                        Download File
-                                    </a>
-                                </p>
-                                <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                                <small class="text-muted d-block mt-2">Uploaded: {{ file.timestamp }}</small>
+                            <div class="col">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ file.title }}</h5>
+                                        <p class="card-text">{{ file.text_content|default:"No content available." }}</p>
+                                        <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary">Download File</a>
+                                        <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                        <small class="text-muted d-block mt-2">Uploaded: {{ file.timestamp }}</small>
+                                    </div>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
