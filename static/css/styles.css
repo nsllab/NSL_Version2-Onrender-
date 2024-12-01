@@ -347,7 +347,7 @@ p {
 .custom-banner {
     height: 30vh; /* 20% of the viewport height */
     /* background: linear-gradient(135deg, #6c5b7b, #c06c84, #6c5b7b);  */
-    background-image: url('../img/one.jpg');
+    background-image: url('../img/one_old.jpg');
     background-repeat: no-repeat;
     color: #fff; /* Text color */
     display: flex;
@@ -357,6 +357,31 @@ p {
     font-size: 2em; /* Increase font size for better visibility */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a subtle text shadow */
 }
+
+.home-custom-banner {
+    height: 30vh; /* 30% of the viewport height */
+    background-color: #f8f9fb; /* Set the background color of the div to gray */
+    background-image: url('../img/three.jpg');
+    background-size: contain; /* Ensures the image is contained within the div, without distorting */
+    background-position: top center; /* Position the image at the top center */
+    background-repeat: no-repeat; /* Prevent the background from repeating */
+    color: #fff; /* Text color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Center-align text */
+    font-size: 2em; /* Adjust font size */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Subtle text shadow */
+}
+
+
+.home-div-banner{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+    
+
 
 .members-banner {
     /* background-color: #bada55; */

@@ -2,61 +2,37 @@
 {% load static %}
 
 {% block content %}
-<!-- <main>
-      <div id="myCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="{% static 'img/four.png' %}" alt="">
-    
-            <div class="container">
-              <div class="carousel-caption text-start">
-                <h1 class="header-text display-4 fw-bold">Networked Systems Lab.</h1>
-                <p class="lead fw-bold text-dark">Innovation at its' very peak. Check out some of our projects</p>
-                <p><a class="btn btn-lg btn-info" href="#">Projects</a></p>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="{% static 'img/five.png' %}" alt="">
-    
-            <div class="container">
-              <div class="carousel-caption">
-                <h1 class="header-text display-4 fw-bold">Networked Systems Lab.</h1>
-                <p class="lead fw-bold text-dark">Research at its' excellent best. Why not go through our publications?</p>
-                <p><a class="btn btn-lg btn-info" href="#">Publications</a></p>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="{% static 'img/four.png' %}" alt="">
-    
-            <div class="container">
-              <div class="carousel-caption text-end">
-                <h1 class="header-text display-4 fw-bold">Networked Systems Lab.</h1>
-                <p class="lead fw-bold text-dark">Where great minds are born. Meet the members of our research team</p>
-                <p><a class="btn btn-lg btn-info" href="#">Team Members</a></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-      </main> -->
+<main>
 
+    <div class="section mb-0">
+        <div class="row">
+            <div class="col-12">
+                <div class="home-custom-banner">
+                    
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- <div id="myCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+      
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{% static 'img/sub_img.jpg' %}" alt="" class="d-block w-100">
+          <div class="container">
+            <div class="carousel-caption text-start">
+              <h1 class="header-text display-4 fw-bold">Networked Systems Lab.</h1>
+              <p class="lead fw-bold text-dark">Innovation at its' very peak. Check out some of our projects</p>
+              <p><a class="btn btn-lg btn-info" href="#">Projects</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </main>
       <!-- Hero Section -->
-      <main id="myCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+      <!-- <main id="myCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -102,7 +78,7 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
-      </main>
+      </main> -->
     
       <!-- About Us Section -->
 <section id="about" class="py-5">
@@ -113,7 +89,7 @@
           </div>
           <div class="col-lg-6">
               <div class="about-content">
-                  <h2 class="display-4 mb-4 decorative-border">About Us</h2>
+                  <h2 class="display-4 mb-4 decorative-border">Networked Systems Laboratory</h2>
                   <p class="lead">Welcome to the IT Research Lab, where innovation meets excellence. We are at the forefront of cutting-edge technologies, specializing in AI, Blockchain, Digital Twin, and IoT.</p>
                   <p>Our dedicated team of researchers is passionate about pushing the boundaries of IT knowledge and creating solutions that impact the future. Whether it's exploring the realms of artificial intelligence, harnessing the power of blockchain, simulating digital twins, or connecting devices through the Internet of Things, we thrive on challenges and continuous exploration.</p>
                   <p>Join us on our journey as we contribute to shaping the future of information technology and make a lasting impact on the world.</p>
@@ -185,14 +161,21 @@
             <div class="col-lg-4 mb-4">
                 <div class="team-member">
                     <img src="{{ prof.image.url }}" class="img-fluid rounded-circle team-image" style="width: 300px; height: 300px;" alt="Professor">
-                    <h3 class="h5 mt-3">{{ prof.name }}</h3>
+                    <h3 class="h5 mt-3">
+                        {% if prof.name == "Dong-Seong Kim" %}
+                            <a href="https://sites.google.com/view/profdskim" target="_blank">{{ prof.name }}</a>
+                        {% else %}
+                            {{ prof.name }}
+                        {% endif %}
+                    </h3>
                     <!-- <p class="text-muted">AI & Machine Learning</p> -->
                 </div>
             </div>
           {% endfor %}
         </div>
     </div>
-  </section>
+</section>
+
 
   <section id="partners" class="pt-5">
     <div class="team-background"></div>
