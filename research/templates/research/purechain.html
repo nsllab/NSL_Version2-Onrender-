@@ -1,91 +1,78 @@
 {% extends 'base.html' %}
 {% load bootstrap5 %}
 {% block content %}
-{% include 'partials/_banner.html' with heading="Pure Chain" %}
-
 <div class="container mt-5">
-    <div class="row">
-        <!-- Add New Entry Section -->
-        <div class="col-lg-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Add New Entry</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Saved Entries</h3>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEntryModal">Add New Entry</button>
+    </div>
 
-        <!-- Saved Entries Section -->
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Saved Entries</h3>
+    <!-- Saved Entries Table -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Uploaded File</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.title }}</td>
+                    <td>{{ entry.text_content|truncatechars:50|default:"No content available" }}</td>
+                    <td>
+                        {% if entry.file %}
+                        <a href="{{ entry.file.url }}" target="_blank" class="btn btn-outline-info btn-sm">Download</a>
+                        {% else %}
+                        No file
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'research:delete_file' entry.file.name %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Entry Modal -->
+    <div class="modal fade" id="addEntryModal" tabindex="-1" aria-labelledby="addEntryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addEntryModalLabel">Add New Entry</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="card-body">
-                    {% if files %}
-                        <div class="list-group">
-                            {% for file in files %}
-                            <div class="list-group-item mb-4 p-3 border rounded">
-                                <h5 class="fw-bold text-truncate">{{ file.title }}</h5>
-                                <p class="mb-2">{{ file.text_content|default:"No content available." }}</p>
-                                <p class="mb-2">
-                                    <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary">
-                                        Download File
-                                    </a>
-                                </p>
-                                <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                                <small class="text-muted d-block mt-2">Uploaded: {{ file.timestamp }}</small>
-                            </div>
-                            {% endfor %}
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data" id="addEntryForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label">Title</label>
+                            {{ form.title }}
                         </div>
-                    {% else %}
-                        <div class="alert alert-info">
-                            No entries found. Start by adding a new entry using the form.
+                        <div class="mb-3">
+                            <label for="id_text_content" class="form-label">Content</label>
+                            {{ form.text_content }}
                         </div>
-                    {% endif %}
+                        <div class="mb-3">
+                            <label for="id_files" class="form-label">Files</label>
+                            <input type="file" name="files" id="id_files" class="form-control" multiple>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Entry</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    const fileInput = document.querySelector('input[type="file"]');
-    const uploadedFiles = document.getElementById('uploaded-files');
-
-    fileInput.addEventListener('change', () => {
-        uploadedFiles.innerHTML = '';
-        Array.from(fileInput.files).forEach((file, index) => {
-            const fileDiv = document.createElement('div');
-            fileDiv.className = 'uploaded-file';
-
-            fileDiv.innerHTML = `
-                <span>${file.name}</span>
-                <button type="button" onclick="removeFile(${index})" class="btn btn-danger btn-sm">X</button>
-            `;
-            uploadedFiles.appendChild(fileDiv);
-        });
-    });
-
-    function removeFile(index) {
-        const dt = new DataTransfer();
-        const files = fileInput.files;
-
-        Array.from(files).forEach((file, i) => {
-            if (i !== index) dt.items.add(file);
-        });
-
-        fileInput.files = dt.files;
-        fileInput.dispatchEvent(new Event('change'));
-    }
-</script>
 {% endblock %}

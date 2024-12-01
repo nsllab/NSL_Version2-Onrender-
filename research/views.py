@@ -11,7 +11,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .choices import PROJECTS
-from .models import UserInput
+from .models import UserInput, UserFile
 from .forms import UserInputForm
 from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
@@ -64,82 +64,33 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
 def purechain_view(request):
-    file_data = []  # List to hold data for saved entries
-
     if request.method == 'POST':
         form = UserInputForm(request.POST, request.FILES)
         if form.is_valid():
-            title = form.cleaned_data['title']
-            text_content = form.cleaned_data['text_content']
-            files = request.FILES.getlist('files')  # Get multiple files
+            # Save the main entry
+            user_input = form.save()
 
-            # Save text content as a .txt file
-            if text_content:
-                text_path = f'uploads/{uuid.uuid4()}_{title}.txt'
-                try:
-                    default_storage.save(text_path, text_content.encode('utf-8'))
-                    file_data.append({
-                        "url": default_storage.url(text_path),
-                        "title": title,
-                        "text_content": text_content,
-                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    })
-                except Exception as e:
-                    messages.error(request, f"Failed to save text content: {e}")
-
-            # Save uploaded files
+            # Handle multiple files
+            files = request.FILES.getlist('files')
             for file in files:
-                file_path = f'uploads/{uuid.uuid4()}_{file.name}'
-                try:
-                    default_storage.save(file_path, file)
-                    file_data.append({
-                        "url": default_storage.url(file_path),
-                        "title": title,
-                        "text_content": text_content if file.name.lower().endswith(".txt") else None,
-                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    })
-                except Exception as e:
-                    messages.error(request, f"Failed to save file {file.name}: {e}")
+                UserFile.objects.create(user_input=user_input, file=file)
 
-            messages.success(request, "Files uploaded successfully.")
+            messages.success(request, "Entry and files saved successfully!")
             return redirect('research:purechain_view')
-    else:
-        form = UserInputForm()
+        else:
+            messages.error(request, "Failed to save the entry. Please check the form.")
 
-    # Fetch file list from storage
-    files = default_storage.listdir('uploads')[1]  # List all files in the 'uploads' directory
-    for file in files:
-        file_entry = {
-            "url": default_storage.url(f'uploads/{file}'),
-            "filename": file,  # Add just the filename
-            "title": file.split("_")[1] if "_" in file else "Unknown Title",
-            "text_content": None,
-            "timestamp": "Unknown",
-        }
-
-        # Check if the file is a text file to read its content
-        if file.lower().endswith('.txt'):
-            try:
-                with default_storage.open(f'uploads/{file}', 'r') as f:
-                    file_entry["text_content"] = f.read()
-            except Exception as e:
-                print(f"Error reading file content for {file}: {e}")
-
-        file_entry["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        file_data.append(file_entry)
-
-    return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
-
+    # Fetch entries with their files
+    entries = UserInput.objects.prefetch_related('files').order_by('-created_at')
+    form = UserInputForm()
+    return render(request, 'research/purechain.html', {'form': form, 'entries': entries})
 
 def delete_file(request, filename):
+    # Delete file associated with an entry
     if request.method == 'POST':
-        file_path = f'uploads/{filename}'
-        try:
-            if default_storage.exists(file_path):
-                default_storage.delete(file_path)
-                messages.success(request, "File deleted successfully.")
-            else:
-                messages.error(request, "File not found.")
-        except Exception as e:
-            messages.error(request, f"An error occurred while deleting the file: {e}")
+        entry = get_object_or_404(UserInput, file=f'uploads/{filename}')
+        if entry.file:
+            entry.file.delete()
+        entry.delete()
+        messages.success(request, "Entry deleted successfully.")
         return redirect('research:purechain_view')
