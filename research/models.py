@@ -50,8 +50,15 @@ class History(models.Model):
 class UserInput(models.Model):
     title = models.CharField(max_length=255)
     text_content = models.TextField(blank=True, null=True)
-    file = models.FileField(upload_to='uploads/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+
+
+class UserFile(models.Model):
+    user_input = models.ForeignKey(UserInput, on_delete=models.CASCADE, related_name="files")
+    file = models.FileField(upload_to="uploads/")
+
+    def __str__(self):
+        return f"File for {self.user_input.title}"
