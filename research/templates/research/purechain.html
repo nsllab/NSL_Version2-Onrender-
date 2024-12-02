@@ -18,27 +18,20 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Title</th>
                                     <th>Content</th>
-                                    <th>Files</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for entry in files %}
-                                <tr>
+                                <tr style="cursor: pointer;" onclick="redirectToDetails('{{ entry.title|escapejs }}')">
+                                    <td>{{ forloop.counter }}</td>
                                     <td>{{ entry.title }}</td>
-                                    <td>{{ entry.text_content|default:"No content available." }}</td>
+                                    <td>{{ entry.text_content|truncatechars:50 }}</td>
                                     <td>
-                                        {% for file in entry.files %}
-                                            <a href="{{ file.url }}" target="_blank">{{ file.filename }}</a><br>
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        <form method="post" action="{% url 'research:delete_file' entry.title %}" class="d-inline">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
+                                        <a href="{% url 'research:entry_details' entry.title %}" class="btn btn-info btn-sm">Details</a>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -104,6 +97,14 @@
 
         fileInput.files = dt.files;
         fileInput.dispatchEvent(new Event('change'));
+    }
+
+    function redirectToDetails(title) {
+        // Construct the URL
+        const url = `/details/${encodeURIComponent(title)}/`;
+
+        // Redirect to the URL
+        window.location.href = url;
     }
 </script>
 {% endblock %}

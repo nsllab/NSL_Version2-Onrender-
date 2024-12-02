@@ -152,3 +152,23 @@ def delete_file(request, filename):
         except Exception as e:
             messages.error(request, f"An error occurred while deleting the file: {e}")
         return redirect('research:purechain_view')
+    
+def entry_details(request, title):
+    file_data = None
+    files = default_storage.listdir('uploads')[1]
+    for file in files:
+        if file.lower().endswith('.json'):
+            try:
+                with default_storage.open(f'uploads/{file}', 'r') as f:
+                    entry_data = json.load(f)
+                    if entry_data["title"] == title:
+                        file_data = entry_data
+                        break
+            except Exception as e:
+                print(f"Error reading JSON file {file}: {e}")
+    
+    if not file_data:
+        messages.error(request, "Entry not found.")
+        return redirect('research:purechain_view')
+    
+    return render(request, 'research/entry_details.html', {'entry': file_data})

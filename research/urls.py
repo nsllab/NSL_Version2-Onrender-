@@ -10,4 +10,5 @@ urlpatterns = [
     path('history/create/', views.HistoryCreateView.as_view(), name="create"),
     path('purechain/', views.purechain_view, name='purechain_view'),
     path('purechain/delete/<str:filename>/', views.delete_file, name='delete_file'),
+    path('details/<str:title>/', views.entry_details, name='entry_details'),
 ]
