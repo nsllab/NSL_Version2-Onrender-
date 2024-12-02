@@ -18,6 +18,7 @@ from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
+from django.core.files.base import ContentFile
 
 def base_project(request):
     base_projects = BaseProject.objects.all()
@@ -94,7 +95,10 @@ def purechain_view(request):
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 }
                 try:
-                    default_storage.save(json_path, json.dumps(json_data).encode('utf-8'))
+                    # Convert dictionary to JSON string
+                    json_string = json.dumps(json_data, ensure_ascii=False)  # Ensure non-ASCII characters are handled
+                    # Save JSON string as a file
+                    default_storage.save(json_path, ContentFile(json_string))
                     file_data.append({
                         "url": default_storage.url(json_path),
                         "title": title,
