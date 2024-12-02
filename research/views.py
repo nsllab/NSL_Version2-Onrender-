@@ -132,7 +132,15 @@ def purechain_view(request):
 
 def delete_file(request, filename):
     if request.method == 'POST':
-        file_path = f'uploads/{filename}'
+        # Search for file with or without UUID
+        files = default_storage.listdir('uploads')[1]
+        file_to_delete = next((f for f in files if f.endswith(filename)), None)
+
+        if not file_to_delete:
+            messages.error(request, "File not found.")
+            return redirect('research:purechain_view')
+
+        file_path = f'uploads/{file_to_delete}'
         try:
             if default_storage.exists(file_path):
                 default_storage.delete(file_path)
@@ -141,6 +149,7 @@ def delete_file(request, filename):
                 messages.error(request, "File not found.")
         except Exception as e:
             messages.error(request, f"An error occurred while deleting the file: {e}")
+        
         return redirect('research:purechain_view')
     
 def entry_details(request, title):
