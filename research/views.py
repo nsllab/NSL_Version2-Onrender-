@@ -65,16 +65,15 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 def purechain_view(request):
     if request.method == 'POST':
-        form = UserInputForm(request.POST, request.FILES)
+        form = UserInputForm(request.POST)
         if form.is_valid():
-            # Save the main entry
-            user_input = form.save()
-
-            # Handle multiple files
-            files = request.FILES.getlist('files')
+            user_input = form.save()  # Save the main entry
+            
+            # Handle multiple file uploads manually
+            files = request.FILES.getlist('files')  # Fetch the list of files
             for file in files:
                 UserFile.objects.create(user_input=user_input, file=file)
-
+            
             messages.success(request, "Entry and files saved successfully!")
             return redirect('research:purechain_view')
         else:
