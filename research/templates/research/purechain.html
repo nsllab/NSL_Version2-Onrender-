@@ -37,8 +37,8 @@
                                         {% endfor %}
                                     </td>
                                     <td>
-                                        <a href="{% url 'research:entry_details' entry.title %}" class="btn btn-info btn-sm">Details</a>
-                                        <form method="post" action="{% url 'research:delete_file' entry.title %}" class="d-inline">
+                                        <a href="{% url 'research:entry_details' entry.title|escapejs %}" class="btn btn-info btn-sm">Details</a>
+                                        <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>
@@ -111,7 +111,7 @@
 
     function redirectToDetails(title) {
         // Construct the URL
-        const url = `/details/${encodeURIComponent(title)}/`;
+        const url = `research/details/${encodeURIComponent(title)}/`;
 
         // Redirect to the URL
         window.location.href = url;

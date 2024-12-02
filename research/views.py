@@ -122,13 +122,19 @@ def purechain_view(request):
         form = UserInputForm()
 
     # Fetch file list from storage
-    files = default_storage.listdir('uploads')[1]  # List all files in the 'uploads' directory
+    files = default_storage.listdir('uploads')[1]
     for file in files:
         if file.lower().endswith('.json'):
             try:
                 with default_storage.open(f'uploads/{file}', 'r') as f:
                     entry_data = json.load(f)
-                    # Append JSON data (title, text content, files) to file_data
+                    
+                    # Clean file names for display
+                    for file_entry in entry_data.get("files", []):
+                        # Remove UUID prefix using regex
+                        cleaned_filename = re.sub(r'^[a-f0-9\-]+_', '', file_entry["filename"])
+                        file_entry["cleaned_filename"] = cleaned_filename
+
                     file_data.append(entry_data)
             except Exception as e:
                 print(f"Error reading JSON file {file}: {e}")
