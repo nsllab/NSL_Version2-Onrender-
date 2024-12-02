@@ -75,13 +75,6 @@ def purechain_view(request):
             text_content = form.cleaned_data['text_content']
             files = request.FILES.getlist('files')
 
-            # Check for duplicate titles
-            existing_titles = [entry["title"] for entry in file_data]
-            if title in existing_titles:
-                messages.error(request, f"An entry with the title '{title}' already exists.")
-                return redirect('research:purechain_view')
-
-            # Create a new entry
             entry_data = {
                 "title": title,
                 "text_content": text_content,
@@ -89,20 +82,18 @@ def purechain_view(request):
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
 
-            # Save uploaded files
             for file in files:
-                file_path = f'uploads/{uuid.uuid4()}_{file.name}'
+                file_path = f'uploads/{file.name}'
                 try:
                     default_storage.save(file_path, file)
                     entry_data["files"].append({
-                        "filename": file.name,  # Save the original filename
+                        "filename": file.name,
                         "url": default_storage.url(file_path),
                     })
                 except Exception as e:
                     messages.error(request, f"Failed to save file {file.name}: {e}")
 
-            # Save JSON metadata
-            json_path = f'uploads/{uuid.uuid4()}_{title}.json'
+            json_path = f'uploads/{title}.json'
             try:
                 json_string = json.dumps(entry_data, ensure_ascii=False)
                 default_storage.save(json_path, ContentFile(json_string))
@@ -117,17 +108,18 @@ def purechain_view(request):
 
     # Fetch JSON files from storage
     files = default_storage.listdir('uploads')[1]
+    print("DEBUG: files in uploads = ", files)
+
     for file in files:
         if file.lower().endswith('.json'):
             try:
                 with default_storage.open(f'uploads/{file}', 'r') as f:
                     entry_data = json.load(f)
-                    # Update file names (remove UUID prefix)
-                    for file_entry in entry_data.get("files", []):
-                        file_entry["cleaned_filename"] = re.sub(r'^[a-f0-9\-]+_', '', file_entry["filename"])
                     file_data.append(entry_data)
             except Exception as e:
                 print(f"Error reading JSON file {file}: {e}")
+
+    print("DEBUG: file_data = ", file_data)
 
     # Sort entries by timestamp (newest first)
     file_data.sort(key=lambda x: x['timestamp'], reverse=True)
