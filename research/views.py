@@ -19,6 +19,7 @@ from django.core.files.storage import default_storage
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from django.core.files.base import ContentFile
+import logging
 
 def base_project(request):
     base_projects = BaseProject.objects.all()
@@ -66,6 +67,7 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
 def purechain_view(request):
+    logger = logging.getLogger(__name__)
     file_data = []  # List to hold all saved entries
 
     if request.method == 'POST':
@@ -75,6 +77,7 @@ def purechain_view(request):
             text_content = form.cleaned_data['text_content']
             files = request.FILES.getlist('files')
 
+            sanitized_title = re.sub(r'[^\w\s-]', '', title).replace(' ', '_')  # Sanitize title
             entry_data = {
                 "title": title,
                 "text_content": text_content,
@@ -83,21 +86,21 @@ def purechain_view(request):
             }
 
             for file in files:
-                file_path = f'uploads/{file.name}'
+                unique_filename = f"{uuid.uuid4()}_{file.name}"
+                file_path = f'uploads/{unique_filename}'
                 try:
                     default_storage.save(file_path, file)
                     entry_data["files"].append({
-                        "filename": file.name,
+                        "filename": unique_filename,
                         "url": default_storage.url(file_path),
                     })
                 except Exception as e:
                     messages.error(request, f"Failed to save file {file.name}: {e}")
 
-            json_path = f'uploads/{title}.json'
+            json_path = f'uploads/{sanitized_title}.json'
             try:
                 json_string = json.dumps(entry_data, ensure_ascii=False)
                 default_storage.save(json_path, ContentFile(json_string))
-                file_data.append(entry_data)
             except Exception as e:
                 messages.error(request, f"Failed to save JSON metadata: {e}")
 
@@ -108,7 +111,7 @@ def purechain_view(request):
 
     # Fetch JSON files from storage
     files = default_storage.listdir('uploads')[1]
-    print("DEBUG: files in uploads = ", files)
+    logger.debug(f"Files in uploads: {files}")
 
     for file in files:
         if file.lower().endswith('.json'):
@@ -116,13 +119,14 @@ def purechain_view(request):
                 with default_storage.open(f'uploads/{file}', 'r') as f:
                     entry_data = json.load(f)
                     file_data.append(entry_data)
+            except json.JSONDecodeError:
+                logger.error(f"Malformed JSON in file {file}. Skipping...")
             except Exception as e:
-                print(f"Error reading JSON file {file}: {e}")
-
-    print("DEBUG: file_data = ", file_data)
+                logger.error(f"Error reading JSON file {file}: {e}")
 
     # Sort entries by timestamp (newest first)
     file_data.sort(key=lambda x: x['timestamp'], reverse=True)
+    logger.debug(f"File data: {file_data}")
 
     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
 
