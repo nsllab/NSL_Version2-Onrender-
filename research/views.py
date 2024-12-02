@@ -66,27 +66,22 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
 def purechain_view(request):
-    file_data = []  # List to hold data for saved entries
+    file_data = []  # List to hold all saved entries
 
     if request.method == 'POST':
         form = UserInputForm(request.POST, request.FILES)
         if form.is_valid():
             title = form.cleaned_data['title']
             text_content = form.cleaned_data['text_content']
-            files = request.FILES.getlist('files')  # Get multiple files
+            files = request.FILES.getlist('files')
 
             # Check for duplicate titles
-            existing_files = [
-                os.path.splitext(file_entry["filename"])[0].split("_")[1]
-                for file_entry in file_data
-            ]
-            if title in existing_files:
-                messages.error(
-                    request, f"An entry with the title '{title}' already exists."
-                )
-                return redirect("research:purechain_view")
+            existing_titles = [entry["title"] for entry in file_data]
+            if title in existing_titles:
+                messages.error(request, f"An entry with the title '{title}' already exists.")
+                return redirect('research:purechain_view')
 
-            # Create a unique record for title, text content, and associated files
+            # Create a new entry
             entry_data = {
                 "title": title,
                 "text_content": text_content,
@@ -94,57 +89,50 @@ def purechain_view(request):
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
 
-            # Save each uploaded file and associate it with this entry
+            # Save uploaded files
             for file in files:
                 file_path = f'uploads/{uuid.uuid4()}_{file.name}'
                 try:
                     default_storage.save(file_path, file)
                     entry_data["files"].append({
-                        "filename": os.path.basename(file_path),
-                        "url": default_storage.url(file_path)
+                        "filename": file.name,  # Save the original filename
+                        "url": default_storage.url(file_path),
                     })
                 except Exception as e:
                     messages.error(request, f"Failed to save file {file.name}: {e}")
 
-            # Save text content as part of JSON for this entry
+            # Save JSON metadata
             json_path = f'uploads/{uuid.uuid4()}_{title}.json'
             try:
-                json_string = json.dumps(entry_data, ensure_ascii=False)  # Ensure non-ASCII characters
+                json_string = json.dumps(entry_data, ensure_ascii=False)
                 default_storage.save(json_path, ContentFile(json_string))
-                entry_data["json_url"] = default_storage.url(json_path)
                 file_data.append(entry_data)
             except Exception as e:
-                messages.error(request, f"Failed to save JSON content: {e}")
+                messages.error(request, f"Failed to save JSON metadata: {e}")
 
             messages.success(request, "Files and metadata uploaded successfully.")
             return redirect('research:purechain_view')
     else:
         form = UserInputForm()
 
-    # Fetch file list from storage
+    # Fetch JSON files from storage
     files = default_storage.listdir('uploads')[1]
     for file in files:
         if file.lower().endswith('.json'):
             try:
                 with default_storage.open(f'uploads/{file}', 'r') as f:
                     entry_data = json.load(f)
-                    
-                    # Clean file names for display
+                    # Update file names (remove UUID prefix)
                     for file_entry in entry_data.get("files", []):
-                        # Remove UUID prefix using regex
-                        cleaned_filename = re.sub(r'^[a-f0-9\-]+_', '', file_entry["filename"])
-                        file_entry["cleaned_filename"] = cleaned_filename
-
+                        file_entry["cleaned_filename"] = re.sub(r'^[a-f0-9\-]+_', '', file_entry["filename"])
                     file_data.append(entry_data)
             except Exception as e:
                 print(f"Error reading JSON file {file}: {e}")
 
-    # Sort file data by timestamp
+    # Sort entries by timestamp (newest first)
     file_data.sort(key=lambda x: x['timestamp'], reverse=True)
 
     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
-
-
 
 def delete_file(request, filename):
     if request.method == 'POST':
