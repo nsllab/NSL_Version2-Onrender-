@@ -38,10 +38,12 @@
                                     </td>
                                     <td>
                                         <a href="{% url 'research:entry_details' entry.title|escapejs %}" class="btn btn-info btn-sm">Details</a>
-                                        <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
+                                        {% for file in entry.files %}
+                                        <form method="post" action="{% if file.filename %}{% url 'research:delete_file' file.filename %}{% else %}#{% endif %}" class="d-inline">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            <button type="submit" class="btn btn-danger btn-sm" {% if not file.filename %}disabled{% endif %}>Delete</button>
                                         </form>
+                                        {% endfor %}
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -80,40 +82,8 @@
 </div>
 
 <script>
-    const fileInput = document.querySelector('input[type="file"]');
-    const uploadedFiles = document.getElementById('uploaded-files');
-
-    fileInput.addEventListener('change', () => {
-        uploadedFiles.innerHTML = '';
-        Array.from(fileInput.files).forEach((file, index) => {
-            const fileDiv = document.createElement('div');
-            fileDiv.className = 'uploaded-file';
-
-            fileDiv.innerHTML = `
-                <span>${file.name}</span>
-                <button type="button" onclick="removeFile(${index})" class="btn btn-danger btn-sm">X</button>
-            `;
-            uploadedFiles.appendChild(fileDiv);
-        });
-    });
-
-    function removeFile(index) {
-        const dt = new DataTransfer();
-        const files = fileInput.files;
-
-        Array.from(files).forEach((file, i) => {
-            if (i !== index) dt.items.add(file);
-        });
-
-        fileInput.files = dt.files;
-        fileInput.dispatchEvent(new Event('change'));
-    }
-
     function redirectToDetails(title) {
-        // Construct the URL
         const url = `research/details/${encodeURIComponent(title)}/`;
-
-        // Redirect to the URL
         window.location.href = url;
     }
 </script>
