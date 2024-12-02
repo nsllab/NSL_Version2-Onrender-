@@ -5,12 +5,9 @@
 
 <div class="container mt-5">
     <div class="row">
-        <!-- Add New Entry Modal -->
         <div class="text-end mb-3">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEntryModal">Add New Entry</button>
         </div>
-        
-        <!-- Entries Table -->
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
@@ -23,19 +20,22 @@
                                 <tr>
                                     <th>Title</th>
                                     <th>Content</th>
-                                    <th>File Name</th>
+                                    <th>Files</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for file in files %}
+                                {% for entry in files %}
                                 <tr>
-                                    <td>{{ file.title }}</td>
-                                    <td>{{ file.text_content|default:"No content available." }}</td>
-                                    <td>{{ file.filename|default:"No file uploaded" }}</td>
+                                    <td>{{ entry.title }}</td>
+                                    <td>{{ entry.text_content|default:"No content available." }}</td>
                                     <td>
-                                        <a href="{{ file.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Download</a>
-                                        <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
+                                        {% for file in entry.files %}
+                                            <a href="{{ file.url }}" target="_blank">{{ file.filename }}</a><br>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <form method="post" action="{% url 'research:delete_file' entry.title %}" class="d-inline">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>

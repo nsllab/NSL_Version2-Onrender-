@@ -86,45 +86,37 @@ def purechain_view(request):
                 )
                 return redirect("research:purechain_view")
 
-            # Save text content as a .json file
-            if text_content:
-                json_path = f'uploads/{uuid.uuid4()}_{title}.json'
-                json_data = {
-                    "title": title,
-                    "text_content": text_content,
-                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                }
-                try:
-                    # Convert dictionary to JSON string
-                    json_string = json.dumps(json_data, ensure_ascii=False)  # Ensure non-ASCII characters are handled
-                    # Save JSON string as a file
-                    default_storage.save(json_path, ContentFile(json_string))
-                    file_data.append({
-                        "url": default_storage.url(json_path),
-                        "title": title,
-                        "text_content": text_content,
-                        "filename": os.path.basename(json_path),
-                        "timestamp": json_data["timestamp"],
-                    })
-                except Exception as e:
-                    messages.error(request, f"Failed to save JSON content: {e}")
+            # Create a unique record for title, text content, and associated files
+            entry_data = {
+                "title": title,
+                "text_content": text_content,
+                "files": [],
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            }
 
-            # Save uploaded files
+            # Save each uploaded file and associate it with this entry
             for file in files:
                 file_path = f'uploads/{uuid.uuid4()}_{file.name}'
                 try:
                     default_storage.save(file_path, file)
-                    file_data.append({
-                        "url": default_storage.url(file_path),
-                        "title": title,
-                        "text_content": None,
+                    entry_data["files"].append({
                         "filename": os.path.basename(file_path),
-                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "url": default_storage.url(file_path)
                     })
                 except Exception as e:
                     messages.error(request, f"Failed to save file {file.name}: {e}")
 
-            messages.success(request, "Files uploaded successfully.")
+            # Save text content as part of JSON for this entry
+            json_path = f'uploads/{uuid.uuid4()}_{title}.json'
+            try:
+                json_string = json.dumps(entry_data, ensure_ascii=False)  # Ensure non-ASCII characters
+                default_storage.save(json_path, ContentFile(json_string))
+                entry_data["json_url"] = default_storage.url(json_path)
+                file_data.append(entry_data)
+            except Exception as e:
+                messages.error(request, f"Failed to save JSON content: {e}")
+
+            messages.success(request, "Files and metadata uploaded successfully.")
             return redirect('research:purechain_view')
     else:
         form = UserInputForm()
@@ -132,40 +124,20 @@ def purechain_view(request):
     # Fetch file list from storage
     files = default_storage.listdir('uploads')[1]  # List all files in the 'uploads' directory
     for file in files:
-        file_entry = {
-            "url": default_storage.url(f'uploads/{file}'),
-            "filename": file,
-            "title": "Unknown Title",
-            "text_content": "No content available.",
-            "timestamp": "Unknown",
-        }
-
-        # Parse JSON files for display
         if file.lower().endswith('.json'):
             try:
                 with default_storage.open(f'uploads/{file}', 'r') as f:
-                    data = json.load(f)
-                    file_entry["title"] = data.get("title", "Unknown Title")
-                    file_entry["text_content"] = data.get("text_content", "No content available.")
-                    file_entry["timestamp"] = data.get("timestamp", "Unknown")
+                    entry_data = json.load(f)
+                    # Append JSON data (title, text content, files) to file_data
+                    file_data.append(entry_data)
             except Exception as e:
                 print(f"Error reading JSON file {file}: {e}")
-
-        # Parse TXT files for display
-        elif file.lower().endswith('.txt'):
-            try:
-                with default_storage.open(f'uploads/{file}', 'r') as f:
-                    file_entry["text_content"] = f.read()
-                    file_entry["title"] = os.path.splitext(file)[0]
-            except Exception as e:
-                print(f"Error reading text file {file}: {e}")
-
-        file_data.append(file_entry)
 
     # Sort file data by timestamp
     file_data.sort(key=lambda x: x['timestamp'], reverse=True)
 
     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
+
 
 
 def delete_file(request, filename):
