@@ -21,6 +21,7 @@
                                     <th>#</th>
                                     <th>Title</th>
                                     <th>Content</th>
+                                    <th>File Name</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -31,7 +32,16 @@
                                     <td>{{ entry.title }}</td>
                                     <td>{{ entry.text_content|truncatechars:50 }}</td>
                                     <td>
+                                        {% for file in entry.files %}
+                                            <a href="{{ file.url }}" target="_blank">{{ file.filename }}</a><br>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
                                         <a href="{% url 'research:entry_details' entry.title %}" class="btn btn-info btn-sm">Details</a>
+                                        <form method="post" action="{% url 'research:delete_file' entry.title %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 {% endfor %}
