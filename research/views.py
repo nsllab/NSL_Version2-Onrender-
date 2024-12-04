@@ -20,6 +20,7 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from django.core.files.base import ContentFile
 import logging
+import re
 
 def base_project(request):
     base_projects = BaseProject.objects.all()
