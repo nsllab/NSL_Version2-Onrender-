@@ -141,7 +141,12 @@ def purechain_view(request):
             try:
                 title = form.cleaned_data['title']
                 text_content = form.cleaned_data['text_content']
-                files = request.FILES.getlist('files')
+                files = []
+                
+                # Collect files from individual file fields
+                for field_name in ['file1', 'file2', 'file3']:
+                    if request.FILES.get(field_name):
+                        files.append(request.FILES[field_name])
 
                 sanitized_title = re.sub(r'[^\w\s-]', '', title).replace(' ', '_')
                 entry_data = {
@@ -151,17 +156,26 @@ def purechain_view(request):
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 }
 
-                # Improved file handling with better error messages
                 for file in files:
-                    try:
-                        unique_filename = f"{uuid.uuid4()}_{file.name}"
+                    # Get file name and extension
+                    file_name, file_ext = os.path.splitext(file.name)
+                    # Create unique filename but preserve original extension
+                    unique_filename = f"{sanitized_title}_{datetime.now().strftime('%Y%m%d_%H%M%S')}{file_ext}"
+                    file_path = f'uploads/{unique_filename}'
+                    
+                    # If file with same name exists, add number suffix
+                    counter = 1
+                    while default_storage.exists(file_path):
+                        unique_filename = f"{sanitized_title}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{counter}{file_ext}"
                         file_path = f'uploads/{unique_filename}'
+                        counter += 1
+
+                    try:
                         default_storage.save(file_path, file)
                         entry_data["files"].append({
-                            "filename": unique_filename,
+                            "filename": file.name,  # Original filename for display
+                            "stored_filename": unique_filename,  # Actual filename in storage
                             "url": default_storage.url(file_path),
-                            "original_name": file.name,  # Store original filename
-                            "size": f"{file.size / 1024 / 1024:.1f} MB"  # Show file size
                         })
                         messages.success(request, f"Successfully uploaded {file.name}")
                     except Exception as e:
