@@ -141,10 +141,28 @@ def delete_file(request, filename):
             return redirect('research:purechain_view')
 
         file_path = f'uploads/{file_to_delete}'
+        
+        # Find and delete the associated JSON metadata file
+        json_files = [f for f in files if f.lower().endswith('.json')]
+        for json_file in json_files:
+            try:
+                with default_storage.open(f'uploads/{json_file}', 'r') as f:
+                    entry_data = json.load(f)
+                    # Check if this JSON file contains metadata for any of the deleted files
+                    if any(file_info['filename'] == file_to_delete for file_info in entry_data.get('files', [])):
+                        # Delete the JSON metadata file
+                        json_path = f'uploads/{json_file}'
+                        if default_storage.exists(json_path):
+                            default_storage.delete(json_path)
+            except Exception as e:
+                messages.error(request, f"Error processing JSON file {json_file}: {e}")
+                continue
+
         try:
+            # Delete the actual file
             if default_storage.exists(file_path):
                 default_storage.delete(file_path)
-                messages.success(request, "File deleted successfully.")
+                messages.success(request, "File and associated metadata deleted successfully.")
             else:
                 messages.error(request, "File not found.")
         except Exception as e:
