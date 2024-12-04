@@ -50,14 +50,18 @@ class UserInputForm(forms.Form):
             'placeholder': 'Enter your content here...'
         })
     )
-    # Modified file field definition
     files = forms.FileField(
         required=False,
-        widget=forms.FileInput(attrs={
-            'class': 'form-control',
-            'multiple': True
-        })
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['files'].widget.attrs['multiple'] = True
 
     def clean_files(self):
         files = self.files.getlist('files')
