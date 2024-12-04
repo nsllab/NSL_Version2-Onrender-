@@ -39,29 +39,38 @@ class UserInputForm(forms.Form):
         max_length=255,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Enter title'
+            'placeholder': 'Enter title',
         })
     )
     text_content = forms.CharField(
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
-            'rows': 4,
-            'placeholder': 'Enter your content here...'
+            'rows': 5,
+            'placeholder': 'Enter your content here',
+            'style': 'resize: vertical;'
         })
     )
     files = forms.FileField(
         required=False,
-        widget=forms.FileInput(
-            attrs={
-                'class': 'form-control',
-            }
-        )
+        widget=forms.FileInput(attrs={
+            'class': 'form-control',
+            'multiple': True,
+            'style': '''
+                border: 2px dashed #dee2e6;
+                padding: 2rem;
+                background-color: #f8f9fa;
+                cursor: pointer;
+            ''',
+        }),
+        help_text='Supported: JPG, PNG, TXT, PDF, DOC, DOCX (Max 5MB)'
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['files'].widget.attrs['multiple'] = True
+        self.fields['title'].label = 'Title'
+        self.fields['text_content'].label = 'Content'
+        self.fields['files'].label = 'Upload Files'
 
     def clean_files(self):
         files = self.files.getlist('files')
