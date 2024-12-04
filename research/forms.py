@@ -33,19 +33,21 @@
 
 from django import forms
 from .models import UserInput, History
-from django.forms.widgets import FileInput
+from django.forms.widgets import ClearableFileInput  # Change this import
 
-class CustomMultipleFileInput(FileInput):
+# Change the custom widget to inherit from ClearableFileInput instead
+class CustomMultipleFileInput(ClearableFileInput):
     def __init__(self, attrs=None):
         default_attrs = {
             'multiple': True,
-            'class': 'form-control dropzone-input',
+            'class': 'form-control',
             'data-bs-toggle': 'tooltip',
-            'title': 'Drag & drop files here or click to select',
+            'title': 'Drag & drop files here or click to select'
         }
         if attrs:
             default_attrs.update(attrs)
         super().__init__(default_attrs)
+        self.allow_multiple_selected = True  # Add this line
 
 class UserInputForm(forms.Form):
     title = forms.CharField(
@@ -64,7 +66,7 @@ class UserInputForm(forms.Form):
         })
     )
     files = forms.FileField(
-        widget=CustomMultipleFileInput,
+        widget=CustomMultipleFileInput(),  # Remove the custom widget class
         required=False,
         help_text='Supported files: JPG, PNG, TXT, PDF, DOC, DOCX (Max 5MB)'
     )
