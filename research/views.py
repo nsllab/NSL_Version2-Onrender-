@@ -154,7 +154,7 @@ def purechain_view(request):
                 # Improved file handling with better error messages
                 for file in files:
                     try:
-                        unique_filename = f"{uuid.uuid4()}_{file.name}"
+                        unique_filename = f"{file.name}_{uuid.uuid4()}"
                         file_path = f'uploads/{unique_filename}'
                         default_storage.save(file_path, file)
                         entry_data["files"].append({
