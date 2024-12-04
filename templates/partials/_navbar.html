@@ -82,6 +82,7 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'works:weekly_reports' %}">Weekly Reports (Graduates Researchers)</a></li>
             <li><a class="dropdown-item" href="{% url 'works:post_doc_reports' %}">Weekly Reports (Post Doc Researchers)</a></li>
+            <li><a class="dropdown-item" href="{% url 'research:purechain_view' %}">Conference Reports</a></li>
             <li><a class="dropdown-item" href="{% url 'works:seminars' %}">Seminars</a></li>
             <li><a class="dropdown-item" href="{% url 'works:reviews' %}">Reviews</a></li>
             <li><a class="dropdown-item" href="{% url 'works:paper_templates' %}">Paper Templates</a></li>
@@ -94,11 +95,14 @@
         <li class="nav-item">
           <a class="nav-link" href="https://sites.google.com/view/profdskim">Professor Website</a>
         </li>
+        
+
+        
+
+        {% if user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'research:purechain_view' %}">Pure Chain</a>
         </li>
-
-        {% if user.is_authenticated %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Accounts
