@@ -32,29 +32,14 @@
 #         fields = ["project", "subject", "content", "file1", "file2"]
 
 from django import forms
-from .models import UserInput, History
-from django.forms.widgets import ClearableFileInput  # Change this import
-
-# Change the custom widget to inherit from ClearableFileInput instead
-class CustomMultipleFileInput(ClearableFileInput):
-    def __init__(self, attrs=None):
-        default_attrs = {
-            'multiple': True,
-            'class': 'form-control',
-            'data-bs-toggle': 'tooltip',
-            'title': 'Drag & drop files here or click to select'
-        }
-        if attrs:
-            default_attrs.update(attrs)
-        super().__init__(default_attrs)
-        self.allow_multiple_selected = True  # Add this line
+from .models import History
 
 class UserInputForm(forms.Form):
     title = forms.CharField(
         max_length=255,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Enter title',
+            'placeholder': 'Enter title'
         })
     )
     text_content = forms.CharField(
@@ -62,13 +47,17 @@ class UserInputForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 4,
-            'placeholder': 'Enter your content here...',
+            'placeholder': 'Enter your content here...'
         })
     )
     files = forms.FileField(
-        widget=CustomMultipleFileInput(),  # Remove the custom widget class
+        widget=forms.ClearableFileInput(attrs={
+            'class': 'form-control',
+            'multiple': True,
+            'data-bs-toggle': 'tooltip',
+            'title': 'Drag & drop files here or click to select'
+        }),
         required=False,
-        help_text='Supported files: JPG, PNG, TXT, PDF, DOC, DOCX (Max 5MB)'
     )
 
     def clean_files(self):
