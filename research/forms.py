@@ -50,14 +50,13 @@ class UserInputForm(forms.Form):
             'placeholder': 'Enter your content here...'
         })
     )
+    # Modified file field definition
     files = forms.FileField(
-        widget=forms.ClearableFileInput(attrs={
-            'class': 'form-control',
-            'multiple': True,
-            'data-bs-toggle': 'tooltip',
-            'title': 'Drag & drop files here or click to select'
-        }),
         required=False,
+        widget=forms.FileInput(attrs={
+            'class': 'form-control',
+            'multiple': True
+        })
     )
 
     def clean_files(self):
