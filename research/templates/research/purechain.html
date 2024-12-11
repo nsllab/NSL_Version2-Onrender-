@@ -32,18 +32,20 @@
                                     <td>{{ entry.title }}</td>
                                     <td>{{ entry.text_content|truncatechars:50 }}</td>
                                     <td>
-                                        {% for file in entry.files %}
-                                            <a href="{{ file.url }}" target="_blank">{{ file.filename }}</a><br>
-                                        {% endfor %}
+                                        {% if entry.files %}
+                                            {% for file in entry.files %}
+                                                <a href="{{ file.url }}" target="_blank">{{ file.original_name }}</a><br>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span>No files uploaded.</span>
+                                        {% endif %}
                                     </td>
                                     <td>
                                         <a href="{% url 'research:entry_details' entry.title|escapejs %}" class="btn btn-info btn-sm">Details</a>
-                                        {% for file in entry.files %}
-                                        <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
+                                        <form method="post" action="{% url 'research:delete_entry' entry.title|escapejs %}" class="d-inline">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>
-                                        {% endfor %}
                                     </td>
                                 </tr>
                                 {% endfor %}
