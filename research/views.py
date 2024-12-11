@@ -227,15 +227,27 @@ from django.contrib import messages
 from .forms import UserInputForm
 import unicodedata
 
-# Function to sanitize file names
-def sanitize_filename(filename):
-    # Normalize Unicode characters to NFC format and remove unsupported characters
-    sanitized_name = unicodedata.normalize('NFC', filename)
-    sanitized_name = re.sub(r'[^\w\s.-]', '', sanitized_name).replace(' ', '_')
-    return sanitized_name
+import unicodedata
+import re
 
-# View function
+def sanitize_filename(filename):
+    """
+    Sanitize the file name to remove unsupported characters and normalize Unicode.
+    """
+    # Normalize Unicode to NFC format
+    sanitized_name = unicodedata.normalize('NFC', filename)
+    # Replace unsupported characters with underscores
+    sanitized_name = re.sub(r'[^\w\s.-]', '', sanitized_name).strip()
+    # Replace spaces with underscores
+    sanitized_name = sanitized_name.replace(' ', '_')
+    # Prevent empty filenames
+    return sanitized_name or 'default_filename'
+
+
 def purechain_view(request):
+    """
+    Handles file uploads, saves metadata as JSON, and displays existing entries.
+    """
     logger = logging.getLogger(__name__)
     file_data = []
 
@@ -243,10 +255,12 @@ def purechain_view(request):
         form = UserInputForm(request.POST, request.FILES)
         if form.is_valid():
             try:
+                # Extract form data
                 title = form.cleaned_data['title']
                 text_content = form.cleaned_data['text_content']
                 files = request.FILES.getlist('files')
 
+                # Sanitize title for use in JSON metadata file name
                 sanitized_title = sanitize_filename(title)
                 entry_data = {
                     "title": title,
@@ -255,14 +269,15 @@ def purechain_view(request):
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 }
 
-                # File upload and handling
+                # Handle file uploads
                 for file in files:
                     try:
+                        # Sanitize the filename
                         sanitized_file_name = sanitize_filename(file.name)
                         unique_filename = f"{sanitized_file_name}_{uuid.uuid4()}"
                         file_path = f'uploads/{unique_filename}'
 
-                        # Save file to storage
+                        # Save the file
                         default_storage.save(file_path, file)
 
                         # Add file details to entry data
@@ -270,13 +285,14 @@ def purechain_view(request):
                             "filename": unique_filename,
                             "url": default_storage.url(file_path),
                             "original_name": file.name,
-                            "size": f"{file.size / 1024 / 1024:.1f} MB"  # File size in MB
+                            "size": f"{file.size / 1024 / 1024:.1f} MB"
                         })
+
+                        # Log success
                         messages.success(request, f"Successfully uploaded {file.name}")
                     except Exception as e:
                         messages.error(request, f"Failed to save file {file.name}: {str(e)}")
-                        logger.error(f"File upload error: {str(e)}")
-                        continue
+                        logger.error(f"File upload error for {file.name}: {str(e)}")
 
                 # Save metadata as JSON
                 json_path = f'uploads/{sanitized_title}.json'
@@ -295,17 +311,18 @@ def purechain_view(request):
     else:
         form = UserInputForm()
 
-    # Fetch and sort existing entries
+    # Fetch existing entries
     try:
         files = default_storage.listdir('uploads')[1]
         for file in files:
             if file.lower().endswith('.json'):
                 try:
+                    # Load metadata JSON
                     with default_storage.open(f'uploads/{file}', 'r') as f:
                         entry_data = json.load(f)
                         file_data.append(entry_data)
-                except json.JSONDecodeError:
-                    logger.error(f"Malformed JSON in file {file}")
+                except json.JSONDecodeError as decode_error:
+                    logger.error(f"Malformed JSON in file {file}: {decode_error}")
                 except Exception as e:
                     logger.error(f"Error reading JSON file {file}: {str(e)}")
 
@@ -315,13 +332,13 @@ def purechain_view(request):
         logger.error(f"Error fetching files: {str(e)}")
         messages.error(request, "Error loading existing entries")
 
+    # Render the template with context
     context = {
-        'form': form, 
+        'form': form,
         'files': file_data,
         'page_title': 'File Upload and Management',
-        'has_files': bool(file_data)
+        'has_files': bool(file_data),
     }
-    
     return render(request, 'research/purechain.html', context)
 
 
