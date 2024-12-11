@@ -131,6 +131,110 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 #     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
 
+# def purechain_view(request):
+#     logger = logging.getLogger(__name__)
+#     file_data = []
+
+#     if request.method == 'POST':
+#         form = UserInputForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             try:
+#                 title = form.cleaned_data['title']
+#                 text_content = form.cleaned_data['text_content']
+#                 files = request.FILES.getlist('files')
+
+#                 sanitized_title = re.sub(r'[^\w\s-]', '', title).replace(' ', '_')
+#                 entry_data = {
+#                     "title": title,
+#                     "text_content": text_content,
+#                     "files": [],
+#                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+#                 }
+
+#                 # Improved file handling with better error messages
+#                 for file in files:
+#                     try:
+#                         unique_filename = f"{file.name}_{uuid.uuid4()}"
+#                         file_path = f'uploads/{unique_filename}'
+#                         default_storage.save(file_path, file)
+#                         entry_data["files"].append({
+#                             "filename": unique_filename,
+#                             "url": default_storage.url(file_path),
+#                             "original_name": file.name,  # Store original filename
+#                             "size": f"{file.size / 1024 / 1024:.1f} MB"  # Show file size
+#                         })
+#                         messages.success(request, f"Successfully uploaded {file.name}")
+#                     except Exception as e:
+#                         messages.error(request, f"Failed to save file {file.name}: {str(e)}")
+#                         logger.error(f"File upload error: {str(e)}")
+#                         continue
+
+#                 # Save metadata
+#                 json_path = f'uploads/{sanitized_title}.json'
+#                 try:
+#                     json_string = json.dumps(entry_data, ensure_ascii=False)
+#                     default_storage.save(json_path, ContentFile(json_string))
+#                     messages.success(request, "Entry saved successfully!")
+#                 except Exception as e:
+#                     messages.error(request, f"Failed to save entry metadata: {str(e)}")
+#                     logger.error(f"Metadata save error: {str(e)}")
+                
+#                 return redirect('research:purechain_view')
+#             except Exception as e:
+#                 messages.error(request, f"An unexpected error occurred: {str(e)}")
+#                 logger.error(f"Unexpected error: {str(e)}")
+#     else:
+#         form = UserInputForm()
+
+#     # Fetch and sort existing entries
+#     try:
+#         files = default_storage.listdir('uploads')[1]
+#         for file in files:
+#             if file.lower().endswith('.json'):
+#                 try:
+#                     with default_storage.open(f'uploads/{file}', 'r') as f:
+#                         entry_data = json.load(f)
+#                         file_data.append(entry_data)
+#                 except json.JSONDecodeError:
+#                     logger.error(f"Malformed JSON in file {file}")
+#                 except Exception as e:
+#                     logger.error(f"Error reading JSON file {file}: {str(e)}")
+
+#         # Sort entries by timestamp (newest first)
+#         file_data.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+#     except Exception as e:
+#         logger.error(f"Error fetching files: {str(e)}")
+#         messages.error(request, "Error loading existing entries")
+
+#     context = {
+#         'form': form, 
+#         'files': file_data,
+#         'page_title': 'File Upload and Management',
+#         'has_files': bool(file_data)
+#     }
+    
+#     return render(request, 'research/purechain.html', context)
+
+import logging
+import re
+import json
+import uuid
+from datetime import datetime
+from django.shortcuts import render, redirect
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from django.contrib import messages
+from .forms import UserInputForm
+import unicodedata
+
+# Function to sanitize file names
+def sanitize_filename(filename):
+    # Normalize Unicode characters to NFC format and remove unsupported characters
+    sanitized_name = unicodedata.normalize('NFC', filename)
+    sanitized_name = re.sub(r'[^\w\s.-]', '', sanitized_name).replace(' ', '_')
+    return sanitized_name
+
+# View function
 def purechain_view(request):
     logger = logging.getLogger(__name__)
     file_data = []
@@ -143,7 +247,7 @@ def purechain_view(request):
                 text_content = form.cleaned_data['text_content']
                 files = request.FILES.getlist('files')
 
-                sanitized_title = re.sub(r'[^\w\s-]', '', title).replace(' ', '_')
+                sanitized_title = sanitize_filename(title)
                 entry_data = {
                     "title": title,
                     "text_content": text_content,
@@ -151,17 +255,22 @@ def purechain_view(request):
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 }
 
-                # Improved file handling with better error messages
+                # File upload and handling
                 for file in files:
                     try:
-                        unique_filename = f"{file.name}_{uuid.uuid4()}"
+                        sanitized_file_name = sanitize_filename(file.name)
+                        unique_filename = f"{sanitized_file_name}_{uuid.uuid4()}"
                         file_path = f'uploads/{unique_filename}'
+
+                        # Save file to storage
                         default_storage.save(file_path, file)
+
+                        # Add file details to entry data
                         entry_data["files"].append({
                             "filename": unique_filename,
                             "url": default_storage.url(file_path),
-                            "original_name": file.name,  # Store original filename
-                            "size": f"{file.size / 1024 / 1024:.1f} MB"  # Show file size
+                            "original_name": file.name,
+                            "size": f"{file.size / 1024 / 1024:.1f} MB"  # File size in MB
                         })
                         messages.success(request, f"Successfully uploaded {file.name}")
                     except Exception as e:
@@ -169,7 +278,7 @@ def purechain_view(request):
                         logger.error(f"File upload error: {str(e)}")
                         continue
 
-                # Save metadata
+                # Save metadata as JSON
                 json_path = f'uploads/{sanitized_title}.json'
                 try:
                     json_string = json.dumps(entry_data, ensure_ascii=False)
@@ -214,6 +323,7 @@ def purechain_view(request):
     }
     
     return render(request, 'research/purechain.html', context)
+
 
 def delete_file(request, filename):
     if request.method == 'POST':
