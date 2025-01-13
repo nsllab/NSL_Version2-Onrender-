@@ -11,5 +11,7 @@ urlpatterns = [
     path('purechain/', views.purechain_view, name='purechain_view'),
     path('paperacknowledgement/', views.acknowl_view, name='acknowl_view'),
     path('purechain/delete/<str:filename>/', views.delete_file, name='delete_file'),
+    path('purechain/delete/<str:filename>/', views.ackdelete_file, name='ackdelete_file'),
     path('details/<str:title>/', views.entry_details, name='entry_details'),
+    path('details/<str:title>/', views.ackentry_details, name='ackentry_details'),
 ]
