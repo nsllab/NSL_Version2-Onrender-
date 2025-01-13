@@ -523,16 +523,24 @@ def ackentry_edit(request, entry_id):
                 entry_data = read_entry_metadata(file_path)
                 
                 if entry_data and entry_data.get('id') == entry_id:
-                    # Update the entry data
+                    # Update the entry data while preserving the original ID and files
+                    original_id = entry_data['id']
+                    original_files = entry_data['files']
+                    
                     entry_data['title'] = request.POST.get('title')
                     entry_data['text_content'] = request.POST.get('text_content')
                     entry_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    entry_data['id'] = original_id  # Preserve the original ID
+                    entry_data['files'] = original_files  # Preserve the original files
                     
-                    # Save the updated data
-                    save_entry_metadata(entry_data, 'ackuploads', entry_data['title'])
+                    # Delete the old JSON file
+                    default_storage.delete(file_path)
+                    
+                    # Save the updated data to the same JSON file
+                    json_string = json.dumps(entry_data, ensure_ascii=False, indent=2)
+                    default_storage.save(file_path, ContentFile(json_string.encode('utf-8')))
+                    
                     messages.success(request, "Entry updated successfully!")
-                    
-                    # Redirect to the updated entry's detail page
                     return redirect('research:ackentry_details', title=entry_data['title'])
             
             messages.error(request, "Entry not found.")
@@ -555,16 +563,24 @@ def entry_edit(request, entry_id):
                 entry_data = read_entry_metadata(file_path)
                 
                 if entry_data and entry_data.get('id') == entry_id:
-                    # Update the entry data
+                    # Update the entry data while preserving the original ID and files
+                    original_id = entry_data['id']
+                    original_files = entry_data['files']
+                    
                     entry_data['title'] = request.POST.get('title')
                     entry_data['text_content'] = request.POST.get('text_content')
                     entry_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    entry_data['id'] = original_id  # Preserve the original ID
+                    entry_data['files'] = original_files  # Preserve the original files
                     
-                    # Save the updated data
-                    save_entry_metadata(entry_data, 'uploads', entry_data['title'])
+                    # Delete the old JSON file
+                    default_storage.delete(file_path)
+                    
+                    # Save the updated data to the same JSON file
+                    json_string = json.dumps(entry_data, ensure_ascii=False, indent=2)
+                    default_storage.save(file_path, ContentFile(json_string.encode('utf-8')))
+                    
                     messages.success(request, "Entry updated successfully!")
-                    
-                    # Redirect to the updated entry's detail page
                     return redirect('research:entry_details', title=entry_data['title'])
             
             messages.error(request, "Entry not found.")
