@@ -4,15 +4,8 @@
     <a class="navbar-brand" href="{% url 'pages:index' %}">
       <img src="{% static 'img/logo.gif' %}" class="logo" alt="Logo">
     </a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -44,7 +37,8 @@
             <li><a class="dropdown-item" href="{% url 'members:part_time_list' %}">Part-Time Researchers</a></li>
             <li><a class="dropdown-item" href="{% url 'members:visiting_list' %}">Visiting Researchers</a></li>
             <li><a class="dropdown-item" href="{% url 'members:alumni_post_doc' %}">Alumni (Post Doc)</a></li>
-            <li><a class="dropdown-item" href="{% url 'members:alumni_graduate' %}">Alumni (Graduate Researchers)</a></li>
+            <li><a class="dropdown-item" href="{% url 'members:alumni_graduate' %}">Alumni (Graduate Researchers)</a>
+            </li>
             <li><a class="dropdown-item" href="{% url 'members:advisers' %}">Advisers</a></li>
             <li><a class="dropdown-item" href="{% url 'members:undergraduate' %}">Undergraduate Researchers</a></li>
           </ul>
@@ -57,20 +51,24 @@
             <li class="dropdown-submenu">
               <a class="dropdown-item" href="{% url 'publications:journals' %}">Journals</a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'publications:international_journals' %}">International Journals</a></li>
-                <li><a class="dropdown-item" href="{% url 'publications:domestic_journals' %}">Domestic Journals</a></li>
-                <li><a class="dropdown-item" href="{% url 'research:acknowl_view' %}">Paper  Acknowledgement</a></li>
+                <li><a class="dropdown-item" href="{% url 'publications:international_journals' %}">International
+                    Journals</a></li>
+                <li><a class="dropdown-item" href="{% url 'publications:domestic_journals' %}">Domestic Journals</a>
+                </li>
               </ul>
             </li>
             <li class="dropdown-submenu">
               <a class="dropdown-item" href="{% url 'publications:conferences' %}">Conferences</a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'publications:international_conferences' %}">International Conferences</a></li>
-                <li><a class="dropdown-item" href="{% url 'publications:domestic_conferences' %}">Domestic Conferences</a></li>
+                <li><a class="dropdown-item" href="{% url 'publications:international_conferences' %}">International
+                    Conferences</a></li>
+                <li><a class="dropdown-item" href="{% url 'publications:domestic_conferences' %}">Domestic
+                    Conferences</a></li>
               </ul>
             </li>
             <li><a class="dropdown-item" href="{% url 'publications:patents' %}">Patents</a></li>
             <li><a class="dropdown-item" href="{% url 'publications:books' %}">Books</a></li>
+            <li><a class="dropdown-item" href="{% url 'research:acknowl_view' %}">Paper  Acknowledgement</a></li>
           </ul>
         </li>
         <li class="nav-item">
@@ -81,24 +79,26 @@
             Works
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'works:weekly_reports' %}">Weekly Reports (Graduates Researchers)</a></li>
-            <li><a class="dropdown-item" href="{% url 'works:post_doc_reports' %}">Weekly Reports (Post Doc Researchers)</a></li>
+            <li><a class="dropdown-item" href="{% url 'works:weekly_reports' %}">Weekly Reports (Graduates
+                Researchers)</a></li>
+            <li><a class="dropdown-item" href="{% url 'works:post_doc_reports' %}">Weekly Reports (Post Doc
+                Researchers)</a></li>
             <li><a class="dropdown-item" href="{% url 'research:purechain_view' %}">Conference Reports</a></li>
             <li><a class="dropdown-item" href="{% url 'works:seminars' %}">Seminars</a></li>
             <li><a class="dropdown-item" href="{% url 'works:reviews' %}">Reviews</a></li>
             <li><a class="dropdown-item" href="{% url 'works:paper_templates' %}">Paper Templates</a></li>
           </ul>
         </li>
-        
+
         <li class="nav-item">
           <a class="nav-link" href="https://auth.worksmobile.com/login/login">Kumoh Mail</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://sites.google.com/view/profdskim">Professor Website</a>
         </li>
-        
 
-        
+
+
 
         {% if user.is_authenticated %}
         <li class="nav-item">
@@ -131,22 +131,21 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-      // Select all dropdown toggles
-      const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-  
-      dropdownToggles.forEach(toggle => {
-          toggle.addEventListener('click', function (e) {
-              // Only activate this behavior on mobile screens
-              if (window.innerWidth < 992) { // Bootstrap's `lg` breakpoint
-                  e.preventDefault();
-                  const dropdownMenu = this.nextElementSibling;
-  
-                  // Toggle the display of the dropdown menu
-                  dropdownMenu.style.display =
-                      dropdownMenu.style.display === 'block' ? 'none' : 'block';
-              }
-          });
+    // Select all dropdown toggles
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+
+    dropdownToggles.forEach(toggle => {
+      toggle.addEventListener('click', function (e) {
+        // Only activate this behavior on mobile screens
+        if (window.innerWidth < 992) { // Bootstrap's `lg` breakpoint
+          e.preventDefault();
+          const dropdownMenu = this.nextElementSibling;
+
+          // Toggle the display of the dropdown menu
+          dropdownMenu.style.display =
+            dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        }
       });
+    });
   });
-  </script>
-  
+</script>
