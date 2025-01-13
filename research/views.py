@@ -318,8 +318,8 @@ def delete_file(request, filename):
             try:
                 with default_storage.open(f'uploads/{json_file}', 'r') as f:
                     entry_data = json.load(f)
-                    # Check if this JSON file contains metadata for any of the deleted files
-                    if any(file_info['filename'] == file_to_delete for file_info in entry_data.get('files', [])):
+                    # Check if this JSON file contains metadata for the deleted file or has no files
+                    if any(file_info['filename'] == file_to_delete for file_info in entry_data.get('files', [])) or not entry_data.get('files'):
                         # Delete the JSON metadata file
                         json_path = f'uploads/{json_file}'
                         if default_storage.exists(json_path):
@@ -358,8 +358,8 @@ def ackdelete_file(request, filename):
             try:
                 with default_storage.open(f'ackuploads/{json_file}', 'r') as f:
                     entry_data = json.load(f)
-                    # Check if this JSON file contains metadata for any of the deleted files
-                    if any(file_info['filename'] == file_to_delete for file_info in entry_data.get('files', [])):
+                    # Check if this JSON file contains metadata for the deleted file or has no files
+                    if any(file_info['filename'] == file_to_delete for file_info in entry_data.get('files', [])) or not entry_data.get('files'):
                         # Delete the JSON metadata file
                         json_path = f'ackuploads/{json_file}'
                         if default_storage.exists(json_path):
