@@ -99,8 +99,10 @@ class DashboardView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Try to find matching Bio using email
+        # Get Bio information
         context['bio'] = Bio.objects.filter(email_list__contains=self.request.user.email).first()
+        # Get reports for this user
+        context['reports'] = Report.objects.filter(user=self.request.user).order_by('-fr_dt')[:5]  # Get last 5 reports
         return context
 
 class ProfessorsListView(ListView):

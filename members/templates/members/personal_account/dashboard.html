@@ -5,32 +5,99 @@
 <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center" 
      style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
     
-    <div class="card shadow-lg" 
-         style="width: 90%; max-width: 800px; backdrop-filter: blur(10px); 
-                background: rgba(255, 255, 255, 0.9); 
-                transform: translateY(-20px); 
-                animation: float 6s ease-in-out infinite;">
-        
-        <div class="card-body p-5">
-            <div class="text-center mb-4">
-                {% if bio and bio.image %}
-                    <img src="{{ bio.image.url }}" 
-                         class="rounded-circle mb-3 shadow" 
-                         alt="{{ user.username }}"
-                         style="width: 150px; height: 150px; object-fit: cover;">
-                {% else %}
-                    <div class="rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center bg-info"
-                         style="width: 150px; height: 150px;">
-                        <span class="display-4 text-white">{{ user.username|make_list|first|upper }}</span>
-                    </div>
-                {% endif %}
+    <div class="row w-100 justify-content-center" style="max-width: 1400px;">
+        <!-- User Profile Card -->
+        <div class="col-md-5">
+            <div class="card shadow-lg h-100" 
+                 style="backdrop-filter: blur(10px); 
+                        background: rgba(255, 255, 255, 0.9); 
+                        transform: translateY(-20px); 
+                        animation: float 6s ease-in-out infinite;">
                 
-                <h2 class="mb-0">Welcome, {{ user.get_full_name|default:user.username }}</h2>
-                {% if bio %}
-                    <p class="text-muted">{{ bio.email_list }}</p>
-                {% else %}
-                    <p class="text-muted">{{ user.email }}</p>
-                {% endif %}
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        {% if bio and bio.image %}
+                            <img src="{{ bio.image.url }}" 
+                                 class="rounded-circle mb-3 shadow" 
+                                 alt="{{ user.username }}"
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center bg-info"
+                                 style="width: 150px; height: 150px;">
+                                <span class="display-4 text-white">{{ user.username|make_list|first|upper }}</span>
+                            </div>
+                        {% endif %}
+                        
+                        <h2 class="mb-0">Welcome, {{ user.get_full_name|default:user.username }}</h2>
+                        {% if bio %}
+                            <p class="text-muted">{{ bio.email_list }}</p>
+                        {% else %}
+                            <p class="text-muted">{{ user.email }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Reports Card -->
+        <div class="col-md-6">
+            <div class="card shadow-lg h-100" 
+                 style="backdrop-filter: blur(10px); 
+                        background: rgba(255, 255, 255, 0.9);">
+                <div class="card-header bg-transparent border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">Recent Weekly Reports</h3>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'works:create_report' %}" class="btn btn-outline-info">
+                                <i class="fa-solid fa-plus"></i> New Report
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if reports %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Date Range</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for report in reports %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}</th>
+                                        <td>
+                                            <a href="{% url 'works:details' pk=report.pk %}" class="text-decoration-none">
+                                                {{ report.fr_dt|date }} ~ {{ report.to_dt|date }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {% if user.is_staff or report.user == user %}
+                                                <a href="{% url 'works:update' pk=report.pk %}" 
+                                                   class="btn btn-outline-info btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <p>No reports available</p>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'works:create_report' %}" class="btn btn-outline-info">
+                                    Create Your First Report
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
