@@ -102,7 +102,6 @@ class DashboardView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         # Get Bio information
         context['bio'] = Bio.objects.filter(email_list__contains=self.request.user.email).first()
-        
         # Get both types of reports
         context['weekly_reports'] = WeeklyReport.objects.filter(
             writer=self.request.user
