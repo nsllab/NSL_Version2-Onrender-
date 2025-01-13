@@ -8,9 +8,16 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
-                    <h3>{{ entry.title }}</h3>
-                    <p class="text-muted">Last updated {{ entry.timestamp }}</p>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3>{{ entry.title }}</h3>
+                        <p class="text-muted mb-0">Last updated {{ entry.timestamp }}</p>
+                    </div>
+                    {% if request.user.username == 'June' or request.user.username == 'Angelo' %}
+                    <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#editModal">
+                        <i class="fas fa-edit"></i> Edit Content
+                    </button>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <div class="content-text">{{ entry.text_content }}</div>
@@ -29,6 +36,35 @@
                 <div class="card-footer">
                     <a href="{% url 'research:purechain_view' %}" class="btn btn-secondary btn-sm">Back</a>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Entry</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'research:entry_edit' entry.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ entry.title }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="text_content" class="form-label">Content</label>
+                        <textarea class="form-control" id="text_content" name="text_content" rows="10">{{ entry.text_content }}</textarea>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

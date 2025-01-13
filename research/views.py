@@ -543,5 +543,35 @@ def ackentry_edit(request, entry_id):
     
     return redirect('research:acknowl_view')
     
-
+def entry_edit(request, entry_id):
+    if request.method == 'POST':
+        try:
+            # Get list of all files in uploads directory
+            _, files = default_storage.listdir('uploads')
+            json_files = [f for f in files if f.endswith('.json')]
+            
+            for json_file in json_files:
+                file_path = os.path.join('uploads', json_file)
+                entry_data = read_entry_metadata(file_path)
+                
+                if entry_data and entry_data.get('id') == entry_id:
+                    # Update the entry data
+                    entry_data['title'] = request.POST.get('title')
+                    entry_data['text_content'] = request.POST.get('text_content')
+                    entry_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    
+                    # Save the updated data
+                    save_entry_metadata(entry_data, 'uploads', entry_data['title'])
+                    messages.success(request, "Entry updated successfully!")
+                    
+                    # Redirect to the updated entry's detail page
+                    return redirect('research:entry_details', title=entry_data['title'])
+            
+            messages.error(request, "Entry not found.")
+            
+        except Exception as e:
+            logger.error(f"Error in entry_edit: {str(e)}")
+            messages.error(request, f"Error updating entry: {str(e)}")
+    
+    return redirect('research:purechain_view')
 

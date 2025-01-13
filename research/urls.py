@@ -15,4 +15,5 @@ urlpatterns = [
     path('details/<str:title>/', views.entry_details, name='entry_details'),
     path('ackdetails/<str:title>/', views.ackentry_details, name='ackentry_details'),
     path('ackentry/<str:entry_id>/edit/', views.ackentry_edit, name='ackentry_edit'),
+    path('entry/<str:entry_id>/edit/', views.entry_edit, name='entry_edit'),
 ]
