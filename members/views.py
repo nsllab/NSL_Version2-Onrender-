@@ -88,6 +88,7 @@ class MemberChangePasswordView(LoginRequiredMixin, SuccessMessageMixin, Password
 #         'total': len(bio)
 #         }
 #     return render(request, 'members/professors.html', context)
+
 class DashboardView(LoginRequiredMixin, DetailView):
     model = Member
     template_name = 'members/personal_account/dashboard.html'
@@ -98,10 +99,9 @@ class DashboardView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add any additional context data you want to display
         context['bio'] = Bio.objects.filter(member=self.request.user).first()
         return context
-        
+
 class ProfessorsListView(ListView):
     model = Bio
     template_name = 'members/people/professors.html'
