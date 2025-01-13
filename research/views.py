@@ -131,6 +131,17 @@ class HistoryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 #     return render(request, 'research/purechain.html', {'form': form, 'files': file_data})
 
+def generate_safe_filename(text):
+    """Generate a filename safe string that preserves Korean characters"""
+    # Convert spaces to underscores but preserve Korean
+    filename = text.replace(' ', '_')
+    # Remove unsafe characters but keep Korean
+    filename = ''.join(char for char in filename 
+                      if char.isalnum() 
+                      or char in ('_', '-') 
+                      or unicodedata.category(char).startswith(('Lo', 'Po')))
+    return filename
+
 def purechain_view(request):
     logger = logging.getLogger(__name__)
     file_data = []
@@ -143,65 +154,83 @@ def purechain_view(request):
                 text_content = form.cleaned_data['text_content']
                 files = request.FILES.getlist('files')
 
-                sanitized_title = re.sub(r'[^\w\s-]', '', title).replace(' ', '_')
+                # Generate a unique ID for this entry
+                entry_id = str(uuid.uuid4())
+                
                 entry_data = {
-                    "title": title,
+                    "id": entry_id,
+                    "title": title,  # Store original title with Korean
                     "text_content": text_content,
                     "files": [],
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 }
 
-                # Improved file handling with better error messages
+                # Handle file uploads
                 for file in files:
                     try:
-                        unique_filename = f"{file.name}_{uuid.uuid4()}"
-                        file_path = f'uploads/{unique_filename}'
-                        default_storage.save(file_path, file)
+                        original_filename = file.name
+                        safe_filename = generate_safe_filename(original_filename)
+                        unique_filename = f"{entry_id}_{safe_filename}"
+                        file_path = os.path.join('uploads', unique_filename)
+
+                        # Save file with proper encoding
+                        with default_storage.open(file_path, 'wb+') as destination:
+                            for chunk in file.chunks():
+                                destination.write(chunk)
+
                         entry_data["files"].append({
                             "filename": unique_filename,
                             "url": default_storage.url(file_path),
-                            "original_name": file.name,  # Store original filename
-                            "size": f"{file.size / 1024 / 1024:.1f} MB"  # Show file size
+                            "original_name": original_filename,  # Keep original name with Korean
+                            "size": f"{file.size / 1024 / 1024:.1f} MB"
                         })
-                        messages.success(request, f"Successfully uploaded {file.name}")
+                        messages.success(request, f"Successfully uploaded {original_filename}")
                     except Exception as e:
-                        messages.error(request, f"Failed to save file {file.name}: {str(e)}")
+                        messages.error(request, f"Failed to save file {original_filename}: {str(e)}")
                         logger.error(f"File upload error: {str(e)}")
                         continue
 
-                # Save metadata
-                json_path = f'uploads/{sanitized_title}.json'
+                # Save metadata with Korean support
+                json_filename = f"{entry_id}.json"
+                json_path = os.path.join('uploads', json_filename)
                 try:
-                    json_string = json.dumps(entry_data, ensure_ascii=False)
-                    default_storage.save(json_path, ContentFile(json_string))
+                    json_string = json.dumps(entry_data, ensure_ascii=False, indent=2)
+                    with default_storage.open(json_path, 'w', encoding='utf-8') as f:
+                        f.write(json_string)
                     messages.success(request, "Entry saved successfully!")
                 except Exception as e:
                     messages.error(request, f"Failed to save entry metadata: {str(e)}")
                     logger.error(f"Metadata save error: {str(e)}")
-                
+
                 return redirect('research:purechain_view')
+
             except Exception as e:
                 messages.error(request, f"An unexpected error occurred: {str(e)}")
                 logger.error(f"Unexpected error: {str(e)}")
     else:
         form = UserInputForm()
 
-    # Fetch and sort existing entries
+    # Fetch existing entries with proper encoding
     try:
-        files = default_storage.listdir('uploads')[1]
-        for file in files:
-            if file.lower().endswith('.json'):
-                try:
-                    with default_storage.open(f'uploads/{file}', 'r') as f:
-                        entry_data = json.load(f)
-                        file_data.append(entry_data)
-                except json.JSONDecodeError:
-                    logger.error(f"Malformed JSON in file {file}")
-                except Exception as e:
-                    logger.error(f"Error reading JSON file {file}: {str(e)}")
+        _, files = default_storage.listdir('uploads')
+        json_files = [f for f in files if f.endswith('.json')]
+        
+        for json_file in json_files:
+            try:
+                file_path = os.path.join('uploads', json_file)
+                with default_storage.open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read().strip()
+                    if content:
+                        entry_data = json.loads(content)
+                        if isinstance(entry_data, dict):
+                            file_data.append(entry_data)
+            except json.JSONDecodeError as e:
+                logger.error(f"JSON decode error for {json_file}: {str(e)}")
+            except Exception as e:
+                logger.error(f"Error reading file {json_file}: {str(e)}")
 
-        # Sort entries by timestamp (newest first)
         file_data.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+        
     except Exception as e:
         logger.error(f"Error fetching files: {str(e)}")
         messages.error(request, "Error loading existing entries")
@@ -215,6 +244,7 @@ def purechain_view(request):
     
     return render(request, 'research/purechain.html', context)
 
+
 def acknowl_view(request):
     logger = logging.getLogger(__name__)
     file_data = []
@@ -227,65 +257,83 @@ def acknowl_view(request):
                 text_content = form.cleaned_data['text_content']
                 files = request.FILES.getlist('files')
 
-                sanitized_title = re.sub(r'[^\w\s-]', '', title).replace(' ', '_')
+                # Generate a unique ID for this entry
+                entry_id = str(uuid.uuid4())
+                
                 entry_data = {
-                    "title": title,
+                    "id": entry_id,
+                    "title": title,  # Store original title with Korean
                     "text_content": text_content,
                     "files": [],
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 }
 
-                # Improved file handling with better error messages
+                # Handle file uploads
                 for file in files:
                     try:
-                        unique_filename = f"{file.name}_{uuid.uuid4()}"
-                        file_path = f'ackuploads/{unique_filename}'
-                        default_storage.save(file_path, file)
+                        original_filename = file.name
+                        safe_filename = generate_safe_filename(original_filename)
+                        unique_filename = f"{entry_id}_{safe_filename}"
+                        file_path = os.path.join('ackuploads', unique_filename)
+
+                        # Save file with proper encoding
+                        with default_storage.open(file_path, 'wb+') as destination:
+                            for chunk in file.chunks():
+                                destination.write(chunk)
+
                         entry_data["files"].append({
                             "filename": unique_filename,
                             "url": default_storage.url(file_path),
-                            "original_name": file.name,  # Store original filename
-                            "size": f"{file.size / 1024 / 1024:.1f} MB"  # Show file size
+                            "original_name": original_filename,  # Keep original name with Korean
+                            "size": f"{file.size / 1024 / 1024:.1f} MB"
                         })
-                        messages.success(request, f"Successfully uploaded {file.name}")
+                        messages.success(request, f"Successfully uploaded {original_filename}")
                     except Exception as e:
-                        messages.error(request, f"Failed to save file {file.name}: {str(e)}")
+                        messages.error(request, f"Failed to save file {original_filename}: {str(e)}")
                         logger.error(f"File upload error: {str(e)}")
                         continue
 
-                # Save metadata
-                json_path = f'ackuploads/{sanitized_title}.json'
+                # Save metadata with Korean support
+                json_filename = f"{entry_id}.json"
+                json_path = os.path.join('ackuploads', json_filename)
                 try:
-                    json_string = json.dumps(entry_data, ensure_ascii=False)
-                    default_storage.save(json_path, ContentFile(json_string))
+                    json_string = json.dumps(entry_data, ensure_ascii=False, indent=2)
+                    with default_storage.open(json_path, 'w', encoding='utf-8') as f:
+                        f.write(json_string)
                     messages.success(request, "Entry saved successfully!")
                 except Exception as e:
                     messages.error(request, f"Failed to save entry metadata: {str(e)}")
                     logger.error(f"Metadata save error: {str(e)}")
-                
+
                 return redirect('research:acknowl_view')
+
             except Exception as e:
                 messages.error(request, f"An unexpected error occurred: {str(e)}")
                 logger.error(f"Unexpected error: {str(e)}")
     else:
         form = UserInputForm()
 
-    # Fetch and sort existing entries
+    # Fetch existing entries with proper encoding
     try:
-        files = default_storage.listdir('ackuploads')[1]
-        for file in files:
-            if file.lower().endswith('.json'):
-                try:
-                    with default_storage.open(f'ackuploads/{file}', 'r') as f:
-                        entry_data = json.load(f)
-                        file_data.append(entry_data)
-                except json.JSONDecodeError:
-                    logger.error(f"Malformed JSON in file {file}")
-                except Exception as e:
-                    logger.error(f"Error reading JSON file {file}: {str(e)}")
+        _, files = default_storage.listdir('ackuploads')
+        json_files = [f for f in files if f.endswith('.json')]
+        
+        for json_file in json_files:
+            try:
+                file_path = os.path.join('ackuploads', json_file)
+                with default_storage.open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read().strip()
+                    if content:
+                        entry_data = json.loads(content)
+                        if isinstance(entry_data, dict):
+                            file_data.append(entry_data)
+            except json.JSONDecodeError as e:
+                logger.error(f"JSON decode error for {json_file}: {str(e)}")
+            except Exception as e:
+                logger.error(f"Error reading file {json_file}: {str(e)}")
 
-        # Sort entries by timestamp (newest first)
         file_data.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+        
     except Exception as e:
         logger.error(f"Error fetching files: {str(e)}")
         messages.error(request, "Error loading existing entries")
@@ -296,7 +344,6 @@ def acknowl_view(request):
         'page_title': 'File Upload and Management',
         'has_files': bool(file_data)
     }
-    
     return render(request, 'research/acknowl.html', context)
 
 
