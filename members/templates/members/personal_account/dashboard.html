@@ -39,23 +39,69 @@
             </div>
         </div>
 
-        <!-- Weekly Reports Card -->
+        <!-- Reports Card -->
         <div class="col-md-6">
             <div class="card shadow-lg h-100" 
                  style="backdrop-filter: blur(10px); 
                         background: rgba(255, 255, 255, 0.9);">
                 <div class="card-header bg-transparent border-0">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0">Recent Weekly Reports</h3>
+                        <h3 class="mb-0">Recent Reports</h3>
                         {% if user.is_authenticated %}
-                            <a href="{% url 'works:create_report' %}" class="btn btn-outline-info">
-                                <i class="fa-solid fa-plus"></i> New Report
-                            </a>
+                            <div>
+                                <a href="{% url 'works:create_weekly_report' %}" class="btn btn-outline-info me-2">
+                                    <i class="fa-solid fa-plus"></i> Weekly Report
+                                </a>
+                                <a href="{% url 'works:create_postdoc_report' %}" class="btn btn-outline-info">
+                                    <i class="fa-solid fa-plus"></i> PostDoc Report
+                                </a>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
                 <div class="card-body">
-                    {% if reports %}
+                    <!-- Weekly Reports -->
+                    {% if weekly_reports %}
+                        <h5 class="mb-3">Weekly Reports</h5>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Date Range</th>
+                                        <th>Progress</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for report in weekly_reports %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}</th>
+                                        <td>
+                                            <a href="{% url 'works:weekly_report_detail' pk=report.pk %}" class="text-decoration-none">
+                                                {{ report.fr_dt|date }} ~ {{ report.to_dt|date }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            Paper: {{ report.paper_prog_percent }}% <br>
+                                            Project: {{ report.project_prog_percent }}%
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'works:update_weekly_report' pk=report.pk %}" 
+                                               class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+
+                    <!-- PostDoc Reports -->
+                    {% if postdoc_reports %}
+                        <h5 class="mb-3">PostDoc Reports</h5>
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead class="table-light">
@@ -66,34 +112,39 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for report in reports %}
+                                    {% for report in postdoc_reports %}
                                     <tr>
                                         <th scope="row">{{ forloop.counter }}</th>
                                         <td>
-                                            <a href="{% url 'works:details' pk=report.pk %}" class="text-decoration-none">
+                                            <a href="{% url 'works:postdoc_report_detail' pk=report.pk %}" class="text-decoration-none">
                                                 {{ report.fr_dt|date }} ~ {{ report.to_dt|date }}
                                             </a>
                                         </td>
                                         <td>
-                                            {% if user.is_staff or report.user == user %}
-                                                <a href="{% url 'works:update' pk=report.pk %}" 
-                                                   class="btn btn-outline-info btn-sm">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            {% endif %}
+                                            <a href="{% url 'works:update_postdoc_report' pk=report.pk %}" 
+                                               class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-                    {% else %}
+                    {% endif %}
+
+                    {% if not weekly_reports and not postdoc_reports %}
                         <div class="text-center text-muted py-4">
                             <p>No reports available</p>
                             {% if user.is_authenticated %}
-                                <a href="{% url 'works:create_report' %}" class="btn btn-outline-info">
-                                    Create Your First Report
-                                </a>
+                                <div class="mt-3">
+                                    <a href="{% url 'works:create_weekly_report' %}" class="btn btn-outline-info me-2">
+                                        Create Weekly Report
+                                    </a>
+                                    <a href="{% url 'works:create_postdoc_report' %}" class="btn btn-outline-info">
+                                        Create PostDoc Report
+                                    </a>
+                                </div>
                             {% endif %}
                         </div>
                     {% endif %}

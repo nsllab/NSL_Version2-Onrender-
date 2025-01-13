@@ -9,6 +9,7 @@ from django.views.generic import CreateView, UpdateView, DetailView, ListView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from works.models import WeeklyReport, PostDocReport
 
 def register_user(request):
     if request.method == 'POST':
@@ -101,8 +102,16 @@ class DashboardView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         # Get Bio information
         context['bio'] = Bio.objects.filter(email_list__contains=self.request.user.email).first()
-        # Get reports for this user
-        context['reports'] = Report.objects.filter(user=self.request.user).order_by('-fr_dt')[:5]  # Get last 5 reports
+        
+        # Get both types of reports
+        context['weekly_reports'] = WeeklyReport.objects.filter(
+            writer=self.request.user
+        ).order_by('-fr_dt')[:5]
+        
+        context['postdoc_reports'] = PostDocReport.objects.filter(
+            writer=self.request.user
+        ).order_by('-fr_dt')[:5]
+        
         return context
 
 class ProfessorsListView(ListView):
