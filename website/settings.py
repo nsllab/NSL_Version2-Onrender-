@@ -13,14 +13,24 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
+# from urllib.parse import urlparse
 import dj_database_url
-from django.utils.translation import gettext_lazy as _
+# from django.core.exceptions import ImproperlyConfigured
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+
 SECRET_KEY = config('SECRET_KEY')
+
+# DEBUG = 'RENDER' not in os.environ
+
+# DEBUG = config('DEBUG', default=False, cast=bool)
+# DEBUG = 'RENDER' not in os.environ
 DEBUG = True
+
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
@@ -29,6 +39,7 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,12 +58,10 @@ INSTALLED_APPS = [
     'custom_filters',
 ]
 
-# Middleware configuration with support for Korean
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # Add this for language support
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -63,7 +72,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'website.urls'
 
-# Templates configuration with internationalization support
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -77,7 +85,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.i18n',  # Add this for internationalization
             ],
         },
     },
@@ -85,20 +92,42 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'website.wsgi.application'
 
-# Database configuration with Korean character support
+
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': config('DB_NAME'),
+#         'USER': config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST': config('DB_HOST'),  # Set to the appropriate host if PostgreSQL is running on a different machine
+#         'PORT': config('DB_PORT'),
+#     }
+# }
+
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DATABASE_URL'),
         conn_max_age=600,
         conn_health_checks=True,
-        options={
-            'charset': 'utf8mb4',
-            'use_unicode': True,
-        }
     )
 }
 
+# DATABASES = {'default': env.db()}
+
+
 # Password validation
+# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -114,53 +143,47 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization and Korean language settings
-LANGUAGE_CODE = 'ko-kr'
-TIME_ZONE = 'Asia/Seoul'
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+LANGUAGE_CODE = 'ko-kr'  # or your preferred language code
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
 DEFAULT_CHARSET = 'utf-8'
 
-LANGUAGES = [
-    ('ko', _('Korean')),
-    ('en', _('English')),
-]
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-# File upload settings for proper handling of Korean filenames
-FILE_UPLOAD_HANDLERS = [
-    'django.core.files.uploadhandler.MemoryFileUploadHandler',
-    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
-]
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
-
-# Static and media files configuration
 USE_SPACES = config('USE_SPACES')
+print(USE_SPACES)
 
 if USE_SPACES:
+
     AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
     AWS_DEFAULT_ACL = 'public-read'
     AWS_S3_ENDPOINT_URL = 'https://sgp1.digitaloceanspaces.com'
     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    
-    # Additional S3 settings for Korean support
-    AWS_S3_ENCODING = 'utf-8'
-    AWS_S3_SIGNATURE_VERSION = 's3v4'
-    AWS_S3_FILE_OVERWRITE = False
-    AWS_QUERYSTRING_AUTH = False
-    S3_USE_SIGV4 = True
-    
-    # Static settings
+    # static settings
     AWS_LOCATION = 'static'
     STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-    # Public media settings
+    # public media settings
     MEDIA_LOCATION = 'media'
     MEDIA_URL = f'https://{AWS_S3_ENDPOINT_URL}/{MEDIA_LOCATION}/'
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 else:
     STATIC_URL = 'static/'
     STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -168,55 +191,37 @@ else:
     MEDIA_ROOT = BASE_DIR / "media"
     MEDIA_URL = '/mediafiles/'
 
+
+# STATIC_URL = 'static/'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# MEDIA_ROOT = BASE_DIR / "media"
+# MEDIA_URL = '/mediafiles/'
+
+# STATIC_URL = 'static/'
+
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+
+
+
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'
+
 # Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Custom user model and authentication settings
 AUTH_USER_MODEL = 'members.Member'
-AUTO_LOGOUT_TIME = 1800  # 30 minutes
+# settings.py
+AUTO_LOGOUT_TIME = 1800  # 30 minutes (adjust as needed)
 
-# Messages configuration
 from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
-}
-
-# Security settings
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-
-# Cache settings
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
-    }
-}
-
-# Logging configuration
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'propagate': False,
-        },
-    },
 }
