@@ -14,4 +14,5 @@ urlpatterns = [
     path('acknowl/delete/<path:filename>/', views.ackdelete_file, name='ackdelete_file'),
     path('details/<str:title>/', views.entry_details, name='entry_details'),
     path('ackdetails/<str:title>/', views.ackentry_details, name='ackentry_details'),
+    path('ackentry/<str:entry_id>/edit/', views.ackentry_edit, name='ackentry_edit'),
 ]

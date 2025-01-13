@@ -511,7 +511,37 @@ def ackentry_details(request, title):
     return redirect('research:acknowl_view')
 
 
-
+def ackentry_edit(request, entry_id):
+    if request.method == 'POST':
+        try:
+            # Get list of all files in ackuploads directory
+            _, files = default_storage.listdir('ackuploads')
+            json_files = [f for f in files if f.endswith('.json')]
+            
+            for json_file in json_files:
+                file_path = os.path.join('ackuploads', json_file)
+                entry_data = read_entry_metadata(file_path)
+                
+                if entry_data and entry_data.get('id') == entry_id:
+                    # Update the entry data
+                    entry_data['title'] = request.POST.get('title')
+                    entry_data['text_content'] = request.POST.get('text_content')
+                    entry_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    
+                    # Save the updated data
+                    save_entry_metadata(entry_data, 'ackuploads', entry_data['title'])
+                    messages.success(request, "Entry updated successfully!")
+                    
+                    # Redirect to the updated entry's detail page
+                    return redirect('research:ackentry_details', title=entry_data['title'])
+            
+            messages.error(request, "Entry not found.")
+            
+        except Exception as e:
+            logger.error(f"Error in ackentry_edit: {str(e)}")
+            messages.error(request, f"Error updating entry: {str(e)}")
+    
+    return redirect('research:acknowl_view')
     
 
 
