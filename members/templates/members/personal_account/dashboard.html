@@ -1,78 +1,13 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block content %}
-<div class="min-h-screen bg-[#f2e6d9]">
-    <!-- Main Container with Vintage Border -->
-    <div class="max-w-6xl mx-auto p-8">
-        <div class="bg-[#f2e6d9] rounded-lg p-6 relative">
-            <!-- Top Navigation -->
-            <div class="mb-8 border-b border-[#2F4F4F] pb-4">
-                <nav class="flex justify-between items-center">
-                    <span class="text-2xl font-serif text-[#2F4F4F]">Welcome, {{ user.username }}</span>
-                    <div class="flex gap-4">
-                        <a href="{% url 'members:update_profile' %}" class="text-[#2F4F4F] hover:text-[#5F7F7F]">Profile</a>
-                        <a href="{% url 'members:logout' %}" class="text-[#2F4F4F] hover:text-[#5F7F7F]">Logout</a>
-                    </div>
-                </nav>
-            </div>
-
-            <!-- Grid Layout -->
-            <div class="grid grid-cols-3 gap-6">
-                <!-- Left Block -->
-                <div class="bg-[#2F4F4F] rounded-lg p-6 text-[#f2e6d9]">
-                    <h2 class="text-xl font-serif mb-4">Profile Stats</h2>
-                    <div class="space-y-3">
-                        <p>Email: {{ user.email }}</p>
-                        <p>Last Login: {{ user.last_login|date:"M d, Y" }}</p>
-                    </div>
-                </div>
-
-                <!-- Center Block with Image -->
-                <div class="flex flex-col items-center justify-center">
-                    <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-[#2F4F4F] mb-4">
-                        {% if user.profile_image %}
-                            <img src="{{ user.profile_image.url }}" alt="Profile" class="w-full h-full object-cover">
-                        {% else %}
-                            <div class="w-full h-full bg-[#8B7355] flex items-center justify-center">
-                                <span class="text-4xl text-[#f2e6d9]">{{ user.username|make_list|first|upper }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <h3 class="text-xl font-serif text-[#2F4F4F]">{{ user.get_full_name|default:user.username }}</h3>
-                </div>
-
-                <!-- Right Block -->
-                <div class="bg-[#2F4F4F] rounded-lg p-6 text-[#f2e6d9]">
-                    <h2 class="text-xl font-serif mb-4">Quick Actions</h2>
-                    <div class="space-y-3">
-                        <a href="{% url 'members:update_profile' %}" 
-                           class="block p-2 hover:bg-[#3F5F5F] rounded transition-colors">
-                            Update Profile
-                        </a>
-                        <a href="{% url 'members:change_password' user.id %}" 
-                           class="block p-2 hover:bg-[#3F5F5F] rounded transition-colors">
-                            Change Password
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Bottom Left Block -->
-                <div class="bg-[#8B7355] rounded-lg p-6 text-[#f2e6d9]">
-                    <h2 class="text-xl font-serif mb-4">Account Status</h2>
-                    <p>Active Member</p>
-                </div>
-
-                <!-- Bottom Center Block -->
-                <div class="bg-[#8B7355] rounded-lg p-6 text-[#f2e6d9]">
-                    <h2 class="text-xl font-serif mb-4">Notifications</h2>
-                    <p>No new notifications</p>
-                </div>
-
-                <!-- Bottom Right Block -->
-                <div class="bg-[#8B7355] rounded-lg p-6 text-[#f2e6d9]">
-                    <h2 class="text-xl font-serif mb-4">Recent Activity</h2>
-                    <p>Last profile update: Never</p>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Welcome, {{ user.username }}</h2>
+                    <p class="text-center text-muted">This page is under construction.</p>
                 </div>
             </div>
         </div>

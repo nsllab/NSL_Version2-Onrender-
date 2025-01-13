@@ -96,11 +96,6 @@ class DashboardView(LoginRequiredMixin, DetailView):
     
     def get_object(self, queryset=None):
         return self.request.user
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['bio'] = Bio.objects.filter(member=self.request.user).first()
-        return context
 
 class ProfessorsListView(ListView):
     model = Bio
