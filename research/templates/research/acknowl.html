@@ -39,7 +39,7 @@
                                     <td>
                                         <!-- <a href="{% url 'research:entry_details' entry.title|escapejs %}" class="btn btn-info btn-sm">Details</a> -->
                                         {% for file in entry.files %}
-                                        <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
+                                        <form method="post" action="{% url 'research:ackdelete_file' file.filename %}" class="d-inline">
                                         {% endfor %}
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -85,7 +85,7 @@
 <script>
     function redirectToDetails(title) {
         // Use Django's 'url' template tag to construct the base URL
-        const baseUrl = "{% url 'research:entry_details' 'PLACEHOLDER' %}";
+        const baseUrl = "{% url 'research:ackentry_details' 'PLACEHOLDER' %}";
         // Replace the 'PLACEHOLDER' part with the actual title
         const url = baseUrl.replace("PLACEHOLDER", encodeURIComponent(title));
         window.location.href = url;
