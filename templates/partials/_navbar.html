@@ -67,7 +67,9 @@
             </li>
             <li><a class="dropdown-item" href="{% url 'publications:patents' %}">Patents</a></li>
             <li><a class="dropdown-item" href="{% url 'publications:books' %}">Books</a></li>
-            <li><a class="dropdown-item" href="{% url 'research:acknowl_view' %}">Paper  Acknowledgement</a></li>
+            {% if user.is_authenticated %}
+            <li><a class="dropdown-item" href="{% url 'research:acknowl_view' %}">Paper Acknowledgement</a></li>
+            {% endif %}
           </ul>
         </li>
         <li class="nav-item">
@@ -95,9 +97,6 @@
         <li class="nav-item">
           <a class="nav-link" href="https://sites.google.com/view/profdskim">Professor Website</a>
         </li>
-
-
-
 
         {% if user.is_authenticated %}
         <li class="nav-item">
