@@ -1,16 +1,52 @@
 {% extends 'base.html' %}
+{% load bootstrap5 %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h2 class="card-title text-center mb-4">Welcome, {{ user.username }}</h2>
-                    <p class="text-center text-muted">This page is under construction.</p>
-                </div>
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center" 
+     style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+    
+    <div class="card shadow-lg" 
+         style="width: 90%; max-width: 800px; backdrop-filter: blur(10px); 
+                background: rgba(255, 255, 255, 0.9); 
+                transform: translateY(-20px); 
+                animation: float 6s ease-in-out infinite;">
+        
+        <div class="card-body p-5">
+            <div class="text-center mb-4">
+                {% if bio and bio.image %}
+                    <img src="{{ bio.image.url }}" 
+                         class="rounded-circle mb-3 shadow" 
+                         alt="{{ user.username }}"
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <div class="rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center bg-info"
+                         style="width: 150px; height: 150px;">
+                        <span class="display-4 text-white">{{ user.username|make_list|first|upper }}</span>
+                    </div>
+                {% endif %}
+                
+                <h2 class="mb-0">Welcome, {{ user.get_full_name|default:user.username }}</h2>
+                {% if bio %}
+                    <p class="text-muted">{{ bio.email_list }}</p>
+                {% else %}
+                    <p class="text-muted">{{ user.email }}</p>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+<style>
+@keyframes float {
+    0% {
+        transform: translateY(-20px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(-20px);
+    }
+}
+</style>
 {% endblock %}

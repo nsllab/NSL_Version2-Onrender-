@@ -96,6 +96,12 @@ class DashboardView(LoginRequiredMixin, DetailView):
     
     def get_object(self, queryset=None):
         return self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Try to find matching Bio using email
+        context['bio'] = Bio.objects.filter(email_list__contains=self.request.user.email).first()
+        return context
 
 class ProfessorsListView(ListView):
     model = Bio
