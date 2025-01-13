@@ -173,7 +173,7 @@ def purechain_view(request):
                 json_path = f'uploads/{sanitized_title}.json'
                 try:
                     json_string = json.dumps(entry_data, ensure_ascii=False)
-                    default_storage.save(json_path, ContentFile(json_string.encode('utf-8')))
+                    default_storage.save(json_path, ContentFile(json_string))
                     messages.success(request, "Entry saved successfully!")
                 except Exception as e:
                     messages.error(request, f"Failed to save entry metadata: {str(e)}")
