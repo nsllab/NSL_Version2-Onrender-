@@ -34,9 +34,9 @@ def login_user(request):
             
             if user is not None:
                 login(request, user)
-                next_url = request.GET.get('next', 'publications:journals')
+                # Change the redirect to our new dashboard
                 messages.add_message(request, messages.SUCCESS, f'Welcome back {user.username}')
-                return redirect(next_url)  # Redirect to the home page or any other page you want
+                return redirect('members:dashboard')  # We'll create this URL pattern
             else:
                 messages.add_message(request, messages.ERROR, 'Invalid Credentials. Login Unsuccessful. Contact Admin')
     else:
@@ -88,7 +88,20 @@ class MemberChangePasswordView(LoginRequiredMixin, SuccessMessageMixin, Password
 #         'total': len(bio)
 #         }
 #     return render(request, 'members/professors.html', context)
-
+class DashboardView(LoginRequiredMixin, DetailView):
+    model = Member
+    template_name = 'members/personal_account/dashboard.html'
+    context_object_name = 'user'
+    
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add any additional context data you want to display
+        context['bio'] = Bio.objects.filter(member=self.request.user).first()
+        return context
+        
 class ProfessorsListView(ListView):
     model = Bio
     template_name = 'members/people/professors.html'
