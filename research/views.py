@@ -263,7 +263,7 @@ def acknowl_view(request):
                     messages.error(request, f"Failed to save entry metadata: {str(e)}")
                     logger.error(f"Metadata save error: {str(e)}")
                 
-                return redirect('research:purechain_view')
+                return redirect('research:acknowl_view')
             except Exception as e:
                 messages.error(request, f"An unexpected error occurred: {str(e)}")
                 logger.error(f"Unexpected error: {str(e)}")
