@@ -302,45 +302,49 @@ def acknowl_view(request):
 
 def delete_file(request, filename):
     if request.method == 'POST':
-        # Initialize success flag
         deletion_performed = False
-        
-        # Search for file with or without UUID
         files = default_storage.listdir('uploads')[1]
-        file_to_delete = next((f for f in files if f.endswith(filename)), None)
-
-        # If the actual file exists, delete it
+        
+        # Clean the filename
+        filename = filename.replace('/', '')  # Remove any path separators
+        
+        # Try to find the actual file
+        file_to_delete = next((f for f in files if filename in f), None)
+        
+        # Delete the actual file if it exists
         if file_to_delete:
-            file_path = f'uploads/{file_to_delete}'
             try:
+                file_path = f'uploads/{file_to_delete}'
                 if default_storage.exists(file_path):
                     default_storage.delete(file_path)
                     deletion_performed = True
             except Exception as e:
-                messages.error(request, f"Error deleting file: {e}")
+                messages.error(request, f"Error deleting file: {str(e)}")
 
-        # Find and delete the associated JSON metadata file
-        json_files = [f for f in files if f.lower().endswith('.json')]
-        for json_file in json_files:
-            try:
-                with default_storage.open(f'uploads/{json_file}', 'r') as f:
-                    entry_data = json.load(f)
-                    # Check if this JSON contains metadata for the target file
-                    if any(file_info.get('filename', '').endswith(filename) 
-                          for file_info in entry_data.get('files', [])):
-                        # Delete the JSON metadata file
-                        json_path = f'uploads/{json_file}'
-                        if default_storage.exists(json_path):
-                            default_storage.delete(json_path)
-                            deletion_performed = True
-            except Exception as e:
-                messages.error(request, f"Error processing JSON file {json_file}: {e}")
-                continue
+        # Find and delete associated JSON metadata
+        try:
+            json_files = [f for f in files if f.endswith('.json')]
+            for json_file in json_files:
+                json_path = f'uploads/{json_file}'
+                try:
+                    if default_storage.exists(json_path):
+                        with default_storage.open(json_path, 'r') as f:
+                            data = json.load(f)
+                            # Check if this JSON contains our file
+                            if any(filename in str(file_info.get('filename', '')) 
+                                  for file_info in data.get('files', [])):
+                                default_storage.delete(json_path)
+                                deletion_performed = True
+                                break
+                except json.JSONDecodeError:
+                    continue
+        except Exception as e:
+            messages.error(request, f"Error processing JSON files: {str(e)}")
 
         if deletion_performed:
-            messages.success(request, "File and/or associated metadata deleted successfully.")
+            messages.success(request, "Entry deleted successfully.")
         else:
-            messages.error(request, "No file or metadata found to delete.")
+            messages.warning(request, "No matching files found to delete.")
 
         return redirect('research:purechain_view')
 
