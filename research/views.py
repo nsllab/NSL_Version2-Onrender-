@@ -401,50 +401,90 @@ def acknowl_view(request):
     
     return render(request, 'research/acknowl.html', context)
 
-def ackdelete_file(request, filename):
+def delete_file(request, filename):
     if request.method == 'POST':
         try:
-            files = default_storage.listdir('ackuploads')[1]
+            # Get list of all files in uploads directory
+            files = default_storage.listdir('uploads')[1]
             
-            # Clean the filename
-            filename = generate_safe_filename(filename)
-            
-            # Delete the actual file
-            file_path = os.path.join('ackuploads', filename)
-            if default_storage.exists(file_path):
-                default_storage.delete(file_path)
-                messages.success(request, "File deleted successfully.")
-            
-            # Update or delete associated JSON metadata
+            # Look for the JSON file that contains this entry's data
             json_files = [f for f in files if f.endswith('.json')]
+            entry_deleted = False
+            
             for json_file in json_files:
+                json_path = os.path.join('uploads', json_file)
                 try:
-                    json_path = os.path.join('ackuploads', json_file)
                     entry_data = read_entry_metadata(json_path)
                     
-                    if entry_data:
-                        # Remove the file from the entry's files list
-                        entry_data['files'] = [
-                            f for f in entry_data.get('files', [])
-                            if f.get('filename') != filename
-                        ]
+                    if entry_data and entry_data.get('id') == filename:
+                        # Delete all associated files
+                        for file_info in entry_data.get('files', []):
+                            file_path = os.path.join('uploads', file_info['filename'])
+                            if default_storage.exists(file_path):
+                                default_storage.delete(file_path)
                         
-                        # If no files and no content, delete the entry
-                        if not entry_data['files'] and not entry_data.get('text_content'):
-                            default_storage.delete(json_path)
-                        else:
-                            # Update the JSON file
-                            save_entry_metadata(entry_data, 'ackuploads', entry_data.get('title', ''))
-                            
+                        # Delete the JSON metadata file
+                        default_storage.delete(json_path)
+                        entry_deleted = True
+                        messages.success(request, "Entry and all associated files deleted successfully.")
+                        break
+                        
                 except Exception as e:
                     logger.error(f"Error processing JSON file {json_file}: {str(e)}")
                     continue
+            
+            if not entry_deleted:
+                messages.warning(request, "Entry not found.")
+                
+        except Exception as e:
+            logger.error(f"Error in delete_file: {str(e)}")
+            messages.error(request, f"Error deleting entry: {str(e)}")
+        
+        return redirect('research:purechain_view')
+    return redirect('research:purechain_view')
+
+def ackdelete_file(request, filename):
+    if request.method == 'POST':
+        try:
+            # Get list of all files in ackuploads directory
+            files = default_storage.listdir('ackuploads')[1]
+            
+            # Look for the JSON file that contains this entry's data
+            json_files = [f for f in files if f.endswith('.json')]
+            entry_deleted = False
+            
+            for json_file in json_files:
+                json_path = os.path.join('ackuploads', json_file)
+                try:
+                    entry_data = read_entry_metadata(json_path)
                     
+                    if entry_data and entry_data.get('id') == filename:
+                        # Delete all associated files
+                        for file_info in entry_data.get('files', []):
+                            file_path = os.path.join('ackuploads', file_info['filename'])
+                            if default_storage.exists(file_path):
+                                default_storage.delete(file_path)
+                        
+                        # Delete the JSON metadata file
+                        default_storage.delete(json_path)
+                        entry_deleted = True
+                        messages.success(request, "Entry and all associated files deleted successfully.")
+                        break
+                        
+                except Exception as e:
+                    logger.error(f"Error processing JSON file {json_file}: {str(e)}")
+                    continue
+            
+            if not entry_deleted:
+                messages.warning(request, "Entry not found.")
+                
         except Exception as e:
             logger.error(f"Error in ackdelete_file: {str(e)}")
-            messages.error(request, f"Error deleting file: {str(e)}")
+            messages.error(request, f"Error deleting entry: {str(e)}")
         
         return redirect('research:acknowl_view')
+    return redirect('research:acknowl_view')
+
 
 def ackentry_details(request, title):
     try:
@@ -470,50 +510,6 @@ def ackentry_details(request, title):
     messages.error(request, "Entry not found.")
     return redirect('research:acknowl_view')
 
-def delete_file(request, filename):
-    if request.method == 'POST':
-        try:
-            files = default_storage.listdir('uploads')[1]
-            
-            # Clean the filename
-            filename = generate_safe_filename(filename)
-            
-            # Delete the actual file
-            file_path = os.path.join('uploads', filename)
-            if default_storage.exists(file_path):
-                default_storage.delete(file_path)
-                messages.success(request, "File deleted successfully.")
-            
-            # Update or delete associated JSON metadata
-            json_files = [f for f in files if f.endswith('.json')]
-            for json_file in json_files:
-                try:
-                    json_path = os.path.join('uploads', json_file)
-                    entry_data = read_entry_metadata(json_path)
-                    
-                    if entry_data:
-                        # Remove the file from the entry's files list
-                        entry_data['files'] = [
-                            f for f in entry_data.get('files', [])
-                            if f.get('filename') != filename
-                        ]
-                        
-                        # If no files and no content, delete the entry
-                        if not entry_data['files'] and not entry_data.get('text_content'):
-                            default_storage.delete(json_path)
-                        else:
-                            # Update the JSON file
-                            save_entry_metadata(entry_data, 'uploads', entry_data.get('title', ''))
-                            
-                except Exception as e:
-                    logger.error(f"Error processing JSON file {json_file}: {str(e)}")
-                    continue
-                    
-        except Exception as e:
-            logger.error(f"Error in delete_file: {str(e)}")
-            messages.error(request, f"Error deleting file: {str(e)}")
-        
-        return redirect('research:purechain_view')
 
 
     

@@ -44,7 +44,7 @@
                                 <td>
                                     {% if request.user.username == 'June' or request.user.username == 'Angelo' %}
                                     <form method="post" action="{% url 'research:delete_file' filename=entry.id %}" {#
-                                        Use entry.id instead of title|slugify #} style="display: inline;"
+                                        Change from entry.title|slugify to entry.id #} style="display: inline;"
                                         onsubmit="return confirm('Are you sure you want to delete this entry?');">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-danger btn-sm"
