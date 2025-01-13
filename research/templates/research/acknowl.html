@@ -43,7 +43,7 @@
                                     <td>
                                         {% if request.user.username == 'June' or request.user.username == 'Angelo' %}
                                             <form method="post" 
-                                                  action="{% url 'research:ackdelete_file' filename=entry.title|slugify %}" 
+                                                  action="{% url 'research:delete_file' filename=entry.title|slugify %}" 
                                                   style="display: inline;"
                                                   onsubmit="return confirm('Are you sure you want to delete this entry?');">
                                                 {% csrf_token %}
