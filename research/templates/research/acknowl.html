@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block content %}
+{% include 'partials/_banner.html' with heading="Paper Acknowledgement" %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="text-end mb-3">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEntryModal">Add New Entry</button>
+        </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Saved Entries</h3>
+                </div>
+                <div class="card-body">
+                    {% if files %}
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Content</th>
+                                    <th>File Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in files %}
+                                <tr style="cursor: pointer;" onclick="redirectToDetails('{{ entry.title|escapejs }}')">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ entry.title }}</td>
+                                    <td>{{ entry.text_content|truncatechars:50 }}</td>
+                                    <td>
+                                        {% for file in entry.files %}
+                                            <a href="{{ file.url }}" target="_blank">{{ file.filename }}</a><br>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <!-- <a href="{% url 'research:entry_details' entry.title|escapejs %}" class="btn btn-info btn-sm">Details</a> -->
+                                        {% for file in entry.files %}
+                                        <form method="post" action="{% url 'research:delete_file' file.filename %}" class="d-inline">
+                                        {% endfor %}
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No entries found. Start by adding a new entry using the form.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding New Entry -->
+<div class="modal fade" id="addEntryModal" tabindex="-1" aria-labelledby="addEntryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEntryModalLabel">Add New Entry</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function redirectToDetails(title) {
+        // Use Django's 'url' template tag to construct the base URL
+        const baseUrl = "{% url 'research:entry_details' 'PLACEHOLDER' %}";
+        // Replace the 'PLACEHOLDER' part with the actual title
+        const url = baseUrl.replace("PLACEHOLDER", encodeURIComponent(title));
+        window.location.href = url;
+    }
+</script>
+{% endblock %}
