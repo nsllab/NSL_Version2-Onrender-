@@ -402,7 +402,7 @@ def entry_details(request, title):
     for file in files:
         if file.lower().endswith('.json'):
             try:
-                with default_storage.open(f'uploads/{file}', 'r') as f:
+                with default_storage.open(f'uploads/{file}', 'r', encoding='utf-8') as f:
                     entry_data = json.load(f)
                     if entry_data["title"] == title:
                         file_data = entry_data
@@ -422,7 +422,7 @@ def ackentry_details(request, title):
     for file in files:
         if file.lower().endswith('.json'):
             try:
-                with default_storage.open(f'ackuploads/{file}', 'r') as f:
+                with default_storage.open(f'ackuploads/{file}', 'r', encoding='utf-8') as f:
                     entry_data = json.load(f)
                     if entry_data["title"] == title:
                         file_data = entry_data
