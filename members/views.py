@@ -100,16 +100,33 @@ class DashboardView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Get Bio information
-        context['bio'] = Bio.objects.filter(email_list__contains=self.request.user.email).first()
-        # Get both types of reports
+        bio = Bio.objects.filter(email_list__contains=self.request.user.email).first()
+        context['bio'] = bio
+        
+        # Get user type with complete labels
+        if bio:
+            position_map = {
+                1: "Professor",
+                2: "Post-Doc Researcher",
+                3: "Full-Time Researcher",
+                4: "Part-Time Researcher",
+                5: "Adviser",
+                6: "Graduate Alumni",
+                7: "Post-Doc Alumni",
+                8: "Undergraduate Researcher",
+                9: "Visiting Researcher"
+            }
+            context['user_type'] = position_map.get(bio.position, '')
+            context['is_postdoc'] = (bio.position == 2)  # Check if user is a Post-Doc
+        
         context['weekly_reports'] = WeeklyReport.objects.filter(
             writer=self.request.user
         ).order_by('-fr_dt')[:5]
         
-        context['postdoc_reports'] = PostDocReport.objects.filter(
-            writer=self.request.user
-        ).order_by('-fr_dt')[:5]
+        if bio and bio.position == 2:  # Only fetch postdoc reports if user is a Post-Doc
+            context['postdoc_reports'] = PostDocReport.objects.filter(
+                writer=self.request.user
+            ).order_by('-fr_dt')[:5]
         
         return context
 

@@ -1,18 +1,17 @@
 {% extends 'base.html' %}
 {% load bootstrap5 %}
+{% load custom_filters %}
 
 {% block content %}
 <div class="container-fluid min-vh-100 d-flex align-items-start justify-content-center py-4"
     style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
 
     <div class="row w-100 justify-content-center" style="max-width: 1400px;">
-        <!-- User Profile Card - Fixed position, no animation -->
+        <!-- User Profile Card -->
         <div class="col-md-5">
             <div class="card shadow-lg" style="background: rgba(255, 255, 255, 0.9);">
                 <div class="card-body p-4">
                     <div class="text-center">
-                        {% load custom_filters %}
-
                         {% if bio and bio.image %}
                         <img src="{{ bio.image.url }}" class="rounded-circle mb-3 shadow" alt="{{ user.username }}"
                             style="width: 150px; height: 150px; object-fit: cover;">
@@ -24,6 +23,9 @@
                         {% endif %}
 
                         <h2 class="mb-2">{{ user|last_name_first }}</h2>
+                        {% if user_type %}
+                            <p class="text-muted mb-2">{{ user_type }}</p>
+                        {% endif %}
                         {% if bio %}
                         <p class="text-muted mb-0">{{ bio.email_list }}</p>
                         {% else %}
@@ -41,59 +43,106 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h3 class="mb-0">Recent Reports</h3>
                         <div>
-                            <a href="{% url 'works:create_report' %}" class="btn btn-outline-info btn-sm">
-                                <i class="fa-solid fa-plus"></i> Weekly Report
-                            </a>
-                            <a href="{% url 'works:post_doc_create' %}" class="btn btn-outline-info btn-sm ms-2">
-                                <i class="fa-solid fa-plus"></i> PostDoc Report
-                            </a>
+                            {% if bio %}
+                                {% if bio.position == 2 %}
+                                    <a href="{% url 'works:post_doc_create' %}" class="btn btn-outline-info btn-sm">
+                                        <i class="fa-solid fa-plus"></i> PostDoc Report
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'works:create_report' %}" class="btn btn-outline-info btn-sm">
+                                        <i class="fa-solid fa-plus"></i> Weekly Report
+                                    </a>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    {% if weekly_reports %}
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Date Range</th>
-                                    <th>Progress</th>
-                                    <th class="text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for report in weekly_reports %}
-                                <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>
-                                        <a href="{% url 'works:details' pk=report.pk %}"
-                                            class="text-decoration-none text-dark">
-                                            {{ report.fr_dt|date }} ~ {{ report.to_dt|date }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <div>Paper: {{ report.paper_prog_percent }}%</div>
-                                        <div>Project: {{ report.project_prog_percent }}%</div>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{% url 'works:update' pk=report.pk %}"
-                                            class="btn btn-outline-info btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    {% if bio.position == 2 %}
+                        {% if postdoc_reports %}
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Date Range</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for report in postdoc_reports %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>
+                                                <a href="{% url 'works:post_doc_details' pk=report.pk %}" 
+                                                   class="text-decoration-none text-dark">
+                                                    {{ report.fr_dt|date }} ~ {{ report.to_dt|date }}
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'works:post_doc_update' pk=report.pk %}" 
+                                                   class="btn btn-outline-info btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <p class="mb-3">No reports available</p>
+                                <a href="{% url 'works:post_doc_create' %}" class="btn btn-outline-info btn-sm">
+                                    Create Your First Report
+                                </a>
+                            </div>
+                        {% endif %}
                     {% else %}
-                    <div class="text-center text-muted py-4">
-                        <p class="mb-3">No reports available</p>
-                        <a href="{% url 'works:create_report' %}" class="btn btn-outline-info btn-sm">
-                            Create Your First Report
-                        </a>
-                    </div>
+                        {% if weekly_reports %}
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Date Range</th>
+                                            <th>Progress</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for report in weekly_reports %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>
+                                                <a href="{% url 'works:details' pk=report.pk %}" 
+                                                   class="text-decoration-none text-dark">
+                                                    {{ report.fr_dt|date }} ~ {{ report.to_dt|date }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div>Paper: {{ report.paper_prog_percent }}%</div>
+                                                <div>Project: {{ report.project_prog_percent }}%</div>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'works:update' pk=report.pk %}" 
+                                                   class="btn btn-outline-info btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <p class="mb-3">No reports available</p>
+                                <a href="{% url 'works:create_report' %}" class="btn btn-outline-info btn-sm">
+                                    Create Your First Report
+                                </a>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
