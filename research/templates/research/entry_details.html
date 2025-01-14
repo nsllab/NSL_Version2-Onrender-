@@ -13,7 +13,7 @@
                         <h3>{{ entry.title }}</h3>
                         <p class="text-muted mb-0">Last updated {{ entry.timestamp }}</p>
                     </div>
-                    {% if request.user.username == 'June' or request.user.username == 'Angelo' %}
+                    {% if request.user.username == 'June' or request.user.username == 'Angelo' or request.user.username == 'Som' %}
                     <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#editModal">
                         <i class="fas fa-edit"></i> Edit Content
                     </button>
