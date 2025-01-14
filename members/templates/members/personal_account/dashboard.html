@@ -23,7 +23,7 @@
                         </div>
                         {% endif %}
 
-                        <h2 class="mb-2">Welcome, {{ user|last_name_first }}</h2>
+                        <h2 class="mb-2">{{ user|last_name_first }}</h2>
                         {% if bio %}
                         <p class="text-muted mb-0">{{ bio.email_list }}</p>
                         {% else %}
