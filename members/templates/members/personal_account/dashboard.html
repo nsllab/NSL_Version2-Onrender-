@@ -2,33 +2,32 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<div class="container-fluid min-vh-100 d-flex align-items-start justify-content-center py-4" 
-     style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
-    
+<div class="container-fluid min-vh-100 d-flex align-items-start justify-content-center py-4"
+    style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+
     <div class="row w-100 justify-content-center" style="max-width: 1400px;">
         <!-- User Profile Card - Fixed position, no animation -->
         <div class="col-md-5">
-            <div class="card shadow-lg" 
-                 style="background: rgba(255, 255, 255, 0.9);">
+            <div class="card shadow-lg" style="background: rgba(255, 255, 255, 0.9);">
                 <div class="card-body p-4">
                     <div class="text-center">
+                        {% load custom_filters %}
+
                         {% if bio and bio.image %}
-                            <img src="{{ bio.image.url }}" 
-                                 class="rounded-circle mb-3 shadow" 
-                                 alt="{{ user.username }}"
-                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        <img src="{{ bio.image.url }}" class="rounded-circle mb-3 shadow" alt="{{ user.username }}"
+                            style="width: 150px; height: 150px; object-fit: cover;">
                         {% else %}
-                            <div class="rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center bg-info"
-                                 style="width: 150px; height: 150px;">
-                                <span class="display-4 text-white">{{ user.username|make_list|first|upper }}</span>
-                            </div>
+                        <div class="rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center bg-info"
+                            style="width: 150px; height: 150px;">
+                            <span class="display-4 text-white">{{ user|get_initial }}</span>
+                        </div>
                         {% endif %}
-                        
-                        <h2 class="mb-2">Welcome, {{ user.get_full_name|default:user.username }}</h2>
+
+                        <h2 class="mb-2">Welcome, {{ user|last_name_first }}</h2>
                         {% if bio %}
-                            <p class="text-muted mb-0">{{ bio.email_list }}</p>
+                        <p class="text-muted mb-0">{{ bio.email_list }}</p>
                         {% else %}
-                            <p class="text-muted mb-0">{{ user.email }}</p>
+                        <p class="text-muted mb-0">{{ user.email }}</p>
                         {% endif %}
                     </div>
                 </div>
@@ -37,8 +36,7 @@
 
         <!-- Reports Card -->
         <div class="col-md-6">
-            <div class="card shadow-lg" 
-                 style="background: rgba(255, 255, 255, 0.9);">
+            <div class="card shadow-lg" style="background: rgba(255, 255, 255, 0.9);">
                 <div class="card-header bg-transparent border-0 pt-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <h3 class="mb-0">Recent Reports</h3>
@@ -54,47 +52,48 @@
                 </div>
                 <div class="card-body">
                     {% if weekly_reports %}
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Date Range</th>
-                                        <th>Progress</th>
-                                        <th class="text-center">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for report in weekly_reports %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>
-                                            <a href="{% url 'works:details' pk=report.pk %}" class="text-decoration-none text-dark">
-                                                {{ report.fr_dt|date }} ~ {{ report.to_dt|date }}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <div>Paper: {{ report.paper_prog_percent }}%</div>
-                                            <div>Project: {{ report.project_prog_percent }}%</div>
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="{% url 'works:update' pk=report.pk %}" 
-                                               class="btn btn-outline-info btn-sm">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date Range</th>
+                                    <th>Progress</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for report in weekly_reports %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <a href="{% url 'works:details' pk=report.pk %}"
+                                            class="text-decoration-none text-dark">
+                                            {{ report.fr_dt|date }} ~ {{ report.to_dt|date }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div>Paper: {{ report.paper_prog_percent }}%</div>
+                                        <div>Project: {{ report.project_prog_percent }}%</div>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{% url 'works:update' pk=report.pk %}"
+                                            class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                     {% else %}
-                        <div class="text-center text-muted py-4">
-                            <p class="mb-3">No reports available</p>
-                            <a href="{% url 'works:create_report' %}" class="btn btn-outline-info btn-sm">
-                                Create Your First Report
-                            </a>
-                        </div>
+                    <div class="text-center text-muted py-4">
+                        <p class="mb-3">No reports available</p>
+                        <a href="{% url 'works:create_report' %}" class="btn btn-outline-info btn-sm">
+                            Create Your First Report
+                        </a>
+                    </div>
                     {% endif %}
                 </div>
             </div>
