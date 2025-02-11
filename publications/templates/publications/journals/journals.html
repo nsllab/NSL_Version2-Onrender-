@@ -54,7 +54,7 @@
 								</div>
 								<div class="modal-body">
 									<!-- Add a form for editing a journal -->
-									<form method="POST" action="{% url 'publications:update' pk=journal.pk %}" enctype="multipart/form-data">
+									<form method="POST" action="{% url 'publications:journal_update' pk=journal.pk %}" enctype="multipart/form-data">
 										{% csrf_token %}
 										<div class="form-floating">
 											<input type="text" id="title{{ journal.pk }}" name="title" value="{{ journal.title }}" class="form-control mb-2" placeholder="Title" required />
@@ -255,7 +255,7 @@
 				</div>
 				<div class="modal-body">
 					<!-- Add a form for creating a journal -->
-					<form method="POST" action="{% url 'publications:create' %}">
+					<form method="POST" action="{% url 'publications:journal_create' %}">
 						{% csrf_token %}
 						<div class="form-floating">
 							<input type="text" id="title" name="title" class="form-control mb-2" placeholder="Title" required />
