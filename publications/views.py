@@ -160,14 +160,15 @@ def all_journals(request):
 class JournalCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url = "/members/login/"
     model = Journal
-    form_class = JournalForm  # Replace with your actual form
-    template_name = ''  # publications/journals/create.html
-    success_url = reverse_lazy('publications:journals')  # Replace with your success URL
-    success_message =  "%(journal_name)s created successfully"
+    form_class = JournalForm
+    template_name = 'publications/journals/create.html'  # Ensure this file exists
+    success_url = reverse_lazy('publications:journals')  # Redirect after creation
+    success_message = "%(title)s created successfully"
 
     def form_valid(self, form):
-        form.instance.writer = self.request.user  # Set the writer to the current user
+        form.instance.writer = self.request.user
         return super().form_valid(form)
+
 
 
 class JournalUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
