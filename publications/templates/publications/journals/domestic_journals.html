@@ -105,4 +105,12 @@
         </div>
     </div>
 </div>
+
+{% if user.is_authenticated %}
+<div class="position-fixed bottom-0 end-0 p-3">
+  <a href="{% url 'publications:journal_create' %}" class="btn btn-outline-info">
+    <i class="fa-solid fa-plus"></i> Add Journal
+  </a>
+</div>
+{% endif %}
 {% endblock %}
