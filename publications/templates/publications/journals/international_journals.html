@@ -3,6 +3,7 @@
 
 {% block content %}
 {% include 'partials/_banner.html' with heading="International Journals" %}
+
 <div class="container mt-5">
     <div class="row">
         <div class="col-sm-10">
@@ -105,4 +106,14 @@
         </div>
     </div>
 </div>
+
+<!-- Create Button for Authenticated Users -->
+{% if user.is_authenticated %}
+<div class="position-fixed bottom-0 end-0 p-3">
+  <a href="{% url 'publications:journals_create' %}" class="btn btn-outline-info">
+    <i class="fa-solid fa-plus"></i> Add Journal
+  </a>
+</div>
+{% endif %}
+
 {% endblock %}
