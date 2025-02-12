@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <div class="row">
         <div class="text-end mb-3">
-            {% if request.user.username == 'June' or request.user.username == 'Angelo' or request.user.username == 'Som' or request.user.username == 'Gieworld' %}
+            {% if request.user.username == 'June' or request.user.username == 'Angelo' or request.user.username == 'Som' or request.user.username == 'Gieworld' or request.user.username == 'Minhee' %}
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEntryModal">Add New
                 Entry</button>
             {% endif %}
@@ -42,7 +42,7 @@
                                     {% endfor %}
                                 </td>
                                 <td>
-                                    {% if request.user.username == 'June' or request.user.username == 'Angelo' or request.user.username == 'Som' or request.user.username == 'Gieworld' %}
+                                    {% if request.user.username == 'June' or request.user.username == 'Angelo' or request.user.username == 'Som' or request.user.username == 'Gieworld' or request.user.username == 'Minhee'%}
                                     <form method="post" action="{% url 'research:delete_file' filename=entry.id %}" {#
                                         Change from entry.title|slugify to entry.id #} style="display: inline;"
                                         onsubmit="return confirm('Are you sure you want to delete this entry?');">
