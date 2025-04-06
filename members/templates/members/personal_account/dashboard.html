@@ -49,8 +49,8 @@
                                         <i class="fa-solid fa-plus"></i> PostDoc Report
                                     </a>
                                 {% else %}
-                                    <a href="{% url 'works:create_report' %}" class="btn btn-outline-info btn-sm">
-                                        <i class="fa-solid fa-plus"></i> Weekly Report
+                                    <a href="https://nsllab-kit.onrender.com/labworks/reports" class="btn btn-outline-info btn-sm" target="_blank">
+                                        <i class="fa-solid fa-external-link-alt"></i> Go to New Reports Platform
                                     </a>
                                 {% endif %}
                             {% endif %}
@@ -99,50 +99,15 @@
                             </div>
                         {% endif %}
                     {% else %}
-                        {% if weekly_reports %}
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Date Range</th>
-                                            <th>Progress</th>
-                                            <th class="text-center">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for report in weekly_reports %}
-                                        <tr>
-                                            <td>{{ forloop.counter }}</td>
-                                            <td>
-                                                <a href="{% url 'works:details' pk=report.pk %}" 
-                                                   class="text-decoration-none text-dark">
-                                                    {{ report.fr_dt|date }} ~ {{ report.to_dt|date }}
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <div>Paper: {{ report.paper_prog_percent }}%</div>
-                                                <div>Project: {{ report.project_prog_percent }}%</div>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{% url 'works:update' pk=report.pk %}" 
-                                                   class="btn btn-outline-info btn-sm">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                        <div class="text-center py-4">
+                            <div class="alert alert-info mb-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Weekly Reports have been migrated to our new platform for better functionality and user experience.
                             </div>
-                        {% else %}
-                            <div class="text-center text-muted py-4">
-                                <p class="mb-3">No reports available</p>
-                                <a href="{% url 'works:create_report' %}" class="btn btn-outline-info btn-sm">
-                                    Create Your First Report
-                                </a>
-                            </div>
-                        {% endif %}
+                            <a href="https://nsllab-kit.onrender.com/labworks/reports" class="btn btn-primary" target="_blank">
+                                Go to New Weekly Reports Platform
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
             </div>
