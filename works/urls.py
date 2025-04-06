@@ -28,5 +28,6 @@ urlpatterns = [
     path('pt/<int:pk>/update', views.PaperTemplateUpdateView.as_view(), name="paper_template_update"),
     path('pt/<int:pk>/', views.PaperTemplateDetailView.as_view(), name='paper_template_detail'),
 
+    path('weekly-reports/', views.weekly_reports_migration, name='weekly_reports'),
 
 ]

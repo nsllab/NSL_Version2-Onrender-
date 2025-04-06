@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+{% include 'partials/_banner.html' with heading="Weekly Reports Migration Notice" %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <h3 class="card-title mb-4">Weekly Reports Have Been Migrated</h3>
+                    <p class="lead mb-4">The Weekly Reports feature has been moved to our new platform for better functionality and user experience.</p>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        You can now access Weekly Reports at our new platform
+                    </div>
+                    <a href="https://nsllab-kit.onrender.com/labworks/reports" class="btn btn-primary btn-lg" target="_blank">
+                        Go to New Weekly Reports Platform
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

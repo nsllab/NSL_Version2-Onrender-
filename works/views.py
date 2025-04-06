@@ -192,3 +192,6 @@ class PaperTemplateDetailView(DetailView):
     model = PaperTemplate
     context_object_name = 'paper_template'
     template_name = 'works/paper_templates/detail.html'
+
+def weekly_reports_migration(request):
+    return render(request, 'works/weeklyreport/migration_notice.html')
