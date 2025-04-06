@@ -2,12 +2,16 @@
     <h4 class="card-header">Works</h4>
     <div class="card-body">
         <div class="list-group">
-            <a href="{% url 'works:weekly_reports' %}" class="list-group-item {% if request.path == '/works/weekly_reports' %} list-group-item list-group-item-action active{% endif %}">
-                Weekly Reports (Graduate)
-                <!-- <span class="badge bg-danger rounded-pill float-end">{{ total }}</span> -->
-            </a>
+            <div class="list-group-item">
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Weekly Reports have been migrated to our new platform
+                </div>
+                <a href="https://nsllab-kit.onrender.com/labworks/reports" class="btn btn-primary btn-sm mt-2 w-100" target="_blank">
+                    Go to New Platform
+                </a>
+            </div>
             
-            <a href="{% url 'works:post_doc_reports' %}" class="list-group-item {% if request.path == '/works/post_docs/' %}list-group-item list-group-item-action active{% endif %} "> Weekly Reports (Post Doctoral Researchers)</a>
             <a href="{% url 'works:seminars' %}" class="list-group-item {% if request.path == '/works/seminars/' %}list-group-item list-group-item-action active{% endif %} ">Seminar</a>
             
         </div>
